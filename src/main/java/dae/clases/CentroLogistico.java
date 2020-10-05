@@ -18,7 +18,7 @@ public class CentroLogistico implements PuntoControl {
     private String localizacion;
 
     public CentroLogistico() {
-        this.id = 0;
+        this.id = null;
         this.nombre = null;
         this.localizacion = null;
 

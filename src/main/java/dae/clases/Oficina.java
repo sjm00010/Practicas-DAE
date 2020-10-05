@@ -27,7 +27,7 @@ public class Oficina implements PuntoControl {
     }
 
     public void CreaEnvio(float alto, float ancho, float peso, String origen, String destino) {
-        //Envio envio = new Envio(); Cuando esté creada la clase Envio.
+        
     }
 
     /**
