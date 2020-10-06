@@ -21,13 +21,23 @@ public class Oficina implements PuntoControl {
         this.centroAsociado = null;
 
     }
-    public Oficina(String nombre, CentroLogistico centroAsociado){
+
+    public Oficina(String nombre, CentroLogistico centroAsociado) {
         this.nombre = nombre;
         this.centroAsociado = centroAsociado;
     }
 
-    public void CreaEnvio(float alto, float ancho, float peso, String origen, String destino) {
-        
+    /**
+     * Función que establece el envio para un paquete.
+     *
+     * @param alto Parámetro con la altura del paquete.
+     * @param ancho Parámetro con la anchura del paquete.
+     * @param peso Parámetro con el peso del paquete.
+     * @param origen Parámetro que nos indica el remitente del paquete.
+     * @param destino Parámetro que nos indica el destinatario del paquete.
+     */
+    public void creaEnvio(float alto, float ancho, float peso, Cliente origen, Cliente destino) {
+
     }
 
     /**
@@ -44,8 +54,15 @@ public class Oficina implements PuntoControl {
         return centroAsociado;
     }
 
+    /**
+     * Función que permite actualizar el envío.
+     *
+     * @param idEnvio int Identificador del envio.
+     * @param fecha LocalDate Anota la fecha de llegada o de salida del paquete en un punto de control.
+     * @param inOut boolean Parámetro el cual nos sirve para identificar si el envio llega o sale de un punto de control.
+     */
     @Override
-    public void Actualizar(Number IdEnvio, LocalDate Fecha, boolean InOut) {
+    public void actualizar(int idEnvio, LocalDate fecha, boolean inOut) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

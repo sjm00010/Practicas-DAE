@@ -13,6 +13,12 @@ import java.time.LocalDate;
  */
 public interface PuntoControl {
 
-    public void Actualizar(Number IdEnvio, LocalDate Fecha, boolean InOut);
+    /**
+     * Función que permite actualizar el envío.
+     * @param idEnvio int Identificador del envio.
+     * @param fecha LocalDate Anota la fecha de llegada o de salida del paquete en un punto de control.   
+     * @param inOut boolean Parámetro el cual nos sirve para identificar si el envio llega o sale de un punto de control.
+     */
+    public void actualizar(int idEnvio, LocalDate fecha, boolean inOut);
 
 }
