@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dae.clases;
+package dae.ujapack.entidades;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -80,15 +80,6 @@ public class Envio {
     // Añadir getRuta tras añadir ruta
     
     /**
-     * Función que establece la ruta para el envío
-     */
-    private void creaRuta(){
-        /* Es necesaria la implementacion de PuntoControl y Paso,
-           asi como la del ServicioMensajeria que es el que realiza
-           el calculo de la ruta */
-    }
-    
-    /**
      * Función que calcula el precio de un envío
      * @return precio
      */
@@ -98,7 +89,9 @@ public class Envio {
     }
     
     /**
-     * Función que permite actualizar el envío, modificando un Paso
+     * 
+     * @param fecha
+     * @param inOut 
      */
     public void actualizar(LocalDate fecha, boolean inOut){ // PuntoControl pc,
         /* Se busca en los pasos aquel que tenga el PuntoControl igual al

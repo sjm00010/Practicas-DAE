@@ -1,4 +1,4 @@
-package dae.clases;
+package dae.ujapack.entidades;
 
 /**
  *
