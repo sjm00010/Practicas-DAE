@@ -27,7 +27,8 @@ public class Oficina implements PuntoControl {
         this.centroAsociado = centroAsociado;
     }
 
-    public void CreaEnvio(float alto, float ancho, float peso, String origen, String destino) {
+    public void creaEnvio(float alto, float ancho, float peso, 
+            String origen, String destino) {
         
     }
 
@@ -46,7 +47,7 @@ public class Oficina implements PuntoControl {
     }
 
     @Override
-    public void Actualizar(Number IdEnvio, LocalDate Fecha, boolean InOut) {
+    public void actualizar(int idEnvio, LocalDate fecha, boolean inOut) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
