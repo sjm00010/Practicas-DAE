@@ -5,19 +5,23 @@
  */
 package dae.ujapack.app;
 
+import dae.ujapack.servicios.ServicioMensajeria;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 /**
  *
  * @author sjm00010
  */
-@EnableAutoConfiguration
+@SpringBootApplication(scanBasePackages = "dae.ujapack.servicios")
 public class UjaPackApp {
     
     public static void main(String[] args) throws Exception {
         SpringApplication servidor = new SpringApplication(UjaPackApp.class);
         ApplicationContext context = servidor.run(args);
+        
+        ServicioMensajeria servicio = (ServicioMensajeria) context.getBean("servicioMensajeria");
+        servicio.cargaDatos("D:\\Usuario\\Descargas\\redujapack.json", 10);
     }
 }
