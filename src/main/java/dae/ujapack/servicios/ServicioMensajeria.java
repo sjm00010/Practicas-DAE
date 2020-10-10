@@ -7,13 +7,14 @@ import dae.ujapack.entidades.Oficina;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import javafx.util.Pair;
 import org.json.simple.parser.ParseException;
@@ -27,14 +28,14 @@ import org.springframework.stereotype.Component;
 public class ServicioMensajeria {
 
     //          Repositorio
-    private ArrayList<Oficina> oficinas;
-    private ArrayList<CentroLogistico> centrosLogisticos;
-    private ArrayList<Envio> envios;
+    private Map<String, Oficina> oficinas;
+    private Map<Integer, CentroLogistico> centrosLogisticos;
+    private Map<String, Envio> envios;
 
     public ServicioMensajeria() {
-        this.oficinas = new ArrayList<>();
-        this.centrosLogisticos = new ArrayList<>();
-        this.envios = new ArrayList<>();
+        this.oficinas = new HashMap<>();
+        this.centrosLogisticos = new HashMap<>();
+        this.envios = new HashMap<>();
     }
     
     //            Servicio
@@ -57,15 +58,20 @@ public class ServicioMensajeria {
         // Obtengo el conjunto de conexiones
         JSONArray conexiones = (JSONArray) centro.get("conexiones");
         
-        centrosLogisticos.add( new CentroLogistico(id, nombre, localizacion, conexiones));
+        centrosLogisticos.put( id ,new CentroLogistico(id, nombre, localizacion, conexiones));
         
         // Obtengo el conjunto de conexiones
         JSONArray provincias = (JSONArray) centro.get("provincias");
         for (int i = 0; i < provincias.size(); i++) {
-            oficinas.add(new Oficina(provincias.get(i).toString(), centrosLogisticos.get(centrosLogisticos.size()-1)));
+            String nombreProvincia = provincias.get(i).toString();
+            oficinas.put( nombreProvincia, new Oficina(nombreProvincia, centrosLogisticos.get(centrosLogisticos.size()-1)));
         }   
     }
     
+    /**
+     * Función que genera los IDs de los envíos
+     * @return Identificador creado
+     */
     private String generaId(){
         boolean generado = false;
         String numero = "";
@@ -79,13 +85,43 @@ public class ServicioMensajeria {
                 numero += Integer.toString(rn.nextInt(10));
             }
             
-            final String nId = numero;
-            boolean esta = envios.stream().anyMatch((e) -> { return e.getId().equals(nId); });
-            
-            if(!esta)
+            // Se comprueba que es único
+            if(!envios.containsKey(numero))
                 generado = true;
         }
         return numero;
+    }
+    
+    
+    
+    // Devielve ArrayList<Paso> ruta
+    private void generaRuta(String origen, String destino){
+        // Crear resultado ArrayList<Paso> ruta
+        
+        Oficina oficinaOrig = oficinas.get(origen);
+        Oficina oficinaDest = oficinas.get(destino);
+        if(oficinaOrig != null && oficinaDest != null){
+            
+            // Caso 1 : Misma provincia
+            if(oficinaOrig == oficinaDest){
+                // asignar a ruta la oficinaOrig
+            }else{
+                // Caso 2 : Distinta provincia y mismo centro
+                CentroLogistico centroOrig = oficinaOrig.getCentroAsociado();
+                CentroLogistico centroDest = oficinaDest.getCentroAsociado();
+                if(centroOrig == centroDest){
+                    // asignar a ruta la oficinaOrig, centroOrig, oficinaDest
+                }else{ // Caso 3 : Distinta provincia y varios centros
+                    // Algoritmo de Dijsktra
+                }
+            }
+            
+                
+            
+            // Empezar algoritmo de creacion de ruta
+        }else{
+            throw new RuntimeException("Error al generar envío. Los cliente tienen una localización no valida");
+        }
     }
     
     // Fin funciones auxiliares
@@ -133,7 +169,9 @@ public class ServicioMensajeria {
      */
     public Pair<String, Integer> creaEnvio(int alto,int ancho,int peso, Cliente origen, Cliente destino){
         String id = generaId();
-        envios.add(new Envio(id, alto, ancho, peso, origen, destino));
+        envios.put( id, new Envio(id, alto, ancho, peso, origen, destino));
         return new Pair<String, Integer>(id, envios.get(envios.size()-1).calculaPrecio());
     }
+    
+    
 }
