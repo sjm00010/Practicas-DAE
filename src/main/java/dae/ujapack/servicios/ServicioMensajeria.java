@@ -1,6 +1,7 @@
 package dae.ujapack.servicios;
 
 import dae.ujapack.entidades.CentroLogistico;
+import dae.ujapack.entidades.Cliente;
 import dae.ujapack.entidades.Envio;
 import dae.ujapack.entidades.Oficina;
 import java.io.BufferedReader;
@@ -13,7 +14,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Iterator;
+import java.util.Random;
+import javafx.util.Pair;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
 
@@ -55,14 +57,35 @@ public class ServicioMensajeria {
         // Obtengo el conjunto de conexiones
         JSONArray conexiones = (JSONArray) centro.get("conexiones");
         
-        centrosLogisticos.add( new CentroLogistico(id, nombre, localizacion));
+        centrosLogisticos.add( new CentroLogistico(id, nombre, localizacion, conexiones));
         
         // Obtengo el conjunto de conexiones
         JSONArray provincias = (JSONArray) centro.get("provincias");
         for (int i = 0; i < provincias.size(); i++) {
             oficinas.add(new Oficina(provincias.get(i).toString(), centrosLogisticos.get(centrosLogisticos.size()-1)));
-        }
+        }   
+    }
+    
+    private String generaId(){
+        boolean generado = false;
+        String numero = "";
+        Random rn = new Random();
         
+        while(!generado){
+            numero = "";
+            
+            // El bucle se repite 10 veces, tamaño Id envio
+            for(int i = 0; i < 10;i++){
+                numero += Integer.toString(rn.nextInt(10));
+            }
+            
+            final String nId = numero;
+            boolean esta = envios.stream().anyMatch((e) -> { return e.getId().equals(nId); });
+            
+            if(!esta)
+                generado = true;
+        }
+        return numero;
     }
     
     // Fin funciones auxiliares
@@ -99,4 +122,18 @@ public class ServicioMensajeria {
         }
     }
 
+    /**
+     * Función para crear el envío de un paquete
+     * @param alto Alto del paquete
+     * @param ancho Ancho del paquete
+     * @param peso Peso del paquete
+     * @param origen Cliente que envía el paquete
+     * @param destino Cliente que recibe el paquete
+     * @return Pair<String, Integer> con el identificador y el precio
+     */
+    public Pair<String, Integer> creaEnvio(int alto,int ancho,int peso, Cliente origen, Cliente destino){
+        String id = generaId();
+        envios.add(new Envio(id, alto, ancho, peso, origen, destino));
+        return new Pair<String, Integer>(id, envios.get(envios.size()-1).calculaPrecio());
+    }
 }

@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author sjm00010
  */
 public class Envio {
-    private int id;
+    private String id;
     private int alto;
     private int ancho;
     private int peso;
@@ -26,7 +26,7 @@ public class Envio {
     }
 
     // Modificar tras añadir ruta
-    public Envio(int id, int alto, int ancho, int peso, Cliente origen, Cliente destino) {
+    public Envio(String id, int alto, int ancho, int peso, Cliente origen, Cliente destino) {
         this.id = id;
         this.alto = alto;
         this.ancho = ancho;
@@ -38,7 +38,7 @@ public class Envio {
     /**
      * @return the id
      */
-    public int getId() {
+    public String getId() {
         return id;
     }
 

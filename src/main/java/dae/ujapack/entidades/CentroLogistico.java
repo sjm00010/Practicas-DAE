@@ -7,6 +7,7 @@ package dae.ujapack.entidades;
 
 import dae.ujapack.interfaces.PuntoControl;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  *
@@ -17,18 +18,20 @@ public class CentroLogistico implements PuntoControl {
     private int id;
     private String nombre;
     private String localizacion;
+    private ArrayList<Integer> conexiones;
 
     public CentroLogistico() {
         this.id = 0;
         this.nombre = null;
         this.localizacion = null;
-
+        this.conexiones = new ArrayList<>();
     }
 
-    public CentroLogistico(int id, String nombre, String localizacion) {
+    public CentroLogistico(int id, String nombre, String localizacion, ArrayList<Integer> conexiones) {
         this.id = id;
         this.nombre = nombre;
         this.localizacion = localizacion;
+        this.conexiones = conexiones;
     }
 
     /**
@@ -50,6 +53,13 @@ public class CentroLogistico implements PuntoControl {
      */
     public String getLocalizacion() {
         return localizacion;
+    }
+
+    /**
+     * @return the conexiones
+     */
+    public ArrayList<Integer> getConexiones() {
+        return conexiones;
     }
     
     @Override
