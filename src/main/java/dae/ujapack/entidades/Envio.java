@@ -5,6 +5,7 @@
  */
 package dae.ujapack.entidades;
 
+import dae.ujapack.interfaces.PuntoControl;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -93,13 +94,33 @@ public class Envio {
     }
     
     /**
-     * 
-     * @param fecha
-     * @param inOut 
+     * Funcion que actualiza la fecha de un punto de la ruta
+     * @param fecha Fecha que hay que actualizar
+     * @param inOut Entrada o salida del Paso
+     * @param pc Punto de control a actualizar
      */
-    public void actualizar(LocalDate fecha, boolean inOut){ // PuntoControl pc,
+    public void actualizar(LocalDate fecha, boolean inOut, PuntoControl pc){
         /* Se busca en los pasos aquel que tenga el PuntoControl igual al
            dado y que coincida con el valor de inOut para añadirle la fecha */
+        for (Paso paso : ruta) {
+            if(paso.getPasoPuntos().equals(pc) && paso.isInOut() == inOut){
+                paso.setFecha(fecha);
+            }
+        }
+    }
+    
+    /**
+     * Función que devuelve el punto actual del envío
+     * @return PuntoControl punto de control actual
+     */
+    public Paso getUltimoPunto(){
+        Paso ultimoPunto = null;
+        for (Paso paso : ruta) {
+            if(paso.getFecha() != null){
+                ultimoPunto = paso;
+            }
+        }
+        return ultimoPunto;
     }
     
 }

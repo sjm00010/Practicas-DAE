@@ -13,26 +13,19 @@ import java.time.LocalDate;
  * @author juanc
  */
 public class Paso {
-
     
     private LocalDate fecha;
-    private boolean inOut;
+    private boolean inOut; // False entrada, True salida
     private PuntoControl pasoPuntos;
-    
-    public Paso() {
-        this.fecha = null;
-        this.inOut = false;
-        this.pasoPuntos = null;
-
-    }
-    //Necesaria la clase Envio
     
     /**
      * Función constructora parametrizada de la clase.
      * @param pasoPuntos Parámetro con los puntos de control por los que ha pasado el envío.
+     * @param inOut Indica la entrada(False) o salida(True) del punto
      */
-    public Paso(PuntoControl pasoPuntos){
+    public Paso(PuntoControl pasoPuntos, boolean inOut){
         this.pasoPuntos = pasoPuntos;
+        this.inOut = inOut;
     }
     
     /**
@@ -42,6 +35,13 @@ public class Paso {
         return fecha;
     }
 
+    /**
+     * @param fecha the fecha to set
+     */
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+    
     /**
      * @return the inOut
      */

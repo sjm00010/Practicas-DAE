@@ -5,6 +5,7 @@ import dae.ujapack.entidades.Cliente;
 import dae.ujapack.entidades.Envio;
 import dae.ujapack.entidades.Oficina;
 import dae.ujapack.entidades.Paso;
+import dae.ujapack.entidades.Repartidor;
 import dae.ujapack.interfaces.PuntoControl;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -15,6 +16,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,31 +119,43 @@ public class ServicioMensajeria {
         Oficina oficinaDest = oficinas.get(destino);
         System.out.println("Generando ruta");
         if(oficinaOrig != null && oficinaDest != null){
-            
             // Caso 1 : Misma provincia
             if(oficinaOrig.equals(oficinaDest)){
-                ruta.add(new Paso(oficinaOrig));
+                ruta.add(new Paso(oficinaOrig, false));
+                ruta.add(new Paso(oficinaOrig, true));
             }else{
                 CentroLogistico centroOrig = oficinaOrig.getCentroAsociado();
                 CentroLogistico centroDest = oficinaDest.getCentroAsociado();
                 if(centroOrig.equals(centroDest)){// Caso 2 : Distinta provincia y mismo centro
-                    ruta.add(new Paso(oficinaOrig));
-                    ruta.add(new Paso(centroOrig));
-                    ruta.add(new Paso(oficinaDest));
+                    ruta.add(new Paso(oficinaOrig,false));
+                    ruta.add(new Paso(oficinaOrig,true));
+                    ruta.add(new Paso(centroOrig,false));
+                    ruta.add(new Paso(centroOrig,true));
+                    ruta.add(new Paso(oficinaDest,false));
+                    ruta.add(new Paso(oficinaDest,true));
                 }else{ // Caso 3 : Distinta provincia y varios centros
                     // Añado el origen
-                    ruta.add(new Paso(oficinaOrig));
+                    ruta.add(new Paso(oficinaOrig,false));
+                    ruta.add(new Paso(oficinaOrig,true));
                     
                     // Calculo y añado los centros logisticos por los que pasa
                     List<String> centrosRuta = grafo.obtenRuta(centroOrig.getId(), centroDest.getId());
                     for (String idCentro : centrosRuta) {
-                        ruta.add(new Paso(centrosLogisticos.get(idCentro)));
+                        ruta.add(new Paso(centrosLogisticos.get(idCentro), false));
+                        ruta.add(new Paso(centrosLogisticos.get(idCentro), true));
                     }
                     
                     // Añado el destino
-                    ruta.add(new Paso(oficinaDest));
+                    ruta.add(new Paso(oficinaDest, false));
+                    ruta.add(new Paso(oficinaDest, true));
                 }
             }
+            // Añado el final de la ruta
+            ruta.add(new Paso(new Repartidor(), false));
+            ruta.add(new Paso(new Repartidor(), true));
+            
+            // Asigno la fecha actual a la entrada del envio
+            ruta.get(0).setFecha(LocalDate.now());
         }else{
             throw new RuntimeException("Error al generar envío. Los cliente tienen una localización no valida");
         }
@@ -206,8 +220,29 @@ public class ServicioMensajeria {
         return new Pair<String, Integer>(id, envios.get(id).calculaPrecio());
     }
     
+    /**
+     * Función que obtiene la situacion de un envío
+     * @param idEnvio ID del envio a localizar
+     * @return Pair<PuntoControl,String> Par con el punto de control actual y la situación
+     */
     public Pair<PuntoControl,String> obtenerSituacion(String idEnvio){
-        Envio envioActual = envios.get(idEnvio);
-        return null; // Por implementar
+        Paso punto = envios.get(idEnvio).getUltimoPunto();
+        String estado;
+        if(punto.getPasoPuntos().getClass() == CentroLogistico.class ||
+                punto.getPasoPuntos().getClass() == Oficina.class){
+            estado = "en transito";
+        }else{
+            if (punto.isInOut()){
+                estado = "entregado";
+            }else{
+                estado = "en reparto";
+            }
+        }
+        return new Pair<PuntoControl, String>(punto.getPasoPuntos(), estado);
+    }
+    
+    
+    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut, PuntoControl pc){
+        envios.get(idEnvio).actualizar(fecha, inOut, pc);
     }
 }
