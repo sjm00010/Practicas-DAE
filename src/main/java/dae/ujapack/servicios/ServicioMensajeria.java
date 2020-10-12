@@ -210,7 +210,7 @@ public class ServicioMensajeria {
      * @param peso Peso del paquete
      * @param origen Cliente que envía el paquete
      * @param destino Cliente que recibe el paquete
-     * @return Pair<String, Integer> con el identificador y el precio
+     * @return Pair<String, Integer> Identificador y precio
      */
     public Pair<String, Integer> creaEnvio(int alto,int ancho,int peso, Cliente origen, Cliente destino){
         String id = generaId();
@@ -241,8 +241,25 @@ public class ServicioMensajeria {
         return new Pair<PuntoControl, String>(punto.getPasoPuntos(), estado);
     }
     
-    
-    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut, PuntoControl pc){
-        envios.get(idEnvio).actualizar(fecha, inOut, pc);
+    /**
+     * Función que actualiza el estado de un envio
+     * @param idEnvio ID del envío a actualizar
+     * @param fecha Fecha actual
+     * @param inOut Entrada o salida del punto de control
+     * @param pc Identificador del punto de control. Si es repartidor poner "Repartidor"
+     */
+    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut, String idPc){
+        PuntoControl punto = null;
+        if(idPc.equals("Repartidor"))
+            punto = new Repartidor();
+        else{
+            punto = oficinas.get(idPc);
+            if(punto == null)
+                punto = centrosLogisticos.get(idPc);
+        } 
+        if(punto == null){
+            throw new RuntimeException("Error al actualizar envío. ID del punto de control invalido");
+        }
+        envios.get(idEnvio).actualizar(fecha, inOut, punto);
     }
 }

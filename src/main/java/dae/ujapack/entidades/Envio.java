@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dae.ujapack.entidades;
 
 import dae.ujapack.interfaces.PuntoControl;
@@ -89,8 +84,12 @@ public class Envio {
      * @return precio
      */
     public int calculaPrecio(){
-        // Completar cuando se implementen la clase Paso
-        return peso*(alto*ancho); // * pasos.numPC / 100
+        int numPc = 0;
+        for (Paso paso : ruta) {
+            if(paso.getPasoPuntos().getClass() == CentroLogistico.class)
+                numPc++;
+        }
+        return peso*(alto*ancho)* (numPc+1) / 1000;
     }
     
     /**
