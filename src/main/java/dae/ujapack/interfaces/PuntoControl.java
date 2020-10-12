@@ -13,6 +13,6 @@ import java.time.LocalDate;
  */
 public interface PuntoControl {
 
-    public void Actualizar(Number IdEnvio, LocalDate Fecha, boolean InOut);
+    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut);
 
 }

@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dae.ujapack.entidades;
 
+import dae.ujapack.interfaces.PuntoControl;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -13,32 +9,31 @@ import java.util.ArrayList;
  * @author sjm00010
  */
 public class Envio {
-    private int id;
+    private String id;
     private int alto;
     private int ancho;
     private int peso;
     private Cliente origen;
     private Cliente destino;
-    // FALTA el Array de Pasos, añadir tras su implementación
-    // private ArrayList<Paso> ruta;
+    private ArrayList<Paso> ruta;
 
     public Envio() {
     }
 
-    // Modificar tras añadir ruta
-    public Envio(int id, int alto, int ancho, int peso, Cliente origen, Cliente destino) {
+    public Envio(String id, int alto, int ancho, int peso, Cliente origen, Cliente destino, ArrayList<Paso> ruta) {
         this.id = id;
         this.alto = alto;
         this.ancho = ancho;
         this.peso = peso;
         this.origen = origen;
         this.destino = destino;
+        this.ruta = ruta;
     }
 
     /**
      * @return the id
      */
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -77,25 +72,54 @@ public class Envio {
         return destino;
     }
     
-    // Añadir getRuta tras añadir ruta
+    /**
+     * @return the ruta
+     */
+    public ArrayList<Paso> getRuta() {
+        return ruta;
+    }
     
     /**
      * Función que calcula el precio de un envío
      * @return precio
      */
     public int calculaPrecio(){
-        // Completar cuando se implementen la clase Paso
-        return peso*(alto*ancho); // * pasos.numPC / 100
+        int numPc = 0;
+        for (Paso paso : ruta) {
+            if(paso.getPasoPuntos().getClass() == CentroLogistico.class)
+                numPc++;
+        }
+        return peso*(alto*ancho)* (numPc+1) / 1000;
     }
     
     /**
-     * 
-     * @param fecha
-     * @param inOut 
+     * Funcion que actualiza la fecha de un punto de la ruta
+     * @param fecha Fecha que hay que actualizar
+     * @param inOut Entrada o salida del Paso
+     * @param pc Punto de control a actualizar
      */
-    public void actualizar(LocalDate fecha, boolean inOut){ // PuntoControl pc,
+    public void actualizar(LocalDate fecha, boolean inOut, PuntoControl pc){
         /* Se busca en los pasos aquel que tenga el PuntoControl igual al
            dado y que coincida con el valor de inOut para añadirle la fecha */
+        for (Paso paso : ruta) {
+            if(paso.getPasoPuntos().equals(pc) && paso.isInOut() == inOut){
+                paso.setFecha(fecha);
+            }
+        }
+    }
+    
+    /**
+     * Función que devuelve el punto actual del envío
+     * @return PuntoControl punto de control actual
+     */
+    public Paso getUltimoPunto(){
+        Paso ultimoPunto = null;
+        for (Paso paso : ruta) {
+            if(paso.getFecha() != null){
+                ultimoPunto = paso;
+            }
+        }
+        return ultimoPunto;
     }
     
 }

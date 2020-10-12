@@ -7,6 +7,7 @@ package dae.ujapack.entidades;
 
 import dae.ujapack.interfaces.PuntoControl;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,32 +15,29 @@ import java.time.LocalDate;
  */
 public class CentroLogistico implements PuntoControl {
 
-    private Number id;
+    private String id;
     private String nombre;
     private String localizacion;
+    private ArrayList<String> conexiones;
 
     public CentroLogistico() {
         this.id = null;
         this.nombre = null;
         this.localizacion = null;
-
+        this.conexiones = new ArrayList<>();
     }
 
-    public CentroLogistico(Number id, String nombre, String localizacion) {
+    public CentroLogistico(String id, String nombre, String localizacion, ArrayList<String> conexiones) {
         this.id = id;
         this.nombre = nombre;
         this.localizacion = localizacion;
-    }
-
-    @Override
-    public void Actualizar(Number IdEnvio, LocalDate Fecha, boolean InOut) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.conexiones = conexiones;
     }
 
     /**
      * @return the id
      */
-    public Number getId() {
+    public String getId() {
         return id;
     }
 
@@ -55,5 +53,17 @@ public class CentroLogistico implements PuntoControl {
      */
     public String getLocalizacion() {
         return localizacion;
+    }
+
+    /**
+     * @return the conexiones
+     */
+    public ArrayList<String> getConexiones() {
+        return conexiones;
+    }
+    
+    @Override
+    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

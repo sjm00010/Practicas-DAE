@@ -13,31 +13,19 @@ import java.time.LocalDate;
  * @author juanc
  */
 public class Paso {
-
     
     private LocalDate fecha;
-    private boolean inOut;
+    private boolean inOut; // False entrada, True salida
     private PuntoControl pasoPuntos;
-    
-    public Paso() {
-        this.fecha = null;
-        this.inOut = false;
-        this.pasoPuntos = null;
-
-    }
-    //Necesaria la clase Envio
     
     /**
      * Función constructora parametrizada de la clase.
-     * 
-     * @param fecha Parámetro que anota la fecha de llegada de un paquete cuando llega a un punto de control y cuando sale al siguiente punto de control anota su fecha de salida.
-     * @param inOut Parámetro el cual nos sirve para identificar si el envio llega o sale de un punto de control.
      * @param pasoPuntos Parámetro con los puntos de control por los que ha pasado el envío.
+     * @param inOut Indica la entrada(False) o salida(True) del punto
      */
-    public Paso(LocalDate fecha, boolean inOut,PuntoControl pasoPuntos){
-        this.fecha = fecha;
-        this.inOut = inOut;
+    public Paso(PuntoControl pasoPuntos, boolean inOut){
         this.pasoPuntos = pasoPuntos;
+        this.inOut = inOut;
     }
     
     /**
@@ -47,6 +35,13 @@ public class Paso {
         return fecha;
     }
 
+    /**
+     * @param fecha the fecha to set
+     */
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+    
     /**
      * @return the inOut
      */
