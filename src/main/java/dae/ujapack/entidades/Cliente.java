@@ -10,7 +10,12 @@ public class Cliente {
     private String apellidos;
     private String localizacion;
 
-    public Cliente() {
+    public Cliente(String localizacion) {
+        // Para hacer la prueba
+        this.dni="111111111A";
+        this.nombre="Prueba";
+        this.apellidos="Pruebas";
+        this.localizacion = localizacion;
     }
 
     public Cliente(String dni, String nombre, String apellidos, String localizacion) {

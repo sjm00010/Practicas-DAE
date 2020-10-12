@@ -21,7 +21,7 @@ public class UjaPackApp {
     /*
     Dudas :
      - Quien crea el cliente? En principio es servicio?
-     - 
+     - A*
     */
     
     public static void main(String[] args) throws Exception {
@@ -31,6 +31,6 @@ public class UjaPackApp {
         ServicioMensajeria servicio = (ServicioMensajeria) context.getBean("servicioMensajeria");
         servicio.cargaDatos("D:\\Usuario\\Descargas\\redujapack.json", 10);
         
-        servicio.creaEnvio(0, 0, 0, new Cliente(), new Cliente());
+        servicio.creaEnvio(10, 50, 40, new Cliente("Almería"), new Cliente("Zamora"));
     }
 }

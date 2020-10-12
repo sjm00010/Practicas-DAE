@@ -29,14 +29,9 @@ public class Paso {
     
     /**
      * Función constructora parametrizada de la clase.
-     * 
-     * @param fecha Parámetro que anota la fecha de llegada de un paquete cuando llega a un punto de control y cuando sale al siguiente punto de control anota su fecha de salida.
-     * @param inOut Parámetro el cual nos sirve para identificar si el envio llega o sale de un punto de control.
      * @param pasoPuntos Parámetro con los puntos de control por los que ha pasado el envío.
      */
-    public Paso(LocalDate fecha, boolean inOut,PuntoControl pasoPuntos){
-        this.fecha = fecha;
-        this.inOut = inOut;
+    public Paso(PuntoControl pasoPuntos){
         this.pasoPuntos = pasoPuntos;
     }
     

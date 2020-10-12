@@ -47,7 +47,7 @@ public class Oficina implements PuntoControl {
     }
 
     @Override
-    public void actualizar(int idEnvio, LocalDate fecha, boolean inOut) {
+    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

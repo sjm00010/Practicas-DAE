@@ -15,19 +15,19 @@ import java.util.ArrayList;
  */
 public class CentroLogistico implements PuntoControl {
 
-    private int id;
+    private String id;
     private String nombre;
     private String localizacion;
-    private ArrayList<Integer> conexiones;
+    private ArrayList<String> conexiones;
 
     public CentroLogistico() {
-        this.id = 0;
+        this.id = null;
         this.nombre = null;
         this.localizacion = null;
         this.conexiones = new ArrayList<>();
     }
 
-    public CentroLogistico(int id, String nombre, String localizacion, ArrayList<Integer> conexiones) {
+    public CentroLogistico(String id, String nombre, String localizacion, ArrayList<String> conexiones) {
         this.id = id;
         this.nombre = nombre;
         this.localizacion = localizacion;
@@ -37,7 +37,7 @@ public class CentroLogistico implements PuntoControl {
     /**
      * @return the id
      */
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -58,12 +58,12 @@ public class CentroLogistico implements PuntoControl {
     /**
      * @return the conexiones
      */
-    public ArrayList<Integer> getConexiones() {
+    public ArrayList<String> getConexiones() {
         return conexiones;
     }
     
     @Override
-    public void actualizar(int idEnvio, LocalDate fecha, boolean inOut) {
+    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

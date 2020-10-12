@@ -4,6 +4,8 @@ import dae.ujapack.entidades.CentroLogistico;
 import dae.ujapack.entidades.Cliente;
 import dae.ujapack.entidades.Envio;
 import dae.ujapack.entidades.Oficina;
+import dae.ujapack.entidades.Paso;
+import dae.ujapack.interfaces.PuntoControl;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,9 +15,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 import javafx.util.Pair;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
@@ -26,16 +31,20 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ServicioMensajeria {
+    
+    // Variables auxiliares
+    Grafo grafo;
 
     //          Repositorio
     private Map<String, Oficina> oficinas;
-    private Map<Integer, CentroLogistico> centrosLogisticos;
+    private Map<String, CentroLogistico> centrosLogisticos;
     private Map<String, Envio> envios;
 
     public ServicioMensajeria() {
         this.oficinas = new HashMap<>();
         this.centrosLogisticos = new HashMap<>();
         this.envios = new HashMap<>();
+        this.grafo = new Grafo();
     }
     
     //            Servicio
@@ -47,7 +56,7 @@ public class ServicioMensajeria {
      * @param centro JSONObject con la información del centro a crear
      * @param i Número del centro
      */
-    private void transformarEnObjetos(JSONObject centro, int id) {
+    private void transformarEnObjetos(JSONObject centro, String id) {
 
         // Obtengo el nombre del centro
         String nombre = (String) centro.get("nombre");
@@ -56,7 +65,11 @@ public class ServicioMensajeria {
         String localizacion = (String) centro.get("localización");
 
         // Obtengo el conjunto de conexiones
-        JSONArray conexiones = (JSONArray) centro.get("conexiones");
+        JSONArray conexionesTemp = (JSONArray) centro.get("conexiones");
+        ArrayList<String> conexiones = new ArrayList<>();
+        for (Object object : conexionesTemp) {
+            conexiones.add(object.toString());
+        }
         
         centrosLogisticos.put( id ,new CentroLogistico(id, nombre, localizacion, conexiones));
         
@@ -64,7 +77,7 @@ public class ServicioMensajeria {
         JSONArray provincias = (JSONArray) centro.get("provincias");
         for (int i = 0; i < provincias.size(); i++) {
             String nombreProvincia = provincias.get(i).toString();
-            oficinas.put( nombreProvincia, new Oficina(nombreProvincia, centrosLogisticos.get(centrosLogisticos.size()-1)));
+            oficinas.put( nombreProvincia, new Oficina(nombreProvincia, centrosLogisticos.get(id)));
         }   
     }
     
@@ -92,36 +105,48 @@ public class ServicioMensajeria {
         return numero;
     }
     
-    
-    
-    // Devielve ArrayList<Paso> ruta
-    private void generaRuta(String origen, String destino){
-        // Crear resultado ArrayList<Paso> ruta
-        
+    /**
+     * Funcion que genera la ruta que ha de seguir el envio
+     * @param origen
+     * @param destino
+     * @return 
+     */
+    private ArrayList<Paso> generaRuta(String origen, String destino){
+        ArrayList<Paso> ruta = new ArrayList<>();
         Oficina oficinaOrig = oficinas.get(origen);
         Oficina oficinaDest = oficinas.get(destino);
+        System.out.println("Generando ruta");
         if(oficinaOrig != null && oficinaDest != null){
             
             // Caso 1 : Misma provincia
-            if(oficinaOrig == oficinaDest){
-                // asignar a ruta la oficinaOrig
+            if(oficinaOrig.equals(oficinaDest)){
+                ruta.add(new Paso(oficinaOrig));
             }else{
-                // Caso 2 : Distinta provincia y mismo centro
                 CentroLogistico centroOrig = oficinaOrig.getCentroAsociado();
                 CentroLogistico centroDest = oficinaDest.getCentroAsociado();
-                if(centroOrig == centroDest){
-                    // asignar a ruta la oficinaOrig, centroOrig, oficinaDest
+                if(centroOrig.equals(centroDest)){// Caso 2 : Distinta provincia y mismo centro
+                    ruta.add(new Paso(oficinaOrig));
+                    ruta.add(new Paso(centroOrig));
+                    ruta.add(new Paso(oficinaDest));
                 }else{ // Caso 3 : Distinta provincia y varios centros
-                    // Algoritmo de Dijsktra
+                    // Añado el origen
+                    ruta.add(new Paso(oficinaOrig));
+                    
+                    // Calculo y añado los centros logisticos por los que pasa
+                    List<String> centrosRuta = grafo.obtenRuta(centroOrig.getId(), centroDest.getId());
+                    for (String idCentro : centrosRuta) {
+                        ruta.add(new Paso(centrosLogisticos.get(idCentro)));
+                    }
+                    
+                    // Añado el destino
+                    ruta.add(new Paso(oficinaDest));
                 }
             }
-            
-                
-            
-            // Empezar algoritmo de creacion de ruta
         }else{
             throw new RuntimeException("Error al generar envío. Los cliente tienen una localización no valida");
         }
+        
+        return ruta;
     }
     
     // Fin funciones auxiliares
@@ -145,8 +170,14 @@ public class ServicioMensajeria {
             // Recorro todos los centros logisticos
             for (int i = 1; i <= numCentros; i++) {
                 JSONObject centro = (JSONObject) jsonParser.parse(listaCentros.get(Integer.toString(i)).toString());
-                transformarEnObjetos(centro, i);
+                transformarEnObjetos(centro, Integer.toString(i));
             }
+            
+            // Aprovecho que ya tengo lso centros para generar el grafo para la ruta
+            grafo.generaGrafo((ArrayList<CentroLogistico>) centrosLogisticos.values().stream().collect(Collectors.toList()));
+            
+            // Prueba
+            System.out.println("Centros leidos : "+centrosLogisticos.size());
             
             System.out.println("Centros y Oficinas cargadas");
         } catch (FileNotFoundException e) {
@@ -169,9 +200,14 @@ public class ServicioMensajeria {
      */
     public Pair<String, Integer> creaEnvio(int alto,int ancho,int peso, Cliente origen, Cliente destino){
         String id = generaId();
-        envios.put( id, new Envio(id, alto, ancho, peso, origen, destino));
-        return new Pair<String, Integer>(id, envios.get(envios.size()-1).calculaPrecio());
+        ArrayList<Paso> ruta = generaRuta(origen.getLocalizacion(), destino.getLocalizacion());
+        envios.put( id, new Envio(id, alto, ancho, peso, origen, destino, ruta));
+        System.out.println("Envio creado");
+        return new Pair<String, Integer>(id, envios.get(id).calculaPrecio());
     }
     
-    
+    public Pair<PuntoControl,String> obtenerSituacion(String idEnvio){
+        Envio envioActual = envios.get(idEnvio);
+        return null; // Por implementar
+    }
 }

@@ -19,20 +19,19 @@ public class Envio {
     private int peso;
     private Cliente origen;
     private Cliente destino;
-    // FALTA el Array de Pasos, añadir tras su implementación
-    // private ArrayList<Paso> ruta;
+    private ArrayList<Paso> ruta;
 
     public Envio() {
     }
 
-    // Modificar tras añadir ruta
-    public Envio(String id, int alto, int ancho, int peso, Cliente origen, Cliente destino) {
+    public Envio(String id, int alto, int ancho, int peso, Cliente origen, Cliente destino, ArrayList<Paso> ruta) {
         this.id = id;
         this.alto = alto;
         this.ancho = ancho;
         this.peso = peso;
         this.origen = origen;
         this.destino = destino;
+        this.ruta = ruta;
     }
 
     /**
@@ -77,7 +76,12 @@ public class Envio {
         return destino;
     }
     
-    // Añadir getRuta tras añadir ruta
+    /**
+     * @return the ruta
+     */
+    public ArrayList<Paso> getRuta() {
+        return ruta;
+    }
     
     /**
      * Función que calcula el precio de un envío
