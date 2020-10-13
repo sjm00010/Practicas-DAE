@@ -6,6 +6,7 @@ import dae.ujapack.entidades.Envio;
 import dae.ujapack.entidades.Oficina;
 import dae.ujapack.entidades.Paso;
 import dae.ujapack.entidades.Repartidor;
+import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.interfaces.PuntoControl;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -113,7 +114,7 @@ public class ServicioMensajeria {
      * @param destino
      * @return 
      */
-    private ArrayList<Paso> generaRuta(String origen, String destino){
+    private ArrayList<Paso> generaRuta(String origen, String destino) throws IdPuntoControlInvalido{
         ArrayList<Paso> ruta = new ArrayList<>();
         Oficina oficinaOrig = oficinas.get(origen);
         Oficina oficinaDest = oficinas.get(destino);
@@ -157,7 +158,7 @@ public class ServicioMensajeria {
             // Asigno la fecha actual a la entrada del envio
             ruta.get(0).setFecha(LocalDate.now());
         }else{
-            throw new RuntimeException("Error al generar envío. Los cliente tienen una localización no valida");
+            throw new IdPuntoControlInvalido("Error al generar envío. Los clientes tienen una localización no valida");
         }
         
         return ruta;
@@ -212,7 +213,7 @@ public class ServicioMensajeria {
      * @param destino Cliente que recibe el paquete
      * @return Pair<String, Integer> Identificador y precio
      */
-    public Pair<String, Integer> creaEnvio(int alto,int ancho,int peso, Cliente origen, Cliente destino){
+    public Pair<String, Integer> creaEnvio(int alto,int ancho,int peso, Cliente origen, Cliente destino) throws IdPuntoControlInvalido{
         String id = generaId();
         ArrayList<Paso> ruta = generaRuta(origen.getLocalizacion(), destino.getLocalizacion());
         envios.put( id, new Envio(id, alto, ancho, peso, origen, destino, ruta));
@@ -248,7 +249,7 @@ public class ServicioMensajeria {
      * @param inOut Entrada o salida del punto de control
      * @param pc Identificador del punto de control. Si es repartidor poner "Repartidor"
      */
-    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut, String idPc){
+    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut, String idPc) throws IdPuntoControlInvalido{
         PuntoControl punto = null;
         if(idPc.equals("Repartidor"))
             punto = new Repartidor();
@@ -258,7 +259,7 @@ public class ServicioMensajeria {
                 punto = centrosLogisticos.get(idPc);
         } 
         if(punto == null){
-            throw new RuntimeException("Error al actualizar envío. ID del punto de control invalido");
+            throw new IdPuntoControlInvalido("Error al actualizar envío. ID del punto de control invalido");
         }
         envios.get(idEnvio).actualizar(fecha, inOut, punto);
     }
