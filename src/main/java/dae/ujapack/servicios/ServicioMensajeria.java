@@ -29,6 +29,15 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
 
 /**
+ * Enumeración con los posibles estados del envío
+ */
+enum Estado {
+  EN_TRANSITO,
+  EN_REPARTO,
+  ENTREGADO
+}
+
+/**
  *
  * @author sjm00010
  */
@@ -231,12 +240,12 @@ public class ServicioMensajeria {
         String estado;
         if(punto.getPasoPuntos().getClass() == CentroLogistico.class ||
                 punto.getPasoPuntos().getClass() == Oficina.class){
-            estado = "en transito";
+            estado = Estado.EN_TRANSITO.toString();
         }else{
             if (punto.isInOut()){
-                estado = "entregado";
+                estado = Estado.ENTREGADO.toString();
             }else{
-                estado = "en reparto";
+                estado = Estado.EN_REPARTO.toString();
             }
         }
         return new Pair<PuntoControl, String>(punto.getPasoPuntos(), estado);
