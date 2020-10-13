@@ -22,11 +22,6 @@ import org.springframework.context.ApplicationContext;
 public class UjaPackApp {
     
     /*
-    Dudas :
-     - Quien crea el cliente? Es la oficina pero lo almacena el envio, esta bien??
-     - A*, libreria para ruta JGrapht
-     - Metodos actualizar deben llamar al Servicio, se puede?? Como hacerlo??
-    
     Mejoras:
      - Identificar al repartidor dentro de la ruta, con un nombre por dejecto. EJ. String id = "Repartidor";
      - Que la interfaz tenga los IDs como atributo (en caso de que se haga el punto anterior)
