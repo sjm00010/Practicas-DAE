@@ -7,6 +7,7 @@ package dae.ujapack.app;
 
 import dae.ujapack.entidades.Cliente;
 import dae.ujapack.interfaces.PuntoControl;
+import dae.ujapack.servicios.ServicioCarga;
 import dae.ujapack.servicios.ServicioMensajeria;
 import java.time.LocalDate;
 import javafx.util.Pair;
@@ -32,7 +33,8 @@ public class UjaPackApp {
         ApplicationContext context = servidor.run(args);
         
         ServicioMensajeria servicio = (ServicioMensajeria) context.getBean("servicioMensajeria");
-        servicio.cargaDatos("D:\\Usuario\\Descargas\\redujapack.json", 10); // Cambiar la ruta del archivo
+        ServicioCarga carga = (ServicioCarga) context.getBean("servicioCarga");
+        // 
         
         Pair<String, Integer> envio = servicio.creaEnvio(10, 50, 40, new Cliente("Almería"), new Cliente("Zamora"));
         servicio.actualizar(envio.getKey(), LocalDate.now(), true, "4");
