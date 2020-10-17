@@ -33,8 +33,6 @@ public class UjaPackApp {
         ApplicationContext context = servidor.run(args);
         
         ServicioMensajeria servicio = (ServicioMensajeria) context.getBean("servicioMensajeria");
-        ServicioCarga carga = (ServicioCarga) context.getBean("servicioCarga");
-        // 
         
         Pair<String, Integer> envio = servicio.creaEnvio(10, 50, 40, new Cliente("Almería"), new Cliente("Zamora"));
         servicio.actualizar(envio.getKey(), LocalDate.now(), true, "4");
