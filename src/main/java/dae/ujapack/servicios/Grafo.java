@@ -7,11 +7,13 @@ import org.jgrapht.alg.shortestpath.*;
 import org.jgrapht.graph.*;
 
 import java.util.*;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author sjm00010
  */
+@Service
 public class Grafo {
     
     private Graph<String, DefaultEdge> directedGraph;

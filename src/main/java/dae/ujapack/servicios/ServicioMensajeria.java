@@ -36,6 +36,7 @@ enum Estado {
 public class ServicioMensajeria {
     
     // Variables auxiliares
+    @Autowired
     private Grafo grafo;
     
     @Autowired
@@ -45,13 +46,6 @@ public class ServicioMensajeria {
     private Map<String, Oficina> oficinas;
     private Map<String, CentroLogistico> centrosLogisticos;
     private Map<String, Envio> envios;
-
-    /**
-     * @return the grafo
-     */
-    public Grafo getGrafo() {
-        return grafo;
-    }
 
     /**
      * @param grafo the grafo to set
@@ -106,7 +100,6 @@ public class ServicioMensajeria {
         this.oficinas = new HashMap<>();
         this.centrosLogisticos = new HashMap<>();
         this.envios = new HashMap<>();
-        this.grafo = new Grafo();
     }
     
     //            Servicio
@@ -177,7 +170,7 @@ public class ServicioMensajeria {
                     ruta.add(new Paso(oficinaOrig,true));
                     
                     // Calculo y añado los centros logisticos por los que pasa
-                    List<String> centrosRuta = getGrafo().obtenRuta(centroOrig.getId(), centroDest.getId());
+                    List<String> centrosRuta = grafo.obtenRuta(centroOrig.getId(), centroDest.getId());
                     for (String idCentro : centrosRuta) {
                         ruta.add(new Paso(getCentrosLogisticos().get(idCentro), false));
                         ruta.add(new Paso(getCentrosLogisticos().get(idCentro), true));
