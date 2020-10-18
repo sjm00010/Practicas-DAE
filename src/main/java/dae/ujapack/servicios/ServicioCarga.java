@@ -28,7 +28,7 @@ public class ServicioCarga {
     private int numCentros;
 
     public ServicioCarga() {
-        this.ruta = "D:\\Usuario\\Descargas\\redujapack.json";
+        this.ruta = "D:\\DESCARGAS\\redujapack.json";
         this.numCentros = 10;
     }
     
