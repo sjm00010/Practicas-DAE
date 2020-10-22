@@ -26,7 +26,7 @@ public class CentroLogistico implements PuntoControl {
     @NotBlank
     private String localizacion;
     /** Conexiones asociadas a un centro logístico*/
-    @NotBlank
+    @NotNull
     private ArrayList<String> conexiones;
 
     public CentroLogistico() {
@@ -68,6 +68,7 @@ public class CentroLogistico implements PuntoControl {
      * @return the conexiones
      */
     public ArrayList<String> getConexiones() {
+
         return conexiones;
     }
     
