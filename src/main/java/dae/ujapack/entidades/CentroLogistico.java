@@ -8,16 +8,24 @@ package dae.ujapack.entidades;
 import dae.ujapack.interfaces.PuntoControl;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  *
  * @author juanc
  */
 public class CentroLogistico implements PuntoControl {
-
+    /** Identificador del centro logístico*/
+    @NotNull
     private String id;
+    /** Nombre del centro logístico*/
+    @NotBlank
     private String nombre;
+    /** Ubicación del centro logístico*/
+    @NotBlank
     private String localizacion;
+    /** Conexiones asociadas a un centro logístico*/
     private ArrayList<String> conexiones;
 
     public CentroLogistico() {
