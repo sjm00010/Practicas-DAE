@@ -80,6 +80,13 @@ public class ServicioMensajeria {
     public Map<String, Envio> getEnvios() {
         return envios;
     }
+    
+    /**
+     * @return un envios
+     */
+    public Envio getEnvio(String id) {
+        return envios.get(id);
+    }
 
     /**
      * @param envios the envios to set
@@ -131,35 +138,31 @@ public class ServicioMensajeria {
     }
     
     /**
-     * Funcion que genera la ruta que ha de seguir el envio
-     * @param origen
-     * @param destino
-     * @return 
+     * Función que genera la ruta que ha de seguir el envio
+     * @param origen Oficina origen
+     * @param destino Oficina destino
+     * @return ArrayList<Paso> Ruta calculada
      */
     private ArrayList<Paso> generaRuta(String origen, String destino) throws IdPuntoControlInvalido{
         ArrayList<Paso> ruta = new ArrayList<>();
         Oficina oficinaOrig = getOficinas().get(origen);
         Oficina oficinaDest = getOficinas().get(destino);
-        System.out.println("Generando ruta");
         if(oficinaOrig != null && oficinaDest != null){
-            // Caso 1 : Misma provincia
-            if(oficinaOrig.equals(oficinaDest)){
-                ruta.add(new Paso(oficinaOrig, false));
-                ruta.add(new Paso(oficinaOrig, true));
-            }else{
+            
+            // Caso 1 : Misma provincia (BASE PARA TODOS LOS CASOS)
+            ruta.add(new Paso(oficinaOrig, false, LocalDate.now()));
+            ruta.add(new Paso(oficinaOrig, true));
+            
+            if(!oficinaOrig.equals(oficinaDest)){
                 CentroLogistico centroOrig = oficinaOrig.getCentroAsociado();
                 CentroLogistico centroDest = oficinaDest.getCentroAsociado();
+                
                 if(centroOrig.equals(centroDest)){// Caso 2 : Distinta provincia y mismo centro
-                    ruta.add(new Paso(oficinaOrig,false));
-                    ruta.add(new Paso(oficinaOrig,true));
                     ruta.add(new Paso(centroOrig,false));
                     ruta.add(new Paso(centroOrig,true));
                     ruta.add(new Paso(oficinaDest,false));
                     ruta.add(new Paso(oficinaDest,true));
-                }else{ // Caso 3 : Distinta provincia y varios centros
-                    // Añado el origen
-                    ruta.add(new Paso(oficinaOrig,false));
-                    ruta.add(new Paso(oficinaOrig,true));
+                }else{ // Caso 3 : Distinta provincia y varios centros  
                     
                     // Calculo y añado los centros logisticos por los que pasa
                     List<String> centrosRuta = grafo.obtenRuta(centroOrig.getId(), centroDest.getId());
@@ -176,9 +179,6 @@ public class ServicioMensajeria {
             // Añado el final de la ruta
             ruta.add(new Paso(new Repartidor(), false));
             ruta.add(new Paso(new Repartidor(), true));
-            
-            // Asigno la fecha actual a la entrada del envio
-            ruta.get(0).setFecha(LocalDate.now());
         }else{
             throw new IdPuntoControlInvalido("Error al generar envío. Los clientes tienen una localización no valida");
         }
@@ -203,7 +203,6 @@ public class ServicioMensajeria {
         String id = generaId();
         ArrayList<Paso> ruta = generaRuta(origen.getLocalizacion(), destino.getLocalizacion());
         getEnvios().put( id, new Envio(id, alto, ancho, peso, origen, destino, ruta));
-        System.out.println("Envio creado");
         return new Pair<String, Integer>(id, getEnvios().get(id).getPrecio());
     }
     

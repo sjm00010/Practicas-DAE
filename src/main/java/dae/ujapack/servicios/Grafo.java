@@ -39,8 +39,6 @@ public class Grafo {
                 directedGraph.addEdge(nodo.getId(), String.valueOf(conexiones.get(i)));
             }
         }
-        
-        System.out.println("Grafo creado");
     }
     
     /**

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dae.ujapack.entidades;
 
 import dae.ujapack.interfaces.PuntoControl;
@@ -26,8 +21,20 @@ public class Paso {
     @NotNull
     private PuntoControl pasoPuntos;
     
+        /**
+     * Constructor parametrizado
+     * @param pasoPuntos Parámetro con los puntos de control por los que ha pasado el envío.
+     * @param inOut Indica la entrada(False) o salida(True) del punto
+     * @param fecha Fecha del paso por el punto de control
+     */
+    public Paso(PuntoControl pasoPuntos, boolean inOut, LocalDate fecha){
+        this.pasoPuntos = pasoPuntos;
+        this.inOut = inOut;
+        this.fecha = fecha;
+    }
+    
     /**
-     * Función constructora parametrizada de la clase.
+     * Función constructora parametrizada para cuando se crea la ruta.
      * @param pasoPuntos Parámetro con los puntos de control por los que ha pasado el envío.
      * @param inOut Indica la entrada(False) o salida(True) del punto
      */
@@ -35,7 +42,7 @@ public class Paso {
         this.pasoPuntos = pasoPuntos;
         this.inOut = inOut;
     }
-    
+       
     /**
      * @return the fecha
      */

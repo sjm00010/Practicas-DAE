@@ -77,7 +77,6 @@ public class ServicioCarga {
         JSONParser jsonParser = new JSONParser();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ruta), "UTF-8"));) {
-            System.out.println("Archivo leido");
             
             // Leo el archivo JSON
             JSONObject listaCentros = (JSONObject) jsonParser.parse(reader);
@@ -91,14 +90,9 @@ public class ServicioCarga {
             // Aprovecho que ya tengo lso centros para generar el grafo para la ruta
             grafo.generaGrafo((ArrayList<CentroLogistico>) centrosLogisticos.values().stream().collect(Collectors.toList()));
             
-            // Prueba
-            System.out.println("Centros leidos : "+centrosLogisticos.size());
-            
             sm.setCentrosLogisticos(centrosLogisticos);
             sm.setOficinas(oficinas);
             sm.setGrafo(grafo);
-            
-            System.out.println("Centros y Oficinas cargadas");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
