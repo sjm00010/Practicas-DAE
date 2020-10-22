@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -25,13 +24,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServicioCarga {
     private String ruta; // Ruta del archivo .json
-    private int numCentros;
+    private int numCentros; // Número de centros que contiene el archivo
 
     public ServicioCarga() {
-        this.ruta = "D:\\DESCARGAS\\redujapack.json";
+        this.ruta = System.getProperty("user.dir")+"\\redujapack.json";
         this.numCentros = 10;
     }
-    
     
     /**
      * Función que crea los centros y oficinas a partir de la información leída del json
@@ -66,7 +64,6 @@ public class ServicioCarga {
     
     /**
      * Función que carga los datos del fichero json
-     *
      * @param ServicioMensajeria Servicio al que ha de cargar los datos
      */
     public void cargaDatos(ServicioMensajeria sm) {
@@ -80,7 +77,6 @@ public class ServicioCarga {
         JSONParser jsonParser = new JSONParser();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ruta), "UTF-8"));) {
-            System.out.println("Archivo leido");
             
             // Leo el archivo JSON
             JSONObject listaCentros = (JSONObject) jsonParser.parse(reader);
@@ -94,14 +90,9 @@ public class ServicioCarga {
             // Aprovecho que ya tengo lso centros para generar el grafo para la ruta
             grafo.generaGrafo((ArrayList<CentroLogistico>) centrosLogisticos.values().stream().collect(Collectors.toList()));
             
-            // Prueba
-            System.out.println("Centros leidos : "+centrosLogisticos.size());
-            
             sm.setCentrosLogisticos(centrosLogisticos);
             sm.setOficinas(oficinas);
             sm.setGrafo(grafo);
-            
-            System.out.println("Centros y Oficinas cargadas");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -110,5 +101,4 @@ public class ServicioCarga {
             e.printStackTrace();
         }
     }
-    
 }
