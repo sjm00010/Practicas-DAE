@@ -1,7 +1,7 @@
 package dae.ujapack.servicios;
 
 import dae.ujapack.entidades.CentroLogistico;
-import dae.ujapack.entidades.Cliente;
+import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.entidades.Envio;
 import dae.ujapack.entidades.Oficina;
 import dae.ujapack.entidades.Paso;
@@ -18,15 +18,7 @@ import javafx.util.Pair;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-/**
- * Enumeración con los posibles estados del envío
- */
-enum Estado {
-  EN_TRANSITO,
-  EN_REPARTO,
-  ENTREGADO
-}
+import util.util.Estado;
 
 /**
  *
@@ -212,7 +204,7 @@ public class ServicioMensajeria {
         ArrayList<Paso> ruta = generaRuta(origen.getLocalizacion(), destino.getLocalizacion());
         getEnvios().put( id, new Envio(id, alto, ancho, peso, origen, destino, ruta));
         System.out.println("Envio creado");
-        return new Pair<String, Integer>(id, getEnvios().get(id).calculaPrecio());
+        return new Pair<String, Integer>(id, getEnvios().get(id).getPrecio());
     }
     
     /**

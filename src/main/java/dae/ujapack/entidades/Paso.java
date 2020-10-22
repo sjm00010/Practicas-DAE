@@ -7,6 +7,9 @@ package dae.ujapack.entidades;
 
 import dae.ujapack.interfaces.PuntoControl;
 import java.time.LocalDate;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 
 /**
  *
@@ -14,8 +17,13 @@ import java.time.LocalDate;
  */
 public class Paso {
     
+    @PastOrPresent
     private LocalDate fecha;
+    
+    @NotEmpty
     private boolean inOut; // False entrada, True salida
+    
+    @NotNull
     private PuntoControl pasoPuntos;
     
     /**

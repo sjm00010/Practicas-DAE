@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -25,13 +24,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServicioCarga {
     private String ruta; // Ruta del archivo .json
-    private int numCentros;
+    private int numCentros; // Número de centros que contiene el archivo
 
     public ServicioCarga() {
-        this.ruta = "D:\\DESCARGAS\\redujapack.json";
+        this.ruta = System.getProperty("user.dir")+"\\redujapack.json";
         this.numCentros = 10;
     }
-    
     
     /**
      * Función que crea los centros y oficinas a partir de la información leída del json
@@ -66,7 +64,6 @@ public class ServicioCarga {
     
     /**
      * Función que carga los datos del fichero json
-     *
      * @param ServicioMensajeria Servicio al que ha de cargar los datos
      */
     public void cargaDatos(ServicioMensajeria sm) {
@@ -110,5 +107,4 @@ public class ServicioCarga {
             e.printStackTrace();
         }
     }
-    
 }

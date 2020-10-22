@@ -1,22 +1,26 @@
-package dae.ujapack.entidades;
+package dae.ujapack.objetosvalor;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 /**
  *
  * @author sjm00010
  */
 public class Cliente {
+    
+    @Pattern(regexp="\\d{8}[A-HJ-NP-TV-Z]")
     private String dni;
+    
+    @NotBlank
     private String nombre;
+    
+    @NotBlank
     private String apellidos;
+    
+    @NotBlank
     private String localizacion;
-
-    public Cliente(String localizacion) {
-        // Para hacer la prueba
-        this.dni="111111111A";
-        this.nombre="Prueba";
-        this.apellidos="Pruebas";
-        this.localizacion = localizacion;
-    }
+    
 
     public Cliente(String dni, String nombre, String apellidos, String localizacion) {
         this.dni = dni;

@@ -1,0 +1,162 @@
+{
+    "1":{
+       "nombre":"CL Andalucía-Extremadura",
+       "localización":"Sevilla",
+       "provincias":[
+          "Almería",
+          "Cádiz",
+          "Córdoba",
+          "Granada",
+          "Huelva",
+          "Jaén",
+          "Málaga",
+          "Sevilla",
+          "Badajoz",
+          "Cáceres",
+          "Melilla",
+          "Ceuta"
+       ],
+       "conexiones":[
+          2,
+          3
+       ]
+    },
+    "2":{
+       "nombre":"CL Castilla La Mancha",
+       "localización":"Toledo",
+       "provincias":[
+          "Albacete",
+          "Ciudad Real",
+          "Cuenca",
+          "Guadalajara",
+          "Toledo"
+       ],
+       "conexiones":[
+          1,
+          9,
+          3
+       ]
+    },
+    "3":{
+       "nombre":"CL Levante",
+       "localización":"Valencia",
+       "provincias":[
+          "Castellón",
+          "Valencia",
+          "Alicante",
+          "Murcia",
+          "Islas Baleares"
+       ],
+       "conexiones":[
+          2,
+          1,
+          5
+       ]
+    },
+    "4":{
+       "nombre":"CL Castilla León-Rioja",
+       "localización":"Valladolid",
+       "provincias":[
+          "León",
+          "Zamora",
+          "Salamanca",
+          "Palencia",
+          "Valladolid",
+          "Avila",
+          "Burgos",
+          "Segovia",
+          "Soria",
+          "La Rioja"
+       ],
+       "conexiones":[
+          9,
+          7,
+          8,
+          6
+       ]
+    },
+    "5":{
+       "nombre":"CL Cataluña",
+       "localización":"Barcelona",
+       "provincias":[
+          "Lleida",
+          "Girona",
+          "Barcelona",
+          "Tarragona"
+       ],
+       "conexiones":[
+          3,
+          6
+       ]
+    },
+    "6":{
+       "nombre":"CL Aragón-Navarra",
+       "localización":"Zaragoza",
+       "provincias":[
+          "Zaragoza",
+          "Huesca",
+          "Navarra",
+          "Teruel"
+       ],
+       "conexiones":[
+          9,
+          5,
+          7,
+          4
+       ]
+    },
+    "7":{
+       "nombre":"CL Pais Vasco-Cantabria",
+       "localización":"Vitoria",
+       "provincias":[
+          "Vizcaya",
+          "Alava",
+          "San Sebastián",
+          "Cantabria"
+       ],
+       "conexiones":[
+          6,
+          4,
+          8
+       ]
+    },
+    "8":{
+       "nombre":"CL Galicia-Asturias",
+       "localización":"Orense",
+       "provincias":[
+          "La Coruña",
+          "Lugo",
+          "Orense",
+          "Pontevedra",
+          "Asturias"
+       ],
+       "conexiones":[
+          7,
+          4
+       ]
+    },
+    "9":{
+       "nombre":"CL Madrid",
+       "localización":"Madrid",
+       "provincias":[
+          "Madrid"
+       ],
+       "conexiones":[
+          6,
+          4,
+          2,
+          10
+       ]
+    },
+    "10":{
+       "nombre":"CL Canarias",
+       "localización":"Santa Cruz de Tenerife",
+       "provincias":[
+          "Santa Cruz de Tenerife",
+          "Las Palmas"
+       ],
+       "conexiones":[
+          9
+       ]
+    }
+ }

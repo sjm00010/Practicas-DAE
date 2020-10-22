@@ -1,26 +1,42 @@
 package dae.ujapack.entidades;
 
+import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.interfaces.PuntoControl;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import javax.validation.constraints.*;
 
 /**
  *
  * @author sjm00010
  */
 public class Envio {
+    
+    @Size(min=10, max=10)
     private String id;
+    
+    @Positive
     private int alto;
+    
+    @Positive
     private int ancho;
+    
+    @Positive
     private int peso;
-    private Cliente origen;
+    
+    
+    @NotNull
+    private Cliente origen; 
+    
+    @NotNull
     private Cliente destino;
+    
+    @NotNull
     private ArrayList<Paso> ruta;
-
-    public Envio() {
-    }
-
-    public Envio(String id, int alto, int ancho, int peso, Cliente origen, Cliente destino, ArrayList<Paso> ruta) {
+    
+    // Para no hacer mas engorrosa la creacion del envio el cliente ya viene creado, solo se vincula
+    public Envio(String id, int alto, int ancho, int peso, Cliente origen, 
+            Cliente destino, ArrayList<Paso> ruta) {
         this.id = id;
         this.alto = alto;
         this.ancho = ancho;
@@ -83,7 +99,7 @@ public class Envio {
      * Función que calcula el precio de un envío
      * @return precio
      */
-    public int calculaPrecio(){
+    public int getPrecio(){
         int numPc = 0;
         for (Paso paso : ruta) {
             if(paso.getPasoPuntos().getClass() == CentroLogistico.class)
