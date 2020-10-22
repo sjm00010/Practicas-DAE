@@ -26,6 +26,7 @@ public class CentroLogistico implements PuntoControl {
     @NotBlank
     private String localizacion;
     /** Conexiones asociadas a un centro logístico*/
+    @NotBlank
     private ArrayList<String> conexiones;
 
     public CentroLogistico() {
