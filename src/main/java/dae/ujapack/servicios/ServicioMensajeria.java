@@ -6,6 +6,7 @@ import dae.ujapack.entidades.Envio;
 import dae.ujapack.entidades.Oficina;
 import dae.ujapack.entidades.Paso;
 import dae.ujapack.entidades.Repartidor;
+import dae.ujapack.errores.EnvioNoExiste;
 import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.interfaces.PuntoControl;
 import java.time.LocalDate;
@@ -203,7 +204,12 @@ public class ServicioMensajeria {
      * @param inOut Entrada o salida del punto de control
      * @param idPc Identificador del punto de control. Si es repartidor poner "Repartidor"
      */
-    public void actualizar(@Size(min=10, max=10) String idEnvio, @PastOrPresent LocalDate fecha, boolean inOut, @NotBlank String idPc){
+    public void actualizar(@Size(min=10, max=10) String idEnvio, 
+            @PastOrPresent LocalDate fecha, boolean inOut, @NotBlank String idPc){
+        
+        if(!envios.containsKey(idEnvio))
+            throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);
+        
         PuntoControl punto = null;
         if(idPc.equals("Repartidor"))
             punto = new Repartidor();
@@ -211,10 +217,6 @@ public class ServicioMensajeria {
             punto = getOficinas().get(idPc);
             if(punto == null)
                 punto = getCentrosLogisticos().get(idPc);
-        }
-        
-        if(punto == null){
-            throw new IdPuntoControlInvalido("Error al actualizar envío. ID del punto de control invalido");
         }
         
         envios.get(idEnvio).actualizar(fecha, inOut, punto);

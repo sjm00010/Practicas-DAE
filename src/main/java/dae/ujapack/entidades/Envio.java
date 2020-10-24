@@ -113,7 +113,10 @@ public class Envio {
      */
     public void actualizar(LocalDate fecha, boolean inOut, PuntoControl pc){
         /* Se busca en los pasos aquel que tenga el PuntoControl igual al
-           dado y que coincida con el valor de inOut para añadirle la fecha */        
+           dado y que coincida con el valor de inOut para añadirle la fecha */
+        if(pc == null)
+            throw new IdPuntoControlInvalido("Punton de control nulo");
+        
         boolean anterior = false, esta = false;
         for (Paso paso : ruta) {
             if(paso.getPasoPuntos().getId().equals(pc.getId()) && paso.isInOut() == inOut){
