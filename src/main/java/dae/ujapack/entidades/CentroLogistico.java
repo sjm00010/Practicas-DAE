@@ -61,9 +61,4 @@ public class CentroLogistico implements PuntoControl {
     public ArrayList<String> getConexiones() {
         return conexiones;
     }
-    
-    @Override
-    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

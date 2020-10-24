@@ -12,11 +12,5 @@ import java.time.LocalDate;
  *
  * @author sjm00010
  */
-public class Repartidor implements PuntoControl{
-
-    @Override
-    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+public class Repartidor implements PuntoControl{   
 }
