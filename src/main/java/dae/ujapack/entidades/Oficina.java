@@ -7,14 +7,19 @@ package dae.ujapack.entidades;
 
 import dae.ujapack.interfaces.PuntoControl;
 import java.time.LocalDate;
+import javax.validation.constraints.NotNull;
 
 /**
  *
  * @author juanc
  */
 public class Oficina implements PuntoControl {
-
+    
+    /**Nombre de la oficina*/
+    @NotNull
     private String nombre;
+    /**Centro logístico asociado a la oficina*/
+    @NotNull
     private CentroLogistico centroAsociado;
 
     public Oficina() {
