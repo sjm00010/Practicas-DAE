@@ -5,4 +5,7 @@ package dae.ujapack.interfaces;
  * @author juanc
  */
 public interface PuntoControl {
+    String id = "";
+    
+    public String getId();
 }

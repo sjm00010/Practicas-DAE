@@ -1,6 +1,7 @@
 package dae.ujapack.entidades;
 
 import dae.ujapack.errores.IdPuntoControlInvalido;
+import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.interfaces.PuntoControl;
 import java.time.LocalDate;
@@ -9,7 +10,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- *
+ * Entidad envio
  * @author sjm00010
  */
 public class Envio {
@@ -26,7 +27,6 @@ public class Envio {
     @Positive
     private int peso;
     
-    
     @Valid
     private Cliente origen; 
     
@@ -36,9 +36,9 @@ public class Envio {
     @NotNull
     private ArrayList<@Valid Paso> ruta;
     
-    // Para no hacer mas engorrosa la creacion del envio el cliente ya viene creado, solo se vincula
+    // Para no hacer mas engorrosa la creación del envio el cliente ya viene creado, solo se vincula
     public Envio(String id, int alto, int ancho, int peso, Cliente origen, 
-            Cliente destino, ArrayList<Paso> ruta) {
+            Cliente destino, ArrayList<@Valid Paso> ruta) {
         this.id = id;
         this.alto = alto;
         this.ancho = ancho;
@@ -111,18 +111,40 @@ public class Envio {
      * @param inOut Entrada o salida del Paso
      * @param pc Punto de control a actualizar
      */
-    public void actualizar(LocalDate fecha, boolean inOut, PuntoControl pc) throws IdPuntoControlInvalido{
+    public void actualizar(LocalDate fecha, boolean inOut,@Valid PuntoControl pc){
         /* Se busca en los pasos aquel que tenga el PuntoControl igual al
            dado y que coincida con el valor de inOut para añadirle la fecha */
-        Paso encontrado = ruta.stream()
-                            .filter(paso -> paso.getFecha() == null || (paso.getPasoPuntos().equals(pc) && paso.isInOut() == inOut))
-                            .findFirst().orElseThrow(() -> new IdPuntoControlInvalido("Se intenta actualizar un punto que no esta en la ruta"));
-
-        if(encontrado.getPasoPuntos().equals(pc)){
-            encontrado.setFecha(fecha);
-        }else{
-            throw new RuntimeException();
+        
+//        if(ruta.stream().reduce(null, (anterior, actual) -> actual.getPasoPuntos().getId() == pc.getId() ? actual : anterior ).equals(pc))
+//            throw new IdPuntoControlInvalido("Se intenta actualizar un punto que no esta en la ruta");
+        
+        boolean anterior = false, esta = false;
+        for (Paso paso : ruta) {
+            if(paso.getPasoPuntos().equals(pc) && paso.isInOut() == inOut){
+                paso.setFecha(fecha);
+                esta = true;
+                break;
+            }else if(paso.getFecha() == null ){
+                anterior = true;
+            }
         }
+        
+        if (!esta)
+            throw new IdPuntoControlInvalido("Se intenta actualizar un punto que no esta en la ruta");
+        else if (anterior)
+            throw new PuntosAnterioresNulos("Algun punto anterior no ha sido actualizado");
+        
+        
+//        Paso encontrado = ruta.stream()
+//                            .filter(paso -> paso.getFecha() == null || (paso.getPasoPuntos().equals(pc) && paso.isInOut() == inOut))
+//                            .findFirst().orElse(null); // Nunca debe devolver null, ya que mientras el paquete no este entregado quedaran fechas nulas
+//
+//        // Si el primer paso es el buscado todo esta bien
+//        if(encontrado.getPasoPuntos().equals(pc) && encontrado.isInOut() == inOut){
+//            encontrado.setFecha(fecha);
+//        }else{ // Si no es que hay alun paso anterior que no se actualizo
+//            throw new PuntosAnterioresNulos("Algun punto anterior no ha sido actualizado");
+//        } 
     }
     
     /**
@@ -133,5 +155,4 @@ public class Envio {
         return ruta.stream()
                     .reduce(null, (anterior, actual) -> actual.getFecha() == null ? anterior : actual);
     }
-    
 }

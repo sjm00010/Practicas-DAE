@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
 /**
- *
+ * Entidad que representa un punto de la ruta
  * @author juanc
  */
 public class Paso {
@@ -20,7 +20,7 @@ public class Paso {
     @NotNull
     private PuntoControl pasoPuntos;
     
-        /**
+    /**
      * Constructor parametrizado
      * @param pasoPuntos Parámetro con los puntos de control por los que ha pasado el envío.
      * @param inOut Indica la entrada(False) o salida(True) del punto

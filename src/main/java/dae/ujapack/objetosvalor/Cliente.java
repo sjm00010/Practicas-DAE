@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 /**
- *
+ * Objeto valor Cliente
  * @author sjm00010
  */
 public class Cliente {
@@ -21,7 +21,6 @@ public class Cliente {
     @NotBlank
     private String localizacion;
     
-
     public Cliente(String dni, String nombre, String apellidos, String localizacion) {
         this.dni = dni;
         this.nombre = nombre;
@@ -56,7 +55,4 @@ public class Cliente {
     public String getLocalizacion() {
         return localizacion;
     }
-    
-    
-    
 }

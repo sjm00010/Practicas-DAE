@@ -1,37 +1,34 @@
 package dae.ujapack.entidades;
 
 import dae.ujapack.interfaces.PuntoControl;
-import java.time.LocalDate;
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 /**
- *
+ * Entidad oficina
  * @author juanc
  */
 public class Oficina implements PuntoControl {
     
     /**Nombre de la oficina*/
-    @NotNull
-    private String nombre;
-    /**Centro logístico asociado a la oficina*/
-    @NotNull
-    private CentroLogistico centroAsociado;
-
-    public Oficina() {
-        this.nombre = null;
-        this.centroAsociado = null;
-    }
+    @NotBlank
+    private String id;
     
-    public Oficina(String nombre, CentroLogistico centroAsociado){
-        this.nombre = nombre;
+    /**Centro logístico asociado a la oficina*/
+    @Valid
+    private CentroLogistico centroAsociado;
+    
+    public Oficina(String id, CentroLogistico centroAsociado){
+        this.id = id;
         this.centroAsociado = centroAsociado;
     }
 
     /**
      * @return the nombre
      */
-    public String getNombre() {
-        return nombre;
+    @Override
+    public String getId() {
+        return id;
     }
 
     /**

@@ -143,47 +143,8 @@ public class ServicioMensajeria {
      * @param destino Oficina destino
      * @return ArrayList<Paso> Ruta calculada
      */
-    private ArrayList<Paso> generaRuta(String origen, String destino) throws IdPuntoControlInvalido{
-        ArrayList<Paso> ruta = new ArrayList<>();
-        Oficina oficinaOrig = getOficinas().get(origen);
-        Oficina oficinaDest = getOficinas().get(destino);
-        if(oficinaOrig != null && oficinaDest != null){
-            
-            // Caso 1 : Misma provincia (BASE PARA TODOS LOS CASOS)
-            ruta.add(new Paso(oficinaOrig, false, LocalDate.now()));
-            ruta.add(new Paso(oficinaOrig, true));
-            
-            if(!oficinaOrig.equals(oficinaDest)){
-                CentroLogistico centroOrig = oficinaOrig.getCentroAsociado();
-                CentroLogistico centroDest = oficinaDest.getCentroAsociado();
-                
-                if(centroOrig.equals(centroDest)){// Caso 2 : Distinta provincia y mismo centro
-                    ruta.add(new Paso(centroOrig,false));
-                    ruta.add(new Paso(centroOrig,true));
-                    ruta.add(new Paso(oficinaDest,false));
-                    ruta.add(new Paso(oficinaDest,true));
-                }else{ // Caso 3 : Distinta provincia y varios centros  
-                    
-                    // Calculo y añado los centros logisticos por los que pasa
-                    List<String> centrosRuta = grafo.obtenRuta(centroOrig.getId(), centroDest.getId());
-                    for (String idCentro : centrosRuta) {
-                        ruta.add(new Paso(getCentrosLogisticos().get(idCentro), false));
-                        ruta.add(new Paso(getCentrosLogisticos().get(idCentro), true));
-                    }
-                    
-                    // Añado el destino
-                    ruta.add(new Paso(oficinaDest, false));
-                    ruta.add(new Paso(oficinaDest, true));
-                }
-            }
-            // Añado el final de la ruta
-            ruta.add(new Paso(new Repartidor(), false));
-            ruta.add(new Paso(new Repartidor(), true));
-        }else{
-            throw new IdPuntoControlInvalido("Error al generar envío. Los clientes tienen una localización no valida");
-        }
-        
-        return ruta;
+    private ArrayList<Paso> generaRuta(String origen, String destino){
+        return grafo.generaRuta(oficinas.get(origen), oficinas.get(destino), centrosLogisticos);
     }
     
     // Fin funciones auxiliares
@@ -234,7 +195,7 @@ public class ServicioMensajeria {
      * @param inOut Entrada o salida del punto de control
      * @param pc Identificador del punto de control. Si es repartidor poner "Repartidor"
      */
-    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut, String idPc) throws IdPuntoControlInvalido{
+    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut, String idPc){
         PuntoControl punto = null;
         if(idPc.equals("Repartidor"))
             punto = new Repartidor();

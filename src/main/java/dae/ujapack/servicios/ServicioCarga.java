@@ -34,7 +34,9 @@ public class ServicioCarga {
     /**
      * Función que crea los centros y oficinas a partir de la información leída del json
      * @param centro JSONObject con la información del centro a crear
-     * @param i Número del centro
+     * @param id Id del centro
+     * @param centrosLogisticos Mapa a rellenar con los centros
+     * @param oficinas Mapa a rellenar con las oficinas
      */
     private void transformarEnObjetos(JSONObject centro, String id, 
             Map<String, CentroLogistico> centrosLogisticos, Map<String, Oficina> oficinas) {
@@ -47,19 +49,15 @@ public class ServicioCarga {
 
         // Obtengo el conjunto de conexiones
         JSONArray conexionesTemp = (JSONArray) centro.get("conexiones");
-        ArrayList<String> conexiones = new ArrayList<>();
-        for (Object object : conexionesTemp) {
-            conexiones.add(object.toString());
-        }
+        ArrayList<String> conexiones = new ArrayList<>();        
+        conexionesTemp.forEach(conexion -> conexiones.add(conexion.toString()));
         
+        // Creo el centro y lo añado
         centrosLogisticos.put( id ,new CentroLogistico(id, nombre, localizacion, conexiones));
         
-        // Obtengo el conjunto de conexiones
+        // Obtengo el conjunto de provincias
         JSONArray provincias = (JSONArray) centro.get("provincias");
-        for (int i = 0; i < provincias.size(); i++) {
-            String nombreProvincia = provincias.get(i).toString();
-            oficinas.put( nombreProvincia, new Oficina(nombreProvincia, centrosLogisticos.get(id)));
-        }   
+        provincias.forEach(provincia -> oficinas.put(provincia.toString(), new Oficina(provincia.toString(), centrosLogisticos.get(id))));
     }
     
     /**
@@ -70,8 +68,7 @@ public class ServicioCarga {
         // Variables
         Map<String, Oficina> oficinas = new HashMap<>();
         Map<String, CentroLogistico> centrosLogisticos = new HashMap<>();
-        Grafo grafo = new Grafo();
-        
+        Grafo grafo = new Grafo();    
         
         //JSON parser object to parse read file
         JSONParser jsonParser = new JSONParser();
