@@ -1,5 +1,6 @@
 package dae.ujapack.entidades;
 
+import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.interfaces.PuntoControl;
 import java.time.LocalDate;
@@ -101,12 +102,7 @@ public class Envio {
      * @return precio
      */
     public int getPrecio(){
-        int numPc = 0;
-        for (Paso paso : ruta) {
-            if(paso.getPasoPuntos().getClass() == CentroLogistico.class)
-                numPc++;
-        }
-        return peso*(alto*ancho)* (numPc+1) / 1000;
+        return peso*(alto*ancho)* (ruta.size()/2+1) / 1000;
     }
     
     /**
@@ -118,10 +114,14 @@ public class Envio {
     public void actualizar(LocalDate fecha, boolean inOut, PuntoControl pc){
         /* Se busca en los pasos aquel que tenga el PuntoControl igual al
            dado y que coincida con el valor de inOut para añadirle la fecha */
-        for (Paso paso : ruta) {
-            if(paso.getPasoPuntos().equals(pc) && paso.isInOut() == inOut){
-                paso.setFecha(fecha);
-            }
+        Paso encontrado = ruta.stream()
+                            .filter(paso -> paso.getFecha() == null || (paso.getPasoPuntos().equals(pc) && paso.isInOut() == inOut))
+                            .findFirst().orElseThrow(() -> new IdPuntoControlInvalido("Se intenta actualizar un punto que no esta en la ruta"));
+
+        if(encontrado.getPasoPuntos().equals(pc)){
+            encontrado.setFecha(fecha);
+        }else{
+            throw new RuntimeException();
         }
     }
     
@@ -129,14 +129,9 @@ public class Envio {
      * Función que devuelve el punto actual del envío
      * @return PuntoControl punto de control actual
      */
-    public Paso getUltimoPunto(){
-        Paso ultimoPunto = null;
-        for (Paso paso : ruta) {
-            if(paso.getFecha() != null){
-                ultimoPunto = paso;
-            }
-        }
-        return ultimoPunto;
+    public Paso getUltimoPunto(){    
+        return ruta.stream()
+                    .reduce(null, (anterior, actual) -> actual.getFecha() == null ? anterior : actual);
     }
     
 }
