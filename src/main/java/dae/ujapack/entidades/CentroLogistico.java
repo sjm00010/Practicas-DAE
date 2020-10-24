@@ -2,9 +2,11 @@ package dae.ujapack.entidades;
 
 import dae.ujapack.interfaces.PuntoControl;
 import java.util.ArrayList;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Entidad Centro logístico
@@ -25,8 +27,7 @@ public class CentroLogistico implements PuntoControl {
     private String localizacion;
     
     /** Conexiones asociadas a un centro logístico*/
-    @NotNull
-    @Size(min=1)
+    @NotNull @Size(min=1)
     private ArrayList<String> conexiones;
 
     public CentroLogistico(String id, String nombre, String localizacion, ArrayList<String> conexiones) {

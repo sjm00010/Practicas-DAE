@@ -11,7 +11,6 @@ import dae.ujapack.interfaces.PuntoControl;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import javafx.util.Pair;
@@ -19,12 +18,20 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import dae.ujapack.utils.util.Estado;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+import org.springframework.validation.annotation.Validated;
 
 /**
  *
  * @author sjm00010
  */
 @Service
+@Validated
 public class ServicioMensajeria {
     
     // Variables auxiliares
@@ -101,9 +108,11 @@ public class ServicioMensajeria {
         this.envios = new HashMap<>();
     }
     
-    //            Servicio
+    /************************
+     *       Servicio       *
+     ************************
     
-    // Funciones auxiliares
+    // ------ Funciones auxiliares ------
     
     /**
      * Función para la carga de datos
@@ -143,13 +152,11 @@ public class ServicioMensajeria {
      * @param destino Oficina destino
      * @return ArrayList<Paso> Ruta calculada
      */
-    private ArrayList<Paso> generaRuta(String origen, String destino){
+    private ArrayList<Paso> generaRuta(@NotBlank String origen,@NotBlank String destino){
         return grafo.generaRuta(oficinas.get(origen), oficinas.get(destino), centrosLogisticos);
     }
     
-    // Fin funciones auxiliares
-
-
+    // ------ Fin funciones auxiliares ------
 
     /**
      * Función para crear el envío de un paquete
@@ -160,11 +167,12 @@ public class ServicioMensajeria {
      * @param destino Cliente que recibe el paquete
      * @return Pair<String, Integer> Identificador y precio
      */
-    public Pair<String, Integer> creaEnvio(int alto,int ancho,int peso, Cliente origen, Cliente destino) throws IdPuntoControlInvalido{
+    public Pair<String, Integer> creaEnvio(@Positive int alto,@Positive int ancho,
+            @Positive int peso, @Valid @NotNull Cliente origen, @Valid @NotNull Cliente destino){
         String id = generaId();
         ArrayList<Paso> ruta = generaRuta(origen.getLocalizacion(), destino.getLocalizacion());
-        getEnvios().put( id, new Envio(id, alto, ancho, peso, origen, destino, ruta));
-        return new Pair<String, Integer>(id, getEnvios().get(id).getPrecio());
+        envios.put( id, new Envio(id, alto, ancho, peso, origen, destino, ruta));
+        return new Pair<String, Integer>(id, envios.get(id).getPrecio());
     }
     
     /**
@@ -172,9 +180,11 @@ public class ServicioMensajeria {
      * @param idEnvio ID del envio a localizar
      * @return Pair<PuntoControl,String> Par con el punto de control actual y la situación
      */
-    public Pair<PuntoControl,String> obtenerSituacion(String idEnvio){
-        Paso punto = getEnvios().get(idEnvio).getUltimoPunto();
+    public Pair<PuntoControl,String> obtenerSituacion(@Size(min=10, max=10) String idEnvio){
+        Paso punto = envios.get(idEnvio).getUltimoPunto();
         String estado;
+        
+        // Calculo el estadp
         if(punto.getPasoPuntos().getClass() == CentroLogistico.class ||
                 punto.getPasoPuntos().getClass() == Oficina.class){
             estado = Estado.EN_TRANSITO.toString();
@@ -193,9 +203,9 @@ public class ServicioMensajeria {
      * @param idEnvio ID del envío a actualizar
      * @param fecha Fecha actual
      * @param inOut Entrada o salida del punto de control
-     * @param pc Identificador del punto de control. Si es repartidor poner "Repartidor"
+     * @param idPc Identificador del punto de control. Si es repartidor poner "Repartidor"
      */
-    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut, String idPc){
+    public void actualizar(@Size(min=10, max=10) String idEnvio, @PastOrPresent LocalDate fecha, boolean inOut, @NotBlank String idPc){
         PuntoControl punto = null;
         if(idPc.equals("Repartidor"))
             punto = new Repartidor();
@@ -203,10 +213,12 @@ public class ServicioMensajeria {
             punto = getOficinas().get(idPc);
             if(punto == null)
                 punto = getCentrosLogisticos().get(idPc);
-        } 
+        }
+        
         if(punto == null){
             throw new IdPuntoControlInvalido("Error al actualizar envío. ID del punto de control invalido");
         }
-        getEnvios().get(idEnvio).actualizar(fecha, inOut, punto);
+        
+        envios.get(idEnvio).actualizar(fecha, inOut, punto);
     }
 }
