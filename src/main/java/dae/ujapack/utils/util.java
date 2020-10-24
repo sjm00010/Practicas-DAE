@@ -1,4 +1,4 @@
-package util;
+package dae.ujapack.utils;
 
 /**
  * Clase que almacena ciertas util de la aplicación

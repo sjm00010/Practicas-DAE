@@ -18,7 +18,7 @@ import javafx.util.Pair;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import util.util.Estado;
+import dae.ujapack.utils.util.Estado;
 
 /**
  *

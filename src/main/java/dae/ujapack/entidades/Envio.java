@@ -4,6 +4,7 @@ import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.interfaces.PuntoControl;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
@@ -25,14 +26,14 @@ public class Envio {
     private int peso;
     
     
-    @NotNull
+    @Valid
     private Cliente origen; 
     
-    @NotNull
+    @Valid
     private Cliente destino;
     
     @NotNull
-    private ArrayList<Paso> ruta;
+    private ArrayList<@Valid Paso> ruta;
     
     // Para no hacer mas engorrosa la creacion del envio el cliente ya viene creado, solo se vincula
     public Envio(String id, int alto, int ancho, int peso, Cliente origen, 

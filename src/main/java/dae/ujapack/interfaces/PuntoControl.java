@@ -1,9 +1,7 @@
 package dae.ujapack.interfaces;
 
-import java.time.LocalDate;
-
 /**
- *
+ * Interfaz que representa los puntos de control
  * @author juanc
  */
 public interface PuntoControl {

@@ -7,10 +7,11 @@ import org.jgrapht.alg.shortestpath.*;
 import org.jgrapht.graph.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 /**
- *
+ * Servicio para la generación de la ruta
  * @author sjm00010
  */
 @Service
@@ -27,18 +28,15 @@ public class Grafo {
      * @param nodos ArrayList<CentroLogistico> Nodos del grafo
      */
     public void generaGrafo(ArrayList<CentroLogistico> nodos){
-        // Añado los nodos
-        for (CentroLogistico nodo : nodos) {
-            directedGraph.addVertex(nodo.getId());
-        }
+        // Añado los nodos        
+        Graphs.addAllVertices(directedGraph, nodos.stream()
+                                                    .map(nodo -> nodo.getId())
+                                                    .collect(Collectors.toList()));
         
         // Añado las conexiones entre los nodos
-        for (CentroLogistico nodo : nodos) {
-            ArrayList<String> conexiones = nodo.getConexiones();
-            for (int i = 0; i < conexiones.size(); i++) {
-                directedGraph.addEdge(nodo.getId(), String.valueOf(conexiones.get(i)));
-            }
-        }
+        nodos.forEach(nodo -> nodo.getConexiones().forEach(conexion -> 
+                directedGraph.addEdge(nodo.getId(), String.valueOf(conexion))
+        ));
     }
     
     /**

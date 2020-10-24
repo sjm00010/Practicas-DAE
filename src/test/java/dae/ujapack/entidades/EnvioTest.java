@@ -21,8 +21,8 @@ public class EnvioTest {
     
     @Test
     void testValidaEnvio(){
-        Cliente origen = new Cliente("111111111A", "Prueba", "Pruebas", "Almería");
-        Cliente destino = new Cliente("111111111A", "Prueba", "Pruebas", "Almería");
+        Cliente origen = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
+        Cliente destino = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
         ArrayList<String> conexiones = new ArrayList<>();
         conexiones.add("2");
         CentroLogistico centro = new CentroLogistico("1", "CL", "Andalucia", conexiones);
