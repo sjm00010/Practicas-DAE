@@ -1,5 +1,6 @@
 package dae.ujapack.servicios;
 
+import dae.ujapack.errores.EnvioNoExiste;
 import dae.ujapack.objetosvalor.Cliente;
 import javafx.util.Pair;
 import org.assertj.core.api.Assertions;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import dae.ujapack.utils.util;
+import java.time.LocalDate;
 import javax.validation.ConstraintViolationException;
 
 /**
@@ -88,5 +90,14 @@ public class ServicioMensajeriaTest {
          *   N entrada/salida del Centro Logistico(4 -> 2 de Andalucía + 2 de La Mancha) +
          *   2 entrada/salida de la Oficina destino + 2 entrada/salida del Repartidor ) */
         Assertions.assertThat(servicioUjapack.getEnvio(envio.getKey()).getRuta().size()).isEqualTo(10);  
+    }
+    
+    @Test
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
+    public void testActualizaEnvioInvalido() {        
+        // Intento actualizar un envio que no existe
+        Assertions.assertThatThrownBy(() -> {
+            servicioUjapack.actualizar("1234567890", LocalDate.now(), true, "1"); }) // En id no existe
+                .isInstanceOf(EnvioNoExiste.class);
     }
 }
