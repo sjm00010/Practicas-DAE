@@ -1,6 +1,7 @@
 package dae.ujapack.entidades;
 
 import dae.ujapack.errores.IdPuntoControlInvalido;
+import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.objetosvalor.Cliente;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,9 +23,9 @@ public class EnvioTest {
     }
     
     @Test
-    void testValidaEnvio() throws IdPuntoControlInvalido{
-        Cliente origen = new Cliente("111111111A", "Prueba", "Pruebas", "Almería");
-        Cliente destino = new Cliente("111111111A", "Prueba", "Pruebas", "Almería");
+    void testValidaEnvio(){
+        Cliente origen = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
+        Cliente destino = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
         ArrayList<String> conexiones = new ArrayList<>();
         conexiones.add("2");
         CentroLogistico centro = new CentroLogistico("1", "CL", "Andalucia", conexiones);
@@ -44,8 +45,8 @@ public class EnvioTest {
     
     @Test
     void testActualizarInvalido(){
-        Cliente origen = new Cliente("111111111A", "OtraPrueba", "Pruebas", "Almería");
-        Cliente destino = new Cliente("111111111A", "OtraPrueba", "Pruebas", "Almería");
+        Cliente origen = new Cliente("11111111A", "OtraPrueba", "Pruebas", "Almería");
+        Cliente destino = new Cliente("11111111A", "OtraPrueba", "Pruebas", "Almería");
         ArrayList<String> conexiones = new ArrayList<>();
         conexiones.add("2");
         CentroLogistico centro = new CentroLogistico("1", "CL", "Andalucia-Extremadura", conexiones);
@@ -57,20 +58,15 @@ public class EnvioTest {
 
         Envio envio = new Envio("2437843955", 2, 2, 2, origen, destino, ruta);
         
-        /*Comprobar que el el centro existe a través de la comprobación
-          de la existencia de su ID. En caso de que no exista se lanza 
-          excepción del tipo IdPuntoControlInvalido */
+        /* Pasamos un centro de control no existente en la ruta */
         assertThatThrownBy(() -> {envio.actualizar(LocalDate.now(), true, null); })
                 .isInstanceOf(IdPuntoControlInvalido.class);
         }
     
-    
-
-
     @Test
-    void testCompruebaUltimoPC() throws IdPuntoControlInvalido{
-        Cliente origen = new Cliente("222222222A", "OtraPrueba", "Pruebas", "Almería");
-        Cliente destino = new Cliente("222222222A", "OtraPrueba", "Pruebas", "Almería");
+    void testCompruebaUltimoPC(){
+        Cliente origen = new Cliente("12345678A", "OtraPrueba", "Pruebas", "Almería");
+        Cliente destino = new Cliente("12345678A", "OtraPrueba", "Pruebas", "Almería");
         ArrayList<String> conexiones = new ArrayList<>();
         conexiones.add("2");
         CentroLogistico centro = new CentroLogistico("1", "CL", "Andalucia-Extremadura", conexiones);
@@ -84,28 +80,25 @@ public class EnvioTest {
         // Comprobar la obtención del último pc. Para ello primero actualiza y luego trata de obtenerlo.
         envio.actualizar(LocalDate.now(), true, centro);
         Assertions.assertThat(envio.getUltimoPunto()).isEqualTo(ruta.get(0));
+    }
+    
+    @Test
+    void testCompruebaAnterioresNull(){
+        Cliente origen = new Cliente("12345678A", "OtraPrueba", "Pruebas", "Almería");
+        Cliente destino = new Cliente("12345678A", "OtraPrueba", "Pruebas", "Almería");
+        ArrayList<String> conexiones = new ArrayList<>();
+        conexiones.add("2");
+        CentroLogistico centro = new CentroLogistico("1", "CL", "Andalucia-Extremadura", conexiones);
+        CentroLogistico centro2 = new CentroLogistico("2", "CL", "Castilla La Mancha", conexiones);
+        ArrayList<Paso> ruta = new ArrayList<>();
+        ruta.add(new Paso(centro, true));
+        ruta.add(new Paso(centro2, true));
+        
+        Envio envio = new Envio("1234567890", 5, 5, 5, origen, destino, ruta);
+    
+        // Comprobar actualizar centro sin actualizar anteriores
+        assertThatThrownBy(() -> {envio.actualizar(LocalDate.now(), true, centro2); })
+                .isInstanceOf(PuntosAnterioresNulos.class);
+    }
 }
     
-}
-    // TO DO : Comprobar actualizar centro sin actualizar anteriores (Crear error)
- 
-
-              
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

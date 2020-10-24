@@ -1,17 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dae.ujapack.errores;
 
 /**
- * Excepción provocada debido a que los puntos anteriores son nulos. 
+ * Excepción provocada debido a que algun punto anterior en la ruta tiene fecha nula. 
  * @author juanc
  */
-public class PuntosAnterioresNulos extends Exception{
+public class PuntosAnterioresNulos extends RuntimeException{
     public PuntosAnterioresNulos(String errorMessage){
         super(errorMessage);
     }
-    
 }

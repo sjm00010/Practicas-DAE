@@ -1,22 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dae.ujapack.entidades;
 
 import dae.ujapack.interfaces.PuntoControl;
-import java.time.LocalDate;
 
 /**
- *
+ * Entidad Repartidor, solo sirve para representar el punto de la ruta del repartidor
  * @author sjm00010
  */
 public class Repartidor implements PuntoControl{
+    private String id;
+
+    /*  Es informacion irrelevante, solo sirve para identificar que que punto es 
+        de tipo repartidor */
+    public Repartidor() {
+        this.id="Repartidor";
+    }
 
     @Override
-    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getId() {
+        return this.id;
     }
-    
 }

@@ -1,10 +1,6 @@
 package dae.ujapack.servicios;
 
-import dae.ujapack.entidades.Oficina;
-import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.objetosvalor.Cliente;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.util.Pair;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.MethodMode;
-import util.util;
+import dae.ujapack.utils.util;
+import javax.validation.ConstraintViolationException;
 
 /**
  * Test para ServicioMensajeria
@@ -32,18 +29,17 @@ public class ServicioMensajeriaTest {
     @Test
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testCreaEnvioInvalido() {
-        Cliente cliente = new Cliente("111111111A", "Prueba", "Pruebas", "Almería");        
+        Cliente cliente = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");        
         
         Assertions.assertThatThrownBy(() -> {
-            // No tiene destino, es nulo.
-            servicioUjapack.creaEnvio(5, 5, 5, cliente, null); })
-                .isInstanceOf(NullPointerException.class);
+            servicioUjapack.creaEnvio(5, 5, 5, cliente, null); }) // No tiene destino, es nulo.
+                .isInstanceOf(ConstraintViolationException.class);
     }
 
     @Test
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
-    public void testGetSituacionEnvio() throws IdPuntoControlInvalido {
-        Cliente cliente = new Cliente("111111111A", "Prueba", "Pruebas", "Almería");
+    public void testGetSituacionEnvio() {
+        Cliente cliente = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
         Pair<String, Integer> envio = servicioUjapack.creaEnvio(5, 5, 5, cliente, cliente);
         
         // Compruebo que esta en transito, dado que sigue la oficina de origen
@@ -52,8 +48,8 @@ public class ServicioMensajeriaTest {
     
     @Test
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
-    public void testEnvioRutaCaso1() throws IdPuntoControlInvalido {
-        Cliente cliente = new Cliente("111111111A", "Prueba", "Pruebas", "Almería");
+    public void testEnvioRutaCaso1() {
+        Cliente cliente = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
         
         // Creación de envio con Origen y destino en la misma Oficina(Provincia)
         Pair<String, Integer> envio = servicioUjapack.creaEnvio(5, 5, 5, cliente, cliente);
@@ -65,9 +61,9 @@ public class ServicioMensajeriaTest {
     
     @Test
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
-    public void testEnvioRutaCaso2() throws IdPuntoControlInvalido {
-        Cliente origen = new Cliente("111111111A", "Prueba", "Pruebas", "Jaén");
-        Cliente destino = new Cliente("111111111A", "Prueba", "Pruebas", "Almería");
+    public void testEnvioRutaCaso2() {
+        Cliente origen = new Cliente("11111111A", "Prueba", "Pruebas", "Jaén");
+        Cliente destino = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
         
         // Creación de envio con origen y destino en distintas oficinas dentro del mismo centro
         Pair<String, Integer> envio = servicioUjapack.creaEnvio(5, 5, 5, origen, destino);
@@ -80,9 +76,9 @@ public class ServicioMensajeriaTest {
     
     @Test
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
-    public void testEnvioRutaCaso3() throws IdPuntoControlInvalido {
-        Cliente origen = new Cliente("111111111A", "Prueba", "Pruebas", "Jaén");
-        Cliente destino = new Cliente("111111111A", "Prueba", "Pruebas", "Albacete");
+    public void testEnvioRutaCaso3() {
+        Cliente origen = new Cliente("11111111A", "Prueba", "Pruebas", "Jaén");
+        Cliente destino = new Cliente("11111111A", "Prueba", "Pruebas", "Albacete");
         
         // Creación de envio con origen y destino en distintos centros
         Pair<String, Integer> envio = servicioUjapack.creaEnvio(5, 5, 5, origen, destino);

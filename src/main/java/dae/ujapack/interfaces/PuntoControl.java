@@ -1,18 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dae.ujapack.interfaces;
 
-import java.time.LocalDate;
-
 /**
- *
+ * Interfaz que representa los puntos de control
  * @author juanc
  */
 public interface PuntoControl {
-
-    public void actualizar(String idEnvio, LocalDate fecha, boolean inOut);
-
+    String id = "";
+    
+    public String getId();
 }
