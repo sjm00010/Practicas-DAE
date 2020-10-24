@@ -113,14 +113,10 @@ public class Envio {
      */
     public void actualizar(LocalDate fecha, boolean inOut, PuntoControl pc){
         /* Se busca en los pasos aquel que tenga el PuntoControl igual al
-           dado y que coincida con el valor de inOut para añadirle la fecha */
-        
-//        if(ruta.stream().reduce(null, (anterior, actual) -> actual.getPasoPuntos().getId() == pc.getId() ? actual : anterior ).equals(pc))
-//            throw new IdPuntoControlInvalido("Se intenta actualizar un punto que no esta en la ruta");
-        
+           dado y que coincida con el valor de inOut para añadirle la fecha */        
         boolean anterior = false, esta = false;
         for (Paso paso : ruta) {
-            if(paso.getPasoPuntos().equals(pc) && paso.isInOut() == inOut){
+            if(paso.getPasoPuntos().getId().equals(pc.getId()) && paso.isInOut() == inOut){
                 paso.setFecha(fecha);
                 esta = true;
                 break;
@@ -133,18 +129,6 @@ public class Envio {
             throw new IdPuntoControlInvalido("Se intenta actualizar un punto que no esta en la ruta");
         else if (anterior)
             throw new PuntosAnterioresNulos("Algun punto anterior no ha sido actualizado");
-        
-        
-//        Paso encontrado = ruta.stream()
-//                            .filter(paso -> paso.getFecha() == null || (paso.getPasoPuntos().equals(pc) && paso.isInOut() == inOut))
-//                            .findFirst().orElse(null); // Nunca debe devolver null, ya que mientras el paquete no este entregado quedaran fechas nulas
-//
-//        // Si el primer paso es el buscado todo esta bien
-//        if(encontrado.getPasoPuntos().equals(pc) && encontrado.isInOut() == inOut){
-//            encontrado.setFecha(fecha);
-//        }else{ // Si no es que hay alun paso anterior que no se actualizo
-//            throw new PuntosAnterioresNulos("Algun punto anterior no ha sido actualizado");
-//        } 
     }
     
     /**

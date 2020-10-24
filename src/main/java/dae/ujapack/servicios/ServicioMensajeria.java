@@ -186,15 +186,13 @@ public class ServicioMensajeria {
         
         // Calculo el estadp
         if(punto.getPasoPuntos().getClass() == CentroLogistico.class ||
-                punto.getPasoPuntos().getClass() == Oficina.class){
+                punto.getPasoPuntos().getClass() == Oficina.class)
             estado = Estado.EN_TRANSITO.toString();
-        }else{
-            if (punto.isInOut()){
-                estado = Estado.ENTREGADO.toString();
-            }else{
-                estado = Estado.EN_REPARTO.toString();
-            }
-        }
+        else if (punto.isInOut())
+            estado = Estado.ENTREGADO.toString();
+        else
+            estado = Estado.EN_REPARTO.toString();
+        
         return new Pair<PuntoControl, String>(punto.getPasoPuntos(), estado);
     }
     
