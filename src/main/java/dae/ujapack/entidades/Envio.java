@@ -111,7 +111,7 @@ public class Envio {
      * @param inOut Entrada o salida del Paso
      * @param pc Punto de control a actualizar
      */
-    public void actualizar(LocalDate fecha, boolean inOut, PuntoControl pc){
+    public void actualizar(LocalDate fecha, boolean inOut, PuntoControl pc) throws IdPuntoControlInvalido{
         /* Se busca en los pasos aquel que tenga el PuntoControl igual al
            dado y que coincida con el valor de inOut para añadirle la fecha */
         Paso encontrado = ruta.stream()
