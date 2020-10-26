@@ -3,7 +3,6 @@ package dae.ujapack.servicios;
 import dae.ujapack.entidades.CentroLogistico;
 import dae.ujapack.entidades.Oficina;
 import dae.ujapack.entidades.Paso;
-import dae.ujapack.entidades.Repartidor;
 import dae.ujapack.errores.IdPuntoControlInvalido;
 import java.time.LocalDate;
 import org.jgrapht.*;
@@ -96,9 +95,6 @@ public class Grafo {
                     ruta.add(new Paso(destino, true));
                 }
             }
-            // Añado el final de la ruta
-            ruta.add(new Paso(new Repartidor(), false));
-            ruta.add(new Paso(new Repartidor(), true));
         }else{
             throw new IdPuntoControlInvalido("Error al generar envío. Los clientes tienen una localización no valida");
         }

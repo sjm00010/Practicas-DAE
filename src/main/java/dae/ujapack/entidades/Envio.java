@@ -4,7 +4,7 @@ import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.interfaces.PuntoControl;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -36,6 +36,9 @@ public class Envio {
     @NotNull
     private ArrayList<@Valid Paso> ruta;
     
+    @PastOrPresent
+    private LocalDateTime entrega; // Representación de la entrega del envio, sacado de la ruta(sustutiye al repartidor)
+    
     // Para no hacer mas engorrosa la creación del envio el cliente ya viene creado, solo se vincula
     public Envio(String id, int alto, int ancho, int peso, Cliente origen, 
             Cliente destino, ArrayList<@Valid Paso> ruta) {
@@ -46,6 +49,7 @@ public class Envio {
         this.origen = origen;
         this.destino = destino;
         this.ruta = ruta;
+        this.entrega = null;
     }
 
     /**
@@ -111,7 +115,7 @@ public class Envio {
      * @param inOut Entrada o salida del Paso
      * @param pc Punto de control a actualizar
      */
-    public void actualizar(LocalDate fecha, boolean inOut, PuntoControl pc){
+    public void actualizar(LocalDateTime fecha, boolean inOut, PuntoControl pc){
         /* Se busca en los pasos aquel que tenga el PuntoControl igual al
            dado y que coincida con el valor de inOut para añadirle la fecha */
         if(pc == null)
@@ -138,8 +142,22 @@ public class Envio {
      * Función que devuelve el punto actual del envío
      * @return PuntoControl punto de control actual
      */
-    public Paso getUltimoPunto(){    
+    public Paso getUltimoPunto(){
         return ruta.stream()
-                    .reduce(null, (anterior, actual) -> actual.getFecha() == null ? anterior : actual);
+                    .reduce(null, (anterior, actual) -> actual.getFecha() == null ? anterior : actual); 
+    }
+
+    /**
+     * @return the entrega
+     */
+    public LocalDateTime getEntrega() {
+        return entrega;
+    }
+
+    /**
+     * @param entrega the entrega to set
+     */
+    public void setEntrega(LocalDateTime entrega) {
+        this.entrega = entrega;
     }
 }

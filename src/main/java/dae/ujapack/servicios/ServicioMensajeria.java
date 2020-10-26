@@ -5,9 +5,7 @@ import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.entidades.Envio;
 import dae.ujapack.entidades.Oficina;
 import dae.ujapack.entidades.Paso;
-import dae.ujapack.entidades.Repartidor;
 import dae.ujapack.errores.EnvioNoExiste;
-import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.interfaces.PuntoControl;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -210,14 +208,9 @@ public class ServicioMensajeria {
         if(!envios.containsKey(idEnvio))
             throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);
         
-        PuntoControl punto = null;
-        if(idPc.equals("Repartidor"))
-            punto = new Repartidor();
-        else{
-            punto = getOficinas().get(idPc);
-            if(punto == null)
-                punto = getCentrosLogisticos().get(idPc);
-        }
+        PuntoControl punto = getOficinas().get(idPc);
+        if(punto == null)
+            punto = getCentrosLogisticos().get(idPc);
         
         envios.get(idEnvio).actualizar(fecha, inOut, punto);
     }
