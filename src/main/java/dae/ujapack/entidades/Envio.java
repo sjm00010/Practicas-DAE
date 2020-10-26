@@ -4,7 +4,7 @@ import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.interfaces.PuntoControl;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -111,7 +111,7 @@ public class Envio {
      * @param inOut Entrada o salida del Paso
      * @param pc Punto de control a actualizar
      */
-    public void actualizar(LocalDate fecha, boolean inOut, PuntoControl pc){
+    public void actualizar(LocalDateTime fecha, boolean inOut, PuntoControl pc){
         /* Se busca en los pasos aquel que tenga el PuntoControl igual al
            dado y que coincida con el valor de inOut para añadirle la fecha */
         if(pc == null)

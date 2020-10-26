@@ -1,7 +1,7 @@
 package dae.ujapack.entidades;
 
 import dae.ujapack.interfaces.PuntoControl;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
@@ -12,7 +12,7 @@ import javax.validation.constraints.PastOrPresent;
 public class Paso {
     
     @PastOrPresent
-    private LocalDate fecha;
+    private LocalDateTime fecha;
     
     // No se comprueba porque es un valor primitivo
     private boolean inOut; // False entrada, True salida
@@ -26,7 +26,7 @@ public class Paso {
      * @param inOut Indica la entrada(False) o salida(True) del punto
      * @param fecha Fecha del paso por el punto de control
      */
-    public Paso(PuntoControl pasoPuntos, boolean inOut, LocalDate fecha){
+    public Paso(PuntoControl pasoPuntos, boolean inOut, LocalDateTime fecha){
         this.pasoPuntos = pasoPuntos;
         this.inOut = inOut;
         this.fecha = fecha;
@@ -45,14 +45,14 @@ public class Paso {
     /**
      * @return the fecha
      */
-    public LocalDate getFecha() {
+    public LocalDateTime getFecha() {
         return fecha;
     }
 
     /**
      * @param fecha the fecha to set
      */
-    public void setFecha(LocalDate fecha) {
+    public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
     }
     

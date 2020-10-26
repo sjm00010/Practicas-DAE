@@ -9,7 +9,6 @@ import dae.ujapack.entidades.Repartidor;
 import dae.ujapack.errores.EnvioNoExiste;
 import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.interfaces.PuntoControl;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +18,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import dae.ujapack.utils.util.Estado;
+import java.time.LocalDateTime;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -37,7 +37,7 @@ public class ServicioMensajeria {
     
     // Variables auxiliares
     @Autowired
-    private Grafo grafo;
+    private ServicioEnrutado grafo;
     
     @Autowired
     private ServicioCarga sc;
@@ -50,7 +50,7 @@ public class ServicioMensajeria {
     /**
      * @param grafo the grafo to set
      */
-    public void setGrafo(Grafo grafo) {
+    public void setGrafo(ServicioEnrutado grafo) {
         this.grafo = grafo;
     }
 
@@ -179,22 +179,22 @@ public class ServicioMensajeria {
     /**
      * Función que obtiene la situacion de un envío
      * @param idEnvio ID del envio a localizar
-     * @return Pair<PuntoControl,String> Par con el punto de control actual y la situación
+     * @return Pair<PuntoControl,Estado> Par con el punto de control actual y la situación
      */
-    public Pair<PuntoControl,String> obtenerSituacion(@Size(min=10, max=10) String idEnvio){
+    public Pair<PuntoControl,Estado> obtenerSituacion(@Size(min=10, max=10) String idEnvio){
         Paso punto = envios.get(idEnvio).getUltimoPunto();
-        String estado;
+        Estado estado;
         
-        // Calculo el estadp
+        // Calculo el estado
         if(punto.getPasoPuntos().getClass() == CentroLogistico.class ||
                 punto.getPasoPuntos().getClass() == Oficina.class)
-            estado = Estado.EN_TRANSITO.toString();
+            estado = Estado.EN_TRANSITO;
         else if (punto.isInOut())
-            estado = Estado.ENTREGADO.toString();
+            estado = Estado.ENTREGADO;
         else
-            estado = Estado.EN_REPARTO.toString();
+            estado = Estado.EN_REPARTO;
         
-        return new Pair<PuntoControl, String>(punto.getPasoPuntos(), estado);
+        return new Pair<PuntoControl, Estado>(punto.getPasoPuntos(), estado);
     }
     
     /**
@@ -205,7 +205,7 @@ public class ServicioMensajeria {
      * @param idPc Identificador del punto de control. Si es repartidor poner "Repartidor"
      */
     public void actualizar(@Size(min=10, max=10) String idEnvio, 
-            @PastOrPresent LocalDate fecha, boolean inOut, @NotBlank String idPc){
+            @PastOrPresent LocalDateTime fecha, boolean inOut, @NotBlank String idPc){
         
         if(!envios.containsKey(idEnvio))
             throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);

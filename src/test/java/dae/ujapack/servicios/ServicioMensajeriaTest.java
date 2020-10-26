@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import dae.ujapack.utils.util;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.validation.ConstraintViolationException;
 
 /**
@@ -45,7 +45,7 @@ public class ServicioMensajeriaTest {
         Pair<String, Integer> envio = servicioUjapack.creaEnvio(5, 5, 5, cliente, cliente);
         
         // Compruebo que esta en transito, dado que sigue la oficina de origen
-        Assertions.assertThat(servicioUjapack.obtenerSituacion(envio.getKey()).getValue()).isEqualTo(util.Estado.EN_TRANSITO.toString());  
+        Assertions.assertThat(servicioUjapack.obtenerSituacion(envio.getKey()).getValue()).isEqualTo(util.Estado.EN_TRANSITO);  
     }
     
     @Test
@@ -97,7 +97,7 @@ public class ServicioMensajeriaTest {
     public void testActualizaEnvioInvalido() {        
         // Intento actualizar un envio que no existe
         Assertions.assertThatThrownBy(() -> {
-            servicioUjapack.actualizar("1234567890", LocalDate.now(), true, "1"); }) // En id no existe
+            servicioUjapack.actualizar("1234567890", LocalDateTime.now(), true, "1"); }) // En id no existe
                 .isInstanceOf(EnvioNoExiste.class);
     }
 }
