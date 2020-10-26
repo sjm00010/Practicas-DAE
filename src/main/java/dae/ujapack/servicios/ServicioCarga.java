@@ -68,7 +68,7 @@ public class ServicioCarga {
         // Variables
         Map<String, Oficina> oficinas = new HashMap<>();
         Map<String, CentroLogistico> centrosLogisticos = new HashMap<>();
-        Grafo grafo = new Grafo();    
+        ServicioEnrutado grafo = new ServicioEnrutado();    
         
         //JSON parser object to parse read file
         JSONParser jsonParser = new JSONParser();

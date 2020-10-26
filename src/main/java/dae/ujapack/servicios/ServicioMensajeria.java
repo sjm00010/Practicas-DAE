@@ -37,7 +37,7 @@ public class ServicioMensajeria {
     
     // Variables auxiliares
     @Autowired
-    private Grafo grafo;
+    private ServicioEnrutado grafo;
     
     @Autowired
     private ServicioCarga sc;
@@ -50,7 +50,7 @@ public class ServicioMensajeria {
     /**
      * @param grafo the grafo to set
      */
-    public void setGrafo(Grafo grafo) {
+    public void setGrafo(ServicioEnrutado grafo) {
         this.grafo = grafo;
     }
 

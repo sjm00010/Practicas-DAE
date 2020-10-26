@@ -20,12 +20,12 @@ import org.springframework.stereotype.Service;
  * @author sjm00010
  */
 @Service
-public class Grafo {
+public class ServicioEnrutado {
     
     // Grafo para calcular la ruta
     private Graph<String, DefaultEdge> directedGraph;
 
-    public Grafo() {
+    public ServicioEnrutado() {
        this.directedGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
     }
     
