@@ -3,7 +3,7 @@ package dae.ujapack.entidades;
 import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.objetosvalor.Cliente;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -59,7 +59,7 @@ public class EnvioTest {
         Envio envio = new Envio("2437843955", 2, 2, 2, origen, destino, ruta);
         
         /* Pasamos un centro de control no existente en la ruta */
-        assertThatThrownBy(() -> {envio.actualizar(LocalDate.now(), true, null); })
+        assertThatThrownBy(() -> {envio.actualizar(LocalDateTime.now(), true, null); })
                 .isInstanceOf(IdPuntoControlInvalido.class);
         }
     
@@ -78,7 +78,7 @@ public class EnvioTest {
         Envio envio = new Envio("1234567890", 5, 5, 5, origen, destino, ruta);
     
         // Comprobar la obtención del último pc. Para ello primero actualiza y luego trata de obtenerlo.
-        envio.actualizar(LocalDate.now(), true, centro);
+        envio.actualizar(LocalDateTime.now(), true, centro);
         Assertions.assertThat(envio.getUltimoPunto()).isEqualTo(ruta.get(0));
     }
     
@@ -97,7 +97,7 @@ public class EnvioTest {
         Envio envio = new Envio("1234567890", 5, 5, 5, origen, destino, ruta);
     
         // Comprobar actualizar centro sin actualizar anteriores
-        assertThatThrownBy(() -> {envio.actualizar(LocalDate.now(), true, centro2); })
+        assertThatThrownBy(() -> {envio.actualizar(LocalDateTime.now(), true, centro2); })
                 .isInstanceOf(PuntosAnterioresNulos.class);
     }
 }

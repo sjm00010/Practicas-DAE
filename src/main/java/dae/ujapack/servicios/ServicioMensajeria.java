@@ -9,7 +9,6 @@ import dae.ujapack.entidades.Repartidor;
 import dae.ujapack.errores.EnvioNoExiste;
 import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.interfaces.PuntoControl;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +18,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import dae.ujapack.utils.util.Estado;
+import java.time.LocalDateTime;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -205,7 +205,7 @@ public class ServicioMensajeria {
      * @param idPc Identificador del punto de control. Si es repartidor poner "Repartidor"
      */
     public void actualizar(@Size(min=10, max=10) String idEnvio, 
-            @PastOrPresent LocalDate fecha, boolean inOut, @NotBlank String idPc){
+            @PastOrPresent LocalDateTime fecha, boolean inOut, @NotBlank String idPc){
         
         if(!envios.containsKey(idEnvio))
             throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);

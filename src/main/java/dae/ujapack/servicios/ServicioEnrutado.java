@@ -5,7 +5,7 @@ import dae.ujapack.entidades.Oficina;
 import dae.ujapack.entidades.Paso;
 import dae.ujapack.entidades.Repartidor;
 import dae.ujapack.errores.IdPuntoControlInvalido;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.jgrapht.*;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.*;
 import org.jgrapht.alg.shortestpath.*;
@@ -70,7 +70,7 @@ public class ServicioEnrutado {
         if(origen != null && destino != null){
             
             // Caso 1 : Misma provincia (BASE PARA TODOS LOS CASOS)
-            ruta.add(new Paso(origen, false, LocalDate.now()));
+            ruta.add(new Paso(origen, false, LocalDateTime.now()));
             ruta.add(new Paso(origen, true));
             
             if(!origen.equals(destino)){
