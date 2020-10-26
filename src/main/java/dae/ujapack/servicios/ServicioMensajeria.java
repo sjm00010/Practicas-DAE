@@ -6,6 +6,7 @@ import dae.ujapack.entidades.Envio;
 import dae.ujapack.entidades.Oficina;
 import dae.ujapack.entidades.Paso;
 import dae.ujapack.errores.EnvioNoExiste;
+import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.interfaces.PuntoControl;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -181,16 +182,13 @@ public class ServicioMensajeria {
      */
     public Pair<PuntoControl,Estado> obtenerSituacion(@Size(min=10, max=10) String idEnvio){
         Paso punto = envios.get(idEnvio).getUltimoPunto();
-        Estado estado;
+        Estado estado = Estado.EN_TRANSITO;;
         
-        // Calculo el estado
-        if(punto.getPasoPuntos().getClass() == CentroLogistico.class ||
-                punto.getPasoPuntos().getClass() == Oficina.class)
-            estado = Estado.EN_TRANSITO;
-        else if (punto.isInOut())
+        if (envios.get(idEnvio).getEntrega() != null)
             estado = Estado.ENTREGADO;
-        else
+        else if(envios.get(idEnvio).getRuta().size()-1 == envios.get(idEnvio).getRuta().indexOf(punto))
             estado = Estado.EN_REPARTO;
+            
         
         return new Pair<PuntoControl, Estado>(punto.getPasoPuntos(), estado);
     }
@@ -213,5 +211,21 @@ public class ServicioMensajeria {
             punto = getCentrosLogisticos().get(idPc);
         
         envios.get(idEnvio).actualizar(fecha, inOut, punto);
+    }
+    
+    /**
+     * Función para notificar la entrega del envío
+     * @param idEnvio Id del envio ha actualizar
+     * @param fecha Fecha de entrega
+     */
+    public void notificarEntrega(@Size(min=10, max=10) String idEnvio, @PastOrPresent LocalDateTime fecha){
+        if(!envios.containsKey(idEnvio))
+            throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);
+        
+        Paso punto = envios.get(idEnvio).getUltimoPunto();
+        if(envios.get(idEnvio).getRuta().size()-1 == envios.get(idEnvio).getRuta().indexOf(punto))
+            envios.get(idEnvio).setEntrega(fecha);
+        else
+            throw new PuntosAnterioresNulos("Algun punto anterior no ha sido actualizado");
     }
 }
