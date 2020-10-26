@@ -45,7 +45,7 @@ public class ServicioMensajeriaTest {
         Pair<String, Integer> envio = servicioUjapack.creaEnvio(5, 5, 5, cliente, cliente);
         
         // Compruebo que esta en transito, dado que sigue la oficina de origen
-        Assertions.assertThat(servicioUjapack.obtenerSituacion(envio.getKey()).getValue()).isEqualTo(util.Estado.EN_TRANSITO.toString());  
+        Assertions.assertThat(servicioUjapack.obtenerSituacion(envio.getKey()).getValue()).isEqualTo(util.Estado.EN_TRANSITO);  
     }
     
     @Test

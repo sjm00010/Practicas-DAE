@@ -181,20 +181,20 @@ public class ServicioMensajeria {
      * @param idEnvio ID del envio a localizar
      * @return Pair<PuntoControl,String> Par con el punto de control actual y la situación
      */
-    public Pair<PuntoControl,String> obtenerSituacion(@Size(min=10, max=10) String idEnvio){
+    public Pair<PuntoControl,Estado> obtenerSituacion(@Size(min=10, max=10) String idEnvio){
         Paso punto = envios.get(idEnvio).getUltimoPunto();
-        String estado;
+        Estado estado;
         
         // Calculo el estadp
         if(punto.getPasoPuntos().getClass() == CentroLogistico.class ||
                 punto.getPasoPuntos().getClass() == Oficina.class)
-            estado = Estado.EN_TRANSITO.toString();
+            estado = Estado.EN_TRANSITO;
         else if (punto.isInOut())
-            estado = Estado.ENTREGADO.toString();
+            estado = Estado.ENTREGADO;
         else
-            estado = Estado.EN_REPARTO.toString();
+            estado = Estado.EN_REPARTO;
         
-        return new Pair<PuntoControl, String>(punto.getPasoPuntos(), estado);
+        return new Pair<PuntoControl, Estado>(punto.getPasoPuntos(), estado);
     }
     
     /**
