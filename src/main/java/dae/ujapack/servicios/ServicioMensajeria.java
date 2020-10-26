@@ -179,13 +179,13 @@ public class ServicioMensajeria {
     /**
      * Función que obtiene la situacion de un envío
      * @param idEnvio ID del envio a localizar
-     * @return Pair<PuntoControl,String> Par con el punto de control actual y la situación
+     * @return Pair<PuntoControl,Estado> Par con el punto de control actual y la situación
      */
     public Pair<PuntoControl,Estado> obtenerSituacion(@Size(min=10, max=10) String idEnvio){
         Paso punto = envios.get(idEnvio).getUltimoPunto();
         Estado estado;
         
-        // Calculo el estadp
+        // Calculo el estado
         if(punto.getPasoPuntos().getClass() == CentroLogistico.class ||
                 punto.getPasoPuntos().getClass() == Oficina.class)
             estado = Estado.EN_TRANSITO;
