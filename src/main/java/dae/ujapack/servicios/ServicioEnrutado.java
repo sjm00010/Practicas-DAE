@@ -3,14 +3,12 @@ package dae.ujapack.servicios;
 import dae.ujapack.entidades.CentroLogistico;
 import dae.ujapack.entidades.Oficina;
 import dae.ujapack.entidades.Paso;
-import dae.ujapack.entidades.Repartidor;
 import dae.ujapack.errores.IdPuntoControlInvalido;
 import java.time.LocalDateTime;
 import org.jgrapht.*;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.*;
 import org.jgrapht.alg.shortestpath.*;
 import org.jgrapht.graph.*;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -96,9 +94,6 @@ public class ServicioEnrutado {
                     ruta.add(new Paso(destino, true));
                 }
             }
-            // Añado el final de la ruta
-            ruta.add(new Paso(new Repartidor(), false));
-            ruta.add(new Paso(new Repartidor(), true));
         }else{
             throw new IdPuntoControlInvalido("Error al generar envío. Los clientes tienen una localización no valida");
         }

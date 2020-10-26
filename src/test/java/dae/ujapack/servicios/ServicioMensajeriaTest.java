@@ -43,9 +43,10 @@ public class ServicioMensajeriaTest {
     public void testGetSituacionEnvio() {
         Cliente cliente = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
         Pair<String, Integer> envio = servicioUjapack.creaEnvio(5, 5, 5, cliente, cliente);
-        
+        servicioUjapack.actualizar(envio.getKey(), LocalDateTime.now(), true, "Almería");
+                
         // Compruebo que esta en transito, dado que sigue la oficina de origen
-        Assertions.assertThat(servicioUjapack.obtenerSituacion(envio.getKey()).getValue()).isEqualTo(util.Estado.EN_TRANSITO);  
+        Assertions.assertThat(servicioUjapack.obtenerSituacion(envio.getKey()).getValue()).isEqualTo(util.Estado.EN_REPARTO);  
     }
     
     @Test
@@ -57,8 +58,8 @@ public class ServicioMensajeriaTest {
         Pair<String, Integer> envio = servicioUjapack.creaEnvio(5, 5, 5, cliente, cliente);
         
         /** Compruebo que la ruta generada contiene los puntos que deberia
-         * ( 2 entrada/salida de la Oficina + 2 entrada/salida del Repartidor ) */
-        Assertions.assertThat(servicioUjapack.getEnvio(envio.getKey()).getRuta().size()).isEqualTo(4);  
+         * ( 2 entrada/salida de la Oficina ) */
+        Assertions.assertThat(servicioUjapack.getEnvio(envio.getKey()).getRuta().size()).isEqualTo(2);  
     }
     
     @Test
@@ -72,8 +73,8 @@ public class ServicioMensajeriaTest {
         
         /** Compruebo que la ruta generada contiene los puntos que deberia
          * ( 2 entrada/salida de la Oficina origen + 2 entrada/salida del Centro Logistico +
-         *   2 entrada/salida de la Oficina destino + 2 entrada/salida del Repartidor ) */
-        Assertions.assertThat(servicioUjapack.getEnvio(envio.getKey()).getRuta().size()).isEqualTo(8);  
+         *   2 entrada/salida de la Oficina destino ) */
+        Assertions.assertThat(servicioUjapack.getEnvio(envio.getKey()).getRuta().size()).isEqualTo(6);  
     }
     
     @Test
@@ -88,8 +89,8 @@ public class ServicioMensajeriaTest {
         /** Compruebo que la ruta generada contiene los puntos que deberia
          * ( 2 entrada/salida de la Oficina + 
          *   N entrada/salida del Centro Logistico(4 -> 2 de Andalucía + 2 de La Mancha) +
-         *   2 entrada/salida de la Oficina destino + 2 entrada/salida del Repartidor ) */
-        Assertions.assertThat(servicioUjapack.getEnvio(envio.getKey()).getRuta().size()).isEqualTo(10);  
+         *   2 entrada/salida de la Oficina destino) */
+        Assertions.assertThat(servicioUjapack.getEnvio(envio.getKey()).getRuta().size()).isEqualTo(8);  
     }
     
     @Test

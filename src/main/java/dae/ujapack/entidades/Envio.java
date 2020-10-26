@@ -36,6 +36,9 @@ public class Envio {
     @NotNull
     private ArrayList<@Valid Paso> ruta;
     
+    @PastOrPresent
+    private LocalDateTime entrega; // Representación de la entrega del envio, sacado de la ruta(sustutiye al repartidor)
+    
     // Para no hacer mas engorrosa la creación del envio el cliente ya viene creado, solo se vincula
     public Envio(String id, int alto, int ancho, int peso, Cliente origen, 
             Cliente destino, ArrayList<@Valid Paso> ruta) {
@@ -46,6 +49,7 @@ public class Envio {
         this.origen = origen;
         this.destino = destino;
         this.ruta = ruta;
+        this.entrega = null;
     }
 
     /**
@@ -138,8 +142,22 @@ public class Envio {
      * Función que devuelve el punto actual del envío
      * @return PuntoControl punto de control actual
      */
-    public Paso getUltimoPunto(){    
+    public Paso getUltimoPunto(){
         return ruta.stream()
-                    .reduce(null, (anterior, actual) -> actual.getFecha() == null ? anterior : actual);
+                    .reduce(null, (anterior, actual) -> actual.getFecha() == null ? anterior : actual); 
+    }
+
+    /**
+     * @return the entrega
+     */
+    public LocalDateTime getEntrega() {
+        return entrega;
+    }
+
+    /**
+     * @param entrega the entrega to set
+     */
+    public void setEntrega(LocalDateTime entrega) {
+        this.entrega = entrega;
     }
 }
