@@ -7,6 +7,10 @@ import dae.ujapack.interfaces.PuntoControl;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
@@ -33,15 +37,32 @@ public class Envio implements Serializable {
     @Positive
     private int peso;
     
-    @Transient
+    /*  Como tengo dos clientes (origen y destino) como objetos valor es necesario,
+        
+     */ 
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride( name = "dni", column = @Column(name = "origen_dni")),
+        @AttributeOverride( name = "nombre", column = @Column(name = "origen_nombre")),
+        @AttributeOverride( name = "apellidos", column = @Column(name = "origen_apellidos")),
+        @AttributeOverride( name = "localizacion", column = @Column(name = "origen_localizacion"))
+    })
     @Valid
     private Cliente origen; 
     
-    @Transient
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride( name = "dni", column = @Column(name = "destino_dni")),
+        @AttributeOverride( name = "nombre", column = @Column(name = "destino_nombre")),
+        @AttributeOverride( name = "apellidos", column = @Column(name = "destino_apellidos")),
+        @AttributeOverride( name = "localizacion", column = @Column(name = "destino_localizacion"))
+    })
     @Valid
     private Cliente destino;
     
     @Transient
+//    @OneToMany
+//    @OrderColumn(name="ruta")
     @NotNull
     private ArrayList<@Valid Paso> ruta;
     
