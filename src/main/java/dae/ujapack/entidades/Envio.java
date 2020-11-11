@@ -4,8 +4,12 @@ import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.interfaces.PuntoControl;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -13,8 +17,10 @@ import javax.validation.constraints.*;
  * Entidad envio
  * @author sjm00010
  */
-public class Envio {
+@Entity
+public class Envio implements Serializable {
     
+    @Id
     @Size(min=10, max=10)
     private String id;
     
@@ -27,17 +33,23 @@ public class Envio {
     @Positive
     private int peso;
     
+    @Transient
     @Valid
     private Cliente origen; 
     
+    @Transient
     @Valid
     private Cliente destino;
     
+    @Transient
     @NotNull
     private ArrayList<@Valid Paso> ruta;
     
     @PastOrPresent
     private LocalDateTime entrega; // Representación de la entrega del envio, sacado de la ruta(sustutiye al repartidor)
+
+    public Envio() {
+    }
     
     // Para no hacer mas engorrosa la creación del envio el cliente ya viene creado, solo se vincula
     public Envio(String id, int alto, int ancho, int peso, Cliente origen, 
