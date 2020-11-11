@@ -13,7 +13,7 @@ El diseño UML realizado se puede consultar en el siguente enlace :
 https://drive.google.com/file/d/1pJQl7SMtWMg5QCvbhpWATaff0mDwG0Q3/view?usp=sharing
 
 ### Código
-El codigo de para la primera practica esta en la rama _master_.
+El código de para la primera práctica está en la rama _master_.
 
 ## Práctica 2
 En esta segunda práctica completaremos el prototipo añadiendo la persistencia mediante JPA.
@@ -21,9 +21,17 @@ En esta segunda práctica completaremos el prototipo añadiendo la persistencia 
 ### Base de datos
 Para la base de datos usaremos MySQL ejecutado en Docker. Para ello se debe :
 
-1. **Descargar Docker** : descargamos docker desde [aquí](https://www.docker.com/get-started), seleccionando la versión correspondiente a su sistema operativo. (Para Windows asegurate de instalar WSL 2, para la correcta ejecucion de Docker. El propio instalador lo pedira, tambien se puede descargar desde [aquí](https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi)).
-2. **Registrarse en Docker** (_opcional_) : este paso es opcional pero recomendable para mayor comodidad a la hora de trabajar con Docker.
-3. **Instalación de MySQL** : una vez instalado todo correctamente abrimos una consola, y ejecutamos el comando `docker pull mysql`, una vez hecho esto podemos ver que se isntalado bien en la pestaña _Images_ de la aplicación de Docker.
-4. **Configuración del contenedor** : por último, configuramos los valores del contenedor para que funcione correctamente en cualquier máquina que ejecute nuestro proyecto. Para ello ejecutamos en la consola `docker run --name contenedor_mysql -e MYSQL_ROOT_PASSWORD=secreto -d mysql:latest`.
+1. **Descargar Docker** : descargamos docker desde [aquí](https://www.docker.com/get-started), seleccionando la versión correspondiente a su sistema operativo. (Para Windows asegurate de instalar WSL 2, para la correcta ejecucion de Docker. El propio instalador lo pedirá, también se puede descargar desde [aquí](https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi)).
+2. **Instalación de MySQL** : una vez instalado todo correctamente abrimos una consola, y ejecutamos el comando `docker pull mysql`, una vez hecho esto podemos ver que se instalado bien en la pestaña _Images_ de la aplicación de Docker.
+3. **Configuración del contenedor** : por último, configuramos los valores del contenedor para que funcione correctamente en cualquier máquina que ejecute nuestro proyecto. Para ello ejecutamos en la consola:
+```
+docker run -p 3306:3306 --name ujapack-db -e MYSQL_ROOT_PASSWORD=secreto -e MYSQL_DATABASE=ujapack -e MYSQL_USER=ujapack -e MYSQL_PASSWORD=ujapack -d mysql
+```
+Este comando hace:
 
-Si todo salio bien le damos al Play y comprobaremos que ejecuta (si no configuramos algo bien se parara) y que la ultima linea de la consola aparece `Version: '8.0.22' socket: '/var/run/mysqld/mysqld.sock' port: 3306 MySQL Community Server - GPL.` que nos indica la version que se esta usando de MySQL y el puerto al que debemos conectarnos. Para el desarrollo de la practica usaremos el puerto por defecto, _3306_.
+1. **-p 3306:3306** : mapea el puerto para nuestro ordenador.
+2. **--name ujapack-db** : nombre del contenedor.
+3. **-e MYSQL_ROOT_PASSWORD=secreto** : establece la contraseña del usuario root a _secreto_.
+4. **-e MYSQL_DATABASE=ujapack -e MYSQL_USER=ujapack -e MYSQL_PASSWORD=ujapack** : crea una base de datos de nombre _ujapack_, a la que le asocia un nuevo usuario _ujapack_ con la contraseña _ujapack_. Es el equivalente ha hacer `GRANT ALL`.
+
+Si todo salio bien le damos al Play y comprobaremos que ejecuta (si no configuramos algo bien se parara) y que en la pestaña _Inspect_ aparece `Port 3306/tcp localhost:3306` que nos indica el puerto al que debemos conectarnos. Para el desarrollo de la práctica usaremos el puerto por defecto, _3306_.
