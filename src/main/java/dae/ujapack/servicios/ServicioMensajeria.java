@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import dae.ujapack.utils.util.Estado;
@@ -38,55 +37,18 @@ public class ServicioMensajeria {
     // Variables auxiliares
     @Autowired
     private ServicioEnrutado grafo;
-    
-    @Autowired
-    private ServicioCarga sc;
 
     //          Repositorio
     private Map<String, Oficina> oficinas;
     private Map<String, CentroLogistico> centrosLogisticos;
     private Map<String, Envio> envios;
-
-    /**
-     * @param grafo the grafo to set
-     */
-    public void setGrafo(ServicioEnrutado grafo) {
-        this.grafo = grafo;
-    }
-
-    /**
-     * @return the oficinas
-     */
-    public Map<String, Oficina> getOficinas() {
-        return oficinas;
-    }
-
-    /**
-     * @param oficinas the oficinas to set
-     */
-    public void setOficinas(Map<String, Oficina> oficinas) {
+    
+    
+    public ServicioMensajeria( Map<String, Oficina> oficinas, 
+            Map<String, CentroLogistico> centros ) {
         this.oficinas = oficinas;
-    }
-
-    /**
-     * @return the centrosLogisticos
-     */
-    public Map<String, CentroLogistico> getCentrosLogisticos() {
-        return centrosLogisticos;
-    }
-
-    /**
-     * @param centrosLogisticos the centrosLogisticos to set
-     */
-    public void setCentrosLogisticos(Map<String, CentroLogistico> centrosLogisticos) {
-        this.centrosLogisticos = centrosLogisticos;
-    }
-
-    /**
-     * @return the envios
-     */
-    public Map<String, Envio> getEnvios() {
-        return envios;
+        this.centrosLogisticos = centros;
+        this.envios = new HashMap<>();
     }
     
     /**
@@ -95,33 +57,12 @@ public class ServicioMensajeria {
     public Envio getEnvio(String id) {
         return envios.get(id);
     }
-
-    /**
-     * @param envios the envios to set
-     */
-    public void setEnvios(Map<String, Envio> envios) {
-        this.envios = envios;
-    }
-
-    public ServicioMensajeria() {
-        this.oficinas = new HashMap<>();
-        this.centrosLogisticos = new HashMap<>();
-        this.envios = new HashMap<>();
-    }
     
     /************************
      *       Servicio       *
      ************************
     
     // ------ Funciones auxiliares ------
-    
-    /**
-     * Función para la carga de datos
-     */
-    @PostConstruct
-    private void cargaDatos(){
-        this.sc.cargaDatos(this);
-    }
     
     /**
      * Función que genera los IDs de los envíos
@@ -207,9 +148,9 @@ public class ServicioMensajeria {
         if(!envios.containsKey(idEnvio))
             throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);
         
-        PuntoControl punto = getOficinas().get(idPc);
+        PuntoControl punto = oficinas.get(idPc);
         if(punto == null)
-            punto = getCentrosLogisticos().get(idPc);
+            punto = centrosLogisticos.get(idPc);
         
         envios.get(idEnvio).actualizar(fecha, inOut, punto);
     }

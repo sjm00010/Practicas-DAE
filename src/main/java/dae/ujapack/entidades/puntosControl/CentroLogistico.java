@@ -24,7 +24,7 @@ public class CentroLogistico extends PuntoControl {
     @NotNull @Size(min=1)
     private List<String> conexiones;
 
-    public CentroLogistico(String id, String nombre, String localizacion, ArrayList<String> conexiones) {
+    public CentroLogistico(String id, String nombre, String localizacion, List<String> conexiones) {
         this.id = id;
         this.nombre = nombre;
         this.localizacion = localizacion;

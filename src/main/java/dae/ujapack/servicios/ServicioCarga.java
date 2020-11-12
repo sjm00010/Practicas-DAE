@@ -2,6 +2,7 @@ package dae.ujapack.servicios;
 
 import dae.ujapack.entidades.puntosControl.CentroLogistico;
 import dae.ujapack.entidades.puntosControl.Oficina;
+import dae.ujapack.tuplas.OficinasCentrosServicioCarga;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,18 +11,15 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.stereotype.Service;
 
 /**
  * Servicio que carga los datos de un archivo json
  * @author sjm00010
  */
-@Service
 public class ServicioCarga {
     private String ruta; // Ruta del archivo .json
     private int numCentros; // Número de centros que contiene el archivo
@@ -64,11 +62,10 @@ public class ServicioCarga {
      * Función que carga los datos del fichero json
      * @param ServicioMensajeria Servicio al que ha de cargar los datos
      */
-    public void cargaDatos(ServicioMensajeria sm) {
+    public OficinasCentrosServicioCarga cargaDatos() {
         // Variables
         Map<String, Oficina> oficinas = new HashMap<>();
         Map<String, CentroLogistico> centrosLogisticos = new HashMap<>();
-        ServicioEnrutado grafo = new ServicioEnrutado();    
         
         //JSON parser object to parse read file
         JSONParser jsonParser = new JSONParser();
@@ -84,12 +81,9 @@ public class ServicioCarga {
                 transformarEnObjetos(centro, Integer.toString(i), centrosLogisticos, oficinas);
             }
             
-            // Aprovecho que ya tengo lso centros para generar el grafo para la ruta
-            grafo.generaGrafo((ArrayList<CentroLogistico>) centrosLogisticos.values().stream().collect(Collectors.toList()));
+            // Aprovecho que ya tengo los centros para generar el grafo para la ruta
+            // grafo.generaGrafo((ArrayList<CentroLogistico>) centrosLogisticos.values().stream().collect(Collectors.toList()));
             
-            sm.setCentrosLogisticos(centrosLogisticos);
-            sm.setOficinas(oficinas);
-            sm.setGrafo(grafo);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -97,5 +91,7 @@ public class ServicioCarga {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        
+        return new OficinasCentrosServicioCarga(oficinas, centrosLogisticos);
     }
 }
