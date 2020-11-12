@@ -27,7 +27,7 @@ public class ServicioCarga {
     private int numCentros; // Número de centros que contiene el archivo
 
     public ServicioCarga() {
-        this.ruta = System.getProperty("user.dir")+"\\redujapack.json";
+        this.ruta = System.getProperty("user.dir")+"/redujapack.json";
         this.numCentros = 10;
     }
     
