@@ -1,19 +1,14 @@
-package dae.ujapack.entidades;
+package dae.ujapack.entidades.puntosControl;
 
-import dae.ujapack.interfaces.PuntoControl;
+import dae.ujapack.entidades.puntosControl.CentroLogistico;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 
 /**
  * Entidad oficina
  * @author juanc
  */
-public class Oficina implements PuntoControl {
-    
-    /**Nombre de la oficina*/
-    @NotBlank
-    private String id;
-    
+public class Oficina extends PuntoControl {
+      
     /**Centro logístico asociado a la oficina*/
     @Valid
     private CentroLogistico centroAsociado;
@@ -21,14 +16,6 @@ public class Oficina implements PuntoControl {
     public Oficina(String id, CentroLogistico centroAsociado){
         this.id = id;
         this.centroAsociado = centroAsociado;
-    }
-
-    /**
-     * @return the nombre
-     */
-    @Override
-    public String getId() {
-        return id;
     }
 
     /**

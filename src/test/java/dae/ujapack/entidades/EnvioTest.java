@@ -1,5 +1,6 @@
 package dae.ujapack.entidades;
 
+import dae.ujapack.entidades.puntosControl.CentroLogistico;
 import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.objetosvalor.Cliente;

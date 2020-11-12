@@ -2,7 +2,7 @@ package dae.ujapack.servicios;
 
 import dae.ujapack.errores.EnvioNoExiste;
 import dae.ujapack.objetosvalor.Cliente;
-import javafx.util.Pair;
+import dae.ujapack.tuplas.LocalizadorPrecioEnvio;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +42,11 @@ public class ServicioMensajeriaTest {
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testGetSituacionEnvio() {
         Cliente cliente = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
-        Pair<String, Integer> envio = servicioUjapack.creaEnvio(5, 5, 5, cliente, cliente);
-        servicioUjapack.actualizar(envio.getKey(), LocalDateTime.now(), true, "Almería");
+        LocalizadorPrecioEnvio envio = servicioUjapack.creaEnvio(5, 5, 5, cliente, cliente);
+        servicioUjapack.actualizar(envio.getIdentificador(), LocalDateTime.now(), true, "Almería");
                 
         // Compruebo que esta en transito, dado que sigue la oficina de origen
-        Assertions.assertThat(servicioUjapack.obtenerSituacion(envio.getKey()).getValue()).isEqualTo(util.Estado.EN_REPARTO);  
+        Assertions.assertThat(servicioUjapack.obtenerSituacion(envio.getIdentificador()).getEstado()).isEqualTo(util.Estado.EN_REPARTO);  
     }
     
     @Test
@@ -55,11 +55,11 @@ public class ServicioMensajeriaTest {
         Cliente cliente = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
         
         // Creación de envio con Origen y destino en la misma Oficina(Provincia)
-        Pair<String, Integer> envio = servicioUjapack.creaEnvio(5, 5, 5, cliente, cliente);
+        LocalizadorPrecioEnvio envio = servicioUjapack.creaEnvio(5, 5, 5, cliente, cliente);
         
         /** Compruebo que la ruta generada contiene los puntos que deberia
          * ( 2 entrada/salida de la Oficina ) */
-        Assertions.assertThat(servicioUjapack.getEnvio(envio.getKey()).getRuta().size()).isEqualTo(2);  
+        Assertions.assertThat(servicioUjapack.getEnvio(envio.getIdentificador()).getRuta().size()).isEqualTo(2);  
     }
     
     @Test
@@ -69,12 +69,12 @@ public class ServicioMensajeriaTest {
         Cliente destino = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
         
         // Creación de envio con origen y destino en distintas oficinas dentro del mismo centro
-        Pair<String, Integer> envio = servicioUjapack.creaEnvio(5, 5, 5, origen, destino);
+        LocalizadorPrecioEnvio envio = servicioUjapack.creaEnvio(5, 5, 5, origen, destino);
         
         /** Compruebo que la ruta generada contiene los puntos que deberia
          * ( 2 entrada/salida de la Oficina origen + 2 entrada/salida del Centro Logistico +
          *   2 entrada/salida de la Oficina destino ) */
-        Assertions.assertThat(servicioUjapack.getEnvio(envio.getKey()).getRuta().size()).isEqualTo(6);  
+        Assertions.assertThat(servicioUjapack.getEnvio(envio.getIdentificador()).getRuta().size()).isEqualTo(6);  
     }
     
     @Test
@@ -84,13 +84,13 @@ public class ServicioMensajeriaTest {
         Cliente destino = new Cliente("11111111A", "Prueba", "Pruebas", "Albacete");
         
         // Creación de envio con origen y destino en distintos centros
-        Pair<String, Integer> envio = servicioUjapack.creaEnvio(5, 5, 5, origen, destino);
+        LocalizadorPrecioEnvio envio = servicioUjapack.creaEnvio(5, 5, 5, origen, destino);
         
         /** Compruebo que la ruta generada contiene los puntos que deberia
          * ( 2 entrada/salida de la Oficina + 
          *   N entrada/salida del Centro Logistico(4 -> 2 de Andalucía + 2 de La Mancha) +
          *   2 entrada/salida de la Oficina destino) */
-        Assertions.assertThat(servicioUjapack.getEnvio(envio.getKey()).getRuta().size()).isEqualTo(8);  
+        Assertions.assertThat(servicioUjapack.getEnvio(envio.getIdentificador()).getRuta().size()).isEqualTo(8);  
     }
     
     @Test

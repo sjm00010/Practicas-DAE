@@ -1,7 +1,7 @@
 package dae.ujapack.servicios;
 
-import dae.ujapack.entidades.CentroLogistico;
-import dae.ujapack.entidades.Oficina;
+import dae.ujapack.entidades.puntosControl.CentroLogistico;
+import dae.ujapack.entidades.puntosControl.Oficina;
 import dae.ujapack.entidades.Paso;
 import dae.ujapack.errores.IdPuntoControlInvalido;
 import java.time.LocalDateTime;

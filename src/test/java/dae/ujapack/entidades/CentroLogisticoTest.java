@@ -1,5 +1,6 @@
 package dae.ujapack.entidades;
 
+import dae.ujapack.entidades.puntosControl.CentroLogistico;
 import java.util.ArrayList;
 import java.util.Set;
 import javax.validation.ConstraintViolation;

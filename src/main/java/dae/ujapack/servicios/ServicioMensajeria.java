@@ -1,18 +1,19 @@
 package dae.ujapack.servicios;
 
-import dae.ujapack.entidades.CentroLogistico;
+import dae.ujapack.entidades.puntosControl.CentroLogistico;
 import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.entidades.Envio;
-import dae.ujapack.entidades.Oficina;
+import dae.ujapack.entidades.puntosControl.Oficina;
 import dae.ujapack.entidades.Paso;
 import dae.ujapack.errores.EnvioNoExiste;
 import dae.ujapack.errores.PuntosAnterioresNulos;
-import dae.ujapack.interfaces.PuntoControl;
+import dae.ujapack.entidades.puntosControl.PuntoControl;
+import dae.ujapack.tuplas.LocalizadorPrecioEnvio;
+import dae.ujapack.tuplas.PuntoControlEstadoEnvio;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import javafx.util.Pair;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -165,22 +166,22 @@ public class ServicioMensajeria {
      * @param peso Peso del paquete
      * @param origen Cliente que envía el paquete
      * @param destino Cliente que recibe el paquete
-     * @return Pair<String, Integer> Identificador y precio
+     * @return LocalizadorPrecioEnvio tupla identificador y precio
      */
-    public Pair<String, Integer> creaEnvio(@Positive int alto,@Positive int ancho,
+    public LocalizadorPrecioEnvio creaEnvio(@Positive int alto,@Positive int ancho,
             @Positive int peso, @Valid @NotNull Cliente origen, @Valid @NotNull Cliente destino){
         String id = generaId();
         ArrayList<Paso> ruta = generaRuta(origen.getLocalizacion(), destino.getLocalizacion());
         envios.put( id, new Envio(id, alto, ancho, peso, origen, destino, ruta));
-        return new Pair<String, Integer>(id, envios.get(id).getPrecio());
+        return new LocalizadorPrecioEnvio(id, envios.get(id).getPrecio());
     }
     
     /**
      * Función que obtiene la situacion de un envío
      * @param idEnvio ID del envio a localizar
-     * @return Pair<PuntoControl,Estado> Par con el punto de control actual y la situación
+     * @return PuntoControlEstadoEnvio tupla con el punto de control actual y la situación
      */
-    public Pair<PuntoControl,Estado> obtenerSituacion(@Size(min=10, max=10) String idEnvio){
+    public PuntoControlEstadoEnvio obtenerSituacion(@Size(min=10, max=10) String idEnvio){
         Paso punto = envios.get(idEnvio).getUltimoPunto();
         Estado estado = Estado.EN_TRANSITO;;
         
@@ -190,7 +191,7 @@ public class ServicioMensajeria {
             estado = Estado.EN_REPARTO;
             
         
-        return new Pair<PuntoControl, Estado>(punto.getPasoPuntos(), estado);
+        return new PuntoControlEstadoEnvio(punto.getPasoPuntos(), estado);
     }
     
     /**
