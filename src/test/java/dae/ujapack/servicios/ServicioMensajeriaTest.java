@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.MethodMode;
-import dae.ujapack.utils.util;
+import dae.ujapack.utils.Utils;
 import java.time.LocalDateTime;
 import javax.validation.ConstraintViolationException;
 
@@ -46,7 +46,7 @@ public class ServicioMensajeriaTest {
         servicioUjapack.actualizar(envio.getIdentificador(), LocalDateTime.now(), true, "Almería");
                 
         // Compruebo que esta en transito, dado que sigue la oficina de origen
-        Assertions.assertThat(servicioUjapack.obtenerSituacion(envio.getIdentificador()).getEstado()).isEqualTo(util.Estado.EN_REPARTO);  
+        Assertions.assertThat(servicioUjapack.obtenerSituacion(envio.getIdentificador()).getEstado()).isEqualTo(Utils.Estado.EN_REPARTO);  
     }
     
     @Test

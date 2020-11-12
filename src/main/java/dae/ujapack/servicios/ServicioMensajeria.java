@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import dae.ujapack.utils.util.Estado;
+import dae.ujapack.utils.Utils.Estado;
 import java.time.LocalDateTime;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;

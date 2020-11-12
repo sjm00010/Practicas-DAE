@@ -1,4 +1,4 @@
-package dae.ujapack.servicios;
+package dae.ujapack.utils;
 
 import dae.ujapack.entidades.puntosControl.CentroLogistico;
 import dae.ujapack.entidades.puntosControl.Oficina;
@@ -20,11 +20,11 @@ import org.json.simple.parser.ParseException;
  * Servicio que carga los datos de un archivo json
  * @author sjm00010
  */
-public class ServicioCarga {
+public class CargaDatos {
     private String ruta; // Ruta del archivo .json
     private int numCentros; // Número de centros que contiene el archivo
 
-    public ServicioCarga() {
+    public CargaDatos() {
         this.ruta = System.getProperty("user.dir")+"/redujapack.json";
         this.numCentros = 10;
     }

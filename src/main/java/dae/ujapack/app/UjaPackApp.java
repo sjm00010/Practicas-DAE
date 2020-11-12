@@ -1,7 +1,7 @@
 package dae.ujapack.app;
 
 import dae.ujapack.entidades.puntosControl.CentroLogistico;
-import dae.ujapack.servicios.ServicioCarga;
+import dae.ujapack.utils.CargaDatos;
 import dae.ujapack.servicios.ServicioEnrutado;
 import dae.ujapack.servicios.ServicioMensajeria;
 import dae.ujapack.tuplas.OficinasCentrosServicioCarga;
@@ -24,7 +24,7 @@ public class UjaPackApp {
     private OficinasCentrosServicioCarga datos;
         
     UjaPackApp() {
-        datos = new ServicioCarga().cargaDatos();
+        datos = new CargaDatos().cargaDatos();
     }
     
     @Bean

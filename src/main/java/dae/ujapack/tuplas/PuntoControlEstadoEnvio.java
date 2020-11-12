@@ -1,7 +1,7 @@
 package dae.ujapack.tuplas;
 
 import dae.ujapack.entidades.puntosControl.PuntoControl;
-import dae.ujapack.utils.util.Estado;
+import dae.ujapack.utils.Utils.Estado;
 
 /**
  * Clase que para almacenar una tupla del último punto de control y el estado
