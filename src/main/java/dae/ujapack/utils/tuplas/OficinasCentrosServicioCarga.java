@@ -1,4 +1,4 @@
-package dae.ujapack.tuplas;
+package dae.ujapack.utils.tuplas;
 
 import dae.ujapack.entidades.puntosControl.CentroLogistico;
 import dae.ujapack.entidades.puntosControl.Oficina;

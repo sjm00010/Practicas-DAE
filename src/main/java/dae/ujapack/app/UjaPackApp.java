@@ -4,7 +4,7 @@ import dae.ujapack.entidades.puntosControl.CentroLogistico;
 import dae.ujapack.utils.CargaDatos;
 import dae.ujapack.servicios.ServicioEnrutado;
 import dae.ujapack.servicios.ServicioMensajeria;
-import dae.ujapack.tuplas.OficinasCentrosServicioCarga;
+import dae.ujapack.utils.tuplas.OficinasCentrosServicioCarga;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import org.springframework.boot.SpringApplication;
@@ -28,7 +28,8 @@ public class UjaPackApp {
     }
     
     @Bean
-    ServicioEnrutado grafo() {
+    @Primary // https://www.baeldung.com/spring-qualifier-annotation
+    ServicioEnrutado servicioRuta() { // Se llaman diferente al nombre del servicio con el fin de evitar el conflicto con el bean que crea Spring
         ServicioEnrutado enrutado = new ServicioEnrutado((ArrayList<CentroLogistico>) 
                                             datos.getCentros()
                                             .values()
@@ -39,10 +40,10 @@ public class UjaPackApp {
     }
     
     @Bean
-    @Primary // https://www.baeldung.com/spring-qualifier-annotation
+    @Primary
     ServicioMensajeria servicioUjapack() {
-        ServicioMensajeria mensajeria = new ServicioMensajeria( datos.getOficinas(), datos.getCentros() );
-        return mensajeria;
+        ServicioMensajeria servicioUjapack = new ServicioMensajeria( datos.getOficinas(), datos.getCentros() );
+        return servicioUjapack;
     }
     
     // El json esta en la carpeta del proyecto, se carga automaticamente

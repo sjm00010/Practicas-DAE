@@ -1,4 +1,4 @@
-package dae.ujapack.tuplas;
+package dae.ujapack.utils.tuplas;
 
 /**
  * Clase que para almacenar una tupla del localizado y el precio de un envío

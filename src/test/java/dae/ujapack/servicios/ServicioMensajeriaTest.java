@@ -2,7 +2,7 @@ package dae.ujapack.servicios;
 
 import dae.ujapack.errores.EnvioNoExiste;
 import dae.ujapack.objetosvalor.Cliente;
-import dae.ujapack.tuplas.LocalizadorPrecioEnvio;
+import dae.ujapack.utils.tuplas.LocalizadorPrecioEnvio;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -8,8 +8,8 @@ import dae.ujapack.entidades.Paso;
 import dae.ujapack.errores.EnvioNoExiste;
 import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.entidades.puntosControl.PuntoControl;
-import dae.ujapack.tuplas.LocalizadorPrecioEnvio;
-import dae.ujapack.tuplas.PuntoControlEstadoEnvio;
+import dae.ujapack.utils.tuplas.LocalizadorPrecioEnvio;
+import dae.ujapack.utils.tuplas.PuntoControlEstadoEnvio;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +36,7 @@ public class ServicioMensajeria {
     
     // Variables auxiliares
     @Autowired
-    private ServicioEnrutado grafo;
+    private ServicioEnrutado servicioEnrutado;
 
     //          Repositorio
     private Map<String, Oficina> oficinas;
@@ -95,7 +95,7 @@ public class ServicioMensajeria {
      * @return ArrayList<Paso> Ruta calculada
      */
     private ArrayList<Paso> generaRuta(@NotBlank String origen,@NotBlank String destino){
-        return grafo.generaRuta(oficinas.get(origen), oficinas.get(destino), centrosLogisticos);
+        return servicioEnrutado.generaRuta(oficinas.get(origen), oficinas.get(destino), centrosLogisticos);
     }
     
     // ------ Fin funciones auxiliares ------

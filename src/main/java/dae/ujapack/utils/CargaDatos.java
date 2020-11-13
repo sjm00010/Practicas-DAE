@@ -2,7 +2,7 @@ package dae.ujapack.utils;
 
 import dae.ujapack.entidades.puntosControl.CentroLogistico;
 import dae.ujapack.entidades.puntosControl.Oficina;
-import dae.ujapack.tuplas.OficinasCentrosServicioCarga;
+import dae.ujapack.utils.tuplas.OficinasCentrosServicioCarga;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
