@@ -3,10 +3,11 @@ package dae.ujapack.entidades;
 import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.objetosvalor.Cliente;
-import dae.ujapack.interfaces.PuntoControl;
+import dae.ujapack.entidades.puntosControl.PuntoControl;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
@@ -43,7 +44,7 @@ public class Envio implements Serializable {
     
     @Transient
     @NotNull
-    private ArrayList<@Valid Paso> ruta;
+    private List<@Valid Paso> ruta;
     
     @PastOrPresent
     private LocalDateTime entrega; // Representación de la entrega del envio, sacado de la ruta(sustutiye al repartidor)
@@ -109,7 +110,7 @@ public class Envio implements Serializable {
     /**
      * @return the ruta
      */
-    public ArrayList<Paso> getRuta() {
+    public List<Paso> getRuta() {
         return ruta;
     }
     

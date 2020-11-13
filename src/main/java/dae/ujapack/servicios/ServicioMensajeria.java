@@ -1,22 +1,22 @@
 package dae.ujapack.servicios;
 
-import dae.ujapack.entidades.CentroLogistico;
+import dae.ujapack.entidades.puntosControl.CentroLogistico;
 import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.entidades.Envio;
-import dae.ujapack.entidades.Oficina;
+import dae.ujapack.entidades.puntosControl.Oficina;
 import dae.ujapack.entidades.Paso;
 import dae.ujapack.errores.EnvioNoExiste;
 import dae.ujapack.errores.PuntosAnterioresNulos;
-import dae.ujapack.interfaces.PuntoControl;
+import dae.ujapack.entidades.puntosControl.PuntoControl;
+import dae.ujapack.utils.tuplas.LocalizadorPrecioEnvio;
+import dae.ujapack.utils.tuplas.PuntoControlEstadoEnvio;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import javafx.util.Pair;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import dae.ujapack.utils.util.Estado;
+import dae.ujapack.utils.Utils.Estado;
 import java.time.LocalDateTime;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -36,56 +36,19 @@ public class ServicioMensajeria {
     
     // Variables auxiliares
     @Autowired
-    private ServicioEnrutado grafo;
-    
-    @Autowired
-    private ServicioCarga sc;
+    private ServicioEnrutado servicioEnrutado;
 
     //          Repositorio
     private Map<String, Oficina> oficinas;
     private Map<String, CentroLogistico> centrosLogisticos;
     private Map<String, Envio> envios;
-
-    /**
-     * @param grafo the grafo to set
-     */
-    public void setGrafo(ServicioEnrutado grafo) {
-        this.grafo = grafo;
-    }
-
-    /**
-     * @return the oficinas
-     */
-    public Map<String, Oficina> getOficinas() {
-        return oficinas;
-    }
-
-    /**
-     * @param oficinas the oficinas to set
-     */
-    public void setOficinas(Map<String, Oficina> oficinas) {
+    
+    
+    public ServicioMensajeria( Map<String, Oficina> oficinas, 
+            Map<String, CentroLogistico> centros ) {
         this.oficinas = oficinas;
-    }
-
-    /**
-     * @return the centrosLogisticos
-     */
-    public Map<String, CentroLogistico> getCentrosLogisticos() {
-        return centrosLogisticos;
-    }
-
-    /**
-     * @param centrosLogisticos the centrosLogisticos to set
-     */
-    public void setCentrosLogisticos(Map<String, CentroLogistico> centrosLogisticos) {
-        this.centrosLogisticos = centrosLogisticos;
-    }
-
-    /**
-     * @return the envios
-     */
-    public Map<String, Envio> getEnvios() {
-        return envios;
+        this.centrosLogisticos = centros;
+        this.envios = new HashMap<>();
     }
     
     /**
@@ -94,33 +57,12 @@ public class ServicioMensajeria {
     public Envio getEnvio(String id) {
         return envios.get(id);
     }
-
-    /**
-     * @param envios the envios to set
-     */
-    public void setEnvios(Map<String, Envio> envios) {
-        this.envios = envios;
-    }
-
-    public ServicioMensajeria() {
-        this.oficinas = new HashMap<>();
-        this.centrosLogisticos = new HashMap<>();
-        this.envios = new HashMap<>();
-    }
     
     /************************
      *       Servicio       *
      ************************
     
     // ------ Funciones auxiliares ------
-    
-    /**
-     * Función para la carga de datos
-     */
-    @PostConstruct
-    private void cargaDatos(){
-        this.sc.cargaDatos(this);
-    }
     
     /**
      * Función que genera los IDs de los envíos
@@ -153,7 +95,7 @@ public class ServicioMensajeria {
      * @return ArrayList<Paso> Ruta calculada
      */
     private ArrayList<Paso> generaRuta(@NotBlank String origen,@NotBlank String destino){
-        return grafo.generaRuta(oficinas.get(origen), oficinas.get(destino), centrosLogisticos);
+        return servicioEnrutado.generaRuta(oficinas.get(origen), oficinas.get(destino), centrosLogisticos);
     }
     
     // ------ Fin funciones auxiliares ------
@@ -165,22 +107,22 @@ public class ServicioMensajeria {
      * @param peso Peso del paquete
      * @param origen Cliente que envía el paquete
      * @param destino Cliente que recibe el paquete
-     * @return Pair<String, Integer> Identificador y precio
+     * @return LocalizadorPrecioEnvio tupla identificador y precio
      */
-    public Pair<String, Integer> creaEnvio(@Positive int alto,@Positive int ancho,
+    public LocalizadorPrecioEnvio creaEnvio(@Positive int alto,@Positive int ancho,
             @Positive int peso, @Valid @NotNull Cliente origen, @Valid @NotNull Cliente destino){
         String id = generaId();
         ArrayList<Paso> ruta = generaRuta(origen.getLocalizacion(), destino.getLocalizacion());
         envios.put( id, new Envio(id, alto, ancho, peso, origen, destino, ruta));
-        return new Pair<String, Integer>(id, envios.get(id).getPrecio());
+        return new LocalizadorPrecioEnvio(id, envios.get(id).getPrecio());
     }
     
     /**
      * Función que obtiene la situacion de un envío
      * @param idEnvio ID del envio a localizar
-     * @return Pair<PuntoControl,Estado> Par con el punto de control actual y la situación
+     * @return PuntoControlEstadoEnvio tupla con el punto de control actual y la situación
      */
-    public Pair<PuntoControl,Estado> obtenerSituacion(@Size(min=10, max=10) String idEnvio){
+    public PuntoControlEstadoEnvio obtenerSituacion(@Size(min=10, max=10) String idEnvio){
         Paso punto = envios.get(idEnvio).getUltimoPunto();
         Estado estado = Estado.EN_TRANSITO;;
         
@@ -190,7 +132,7 @@ public class ServicioMensajeria {
             estado = Estado.EN_REPARTO;
             
         
-        return new Pair<PuntoControl, Estado>(punto.getPasoPuntos(), estado);
+        return new PuntoControlEstadoEnvio(punto.getPasoPuntos(), estado);
     }
     
     /**
@@ -206,9 +148,9 @@ public class ServicioMensajeria {
         if(!envios.containsKey(idEnvio))
             throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);
         
-        PuntoControl punto = getOficinas().get(idPc);
+        PuntoControl punto = oficinas.get(idPc);
         if(punto == null)
-            punto = getCentrosLogisticos().get(idPc);
+            punto = centrosLogisticos.get(idPc);
         
         envios.get(idEnvio).actualizar(fecha, inOut, punto);
     }
