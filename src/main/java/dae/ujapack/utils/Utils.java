@@ -1,12 +1,12 @@
 package dae.ujapack.utils;
 
 /**
- * Clase que almacena ciertas util de la aplicación
+ * Clase que almacena ciertas Utils de la aplicación
  * @author sjm00010
  */
-public class util {
+public class Utils {
 
-    public util() {
+    public Utils() {
     }
     
     /** Enumeración con los posibles estados del envío */
