@@ -1,7 +1,7 @@
 package dae.ujapack.servicios;
 
-import dae.ujapack.entidades.CentroLogistico;
-import dae.ujapack.entidades.Oficina;
+import dae.ujapack.entidades.puntosControl.CentroLogistico;
+import dae.ujapack.entidades.puntosControl.Oficina;
 import dae.ujapack.entidades.Paso;
 import dae.ujapack.errores.IdPuntoControlInvalido;
 import java.time.LocalDateTime;
@@ -23,15 +23,16 @@ public class ServicioEnrutado {
     // Grafo para calcular la ruta
     private Graph<String, DefaultEdge> directedGraph;
 
-    public ServicioEnrutado() {
+    public ServicioEnrutado(ArrayList<CentroLogistico> nodos) {
        this.directedGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        generaGrafo(nodos);
     }
     
     /**
      * Función que genera el grafo para calcular el camino mínimo
      * @param nodos ArrayList<CentroLogistico> Nodos del grafo
      */
-    public void generaGrafo(ArrayList<CentroLogistico> nodos){
+    private void generaGrafo(ArrayList<CentroLogistico> nodos){
         // Añado los nodos        
         Graphs.addAllVertices(directedGraph, nodos.stream()
                                                     .map(nodo -> nodo.getId())

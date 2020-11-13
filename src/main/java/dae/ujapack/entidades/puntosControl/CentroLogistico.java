@@ -1,23 +1,17 @@
-package dae.ujapack.entidades;
+package dae.ujapack.entidades.puntosControl;
 
-import dae.ujapack.interfaces.PuntoControl;
 import java.util.ArrayList;
-import javax.validation.Valid;
+import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.springframework.validation.annotation.Validated;
 
 /**
  * Entidad Centro logístico
  * @author juanc
  */
-public class CentroLogistico implements PuntoControl {
-    
-    /** Identificador del centro logístico*/
-    @NotNull
-    private String id;
-    
+public class CentroLogistico extends PuntoControl {
+        
     /** Nombre del centro logístico*/
     @NotBlank
     private String nombre;
@@ -28,20 +22,13 @@ public class CentroLogistico implements PuntoControl {
     
     /** Conexiones asociadas a un centro logístico*/
     @NotNull @Size(min=1)
-    private ArrayList<String> conexiones;
+    private List<String> conexiones;
 
-    public CentroLogistico(String id, String nombre, String localizacion, ArrayList<String> conexiones) {
+    public CentroLogistico(String id, String nombre, String localizacion, List<String> conexiones) {
         this.id = id;
         this.nombre = nombre;
         this.localizacion = localizacion;
         this.conexiones = conexiones;
-    }
-
-    /**
-     * @return the id
-     */
-    public String getId() {
-        return id;
     }
 
     /**
@@ -61,7 +48,7 @@ public class CentroLogistico implements PuntoControl {
     /**
      * @return the conexiones
      */
-    public ArrayList<String> getConexiones() {
+    public List<String> getConexiones() {
         return conexiones;
     }
 }
