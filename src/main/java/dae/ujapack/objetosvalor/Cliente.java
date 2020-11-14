@@ -1,14 +1,19 @@
 package dae.ujapack.objetosvalor;
 
+import java.io.Serializable;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.persistence.Embeddable;
+import javax.validation.constraints.Size;
 
 /**
  * Objeto valor Cliente
  * @author sjm00010
  */
-public class Cliente {
+@Embeddable
+public class Cliente implements Serializable {
     
+    @Size(min=9, max=9)
     @Pattern(regexp="\\d{8}[A-HJ-NP-TV-Z]")
     private String dni;
     
@@ -20,6 +25,9 @@ public class Cliente {
     
     @NotBlank
     private String localizacion;
+
+    public Cliente() {
+    }
     
     public Cliente(String dni, String nombre, String apellidos, String localizacion) {
         this.dni = dni;
