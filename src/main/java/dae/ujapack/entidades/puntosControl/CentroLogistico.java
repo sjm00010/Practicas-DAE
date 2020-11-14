@@ -1,7 +1,14 @@
 package dae.ujapack.entidades.puntosControl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -10,7 +17,8 @@ import javax.validation.constraints.Size;
  * Entidad Centro logístico
  * @author juanc
  */
-public class CentroLogistico extends PuntoControl {
+@Entity
+public class CentroLogistico extends PuntoControl implements Serializable{
         
     /** Nombre del centro logístico*/
     @NotBlank
@@ -21,11 +29,15 @@ public class CentroLogistico extends PuntoControl {
     private String localizacion;
     
     /** Conexiones asociadas a un centro logístico*/
+    @ElementCollection
     @NotNull @Size(min=1)
     private List<String> conexiones;
 
+    public CentroLogistico() {
+    }
+
     public CentroLogistico(String id, String nombre, String localizacion, List<String> conexiones) {
-        this.id = id;
+        super(id);
         this.nombre = nombre;
         this.localizacion = localizacion;
         this.conexiones = conexiones;

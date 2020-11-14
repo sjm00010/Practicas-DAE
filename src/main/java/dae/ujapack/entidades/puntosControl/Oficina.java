@@ -1,20 +1,30 @@
 package dae.ujapack.entidades.puntosControl;
 
-import dae.ujapack.entidades.puntosControl.CentroLogistico;
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 
 /**
  * Entidad oficina
  * @author juanc
  */
-public class Oficina extends PuntoControl {
-      
+@Entity
+public class Oficina extends PuntoControl implements Serializable{
+ 
     /**Centro logístico asociado a la oficina*/
+    @ManyToOne
+    @JoinColumn(name="CentroAsociado")
     @Valid
     private CentroLogistico centroAsociado;
+
+    public Oficina() {
+    }
     
     public Oficina(String id, CentroLogistico centroAsociado){
-        this.id = id;
+        super(id);
         this.centroAsociado = centroAsociado;
     }
 
@@ -25,3 +35,4 @@ public class Oficina extends PuntoControl {
         return centroAsociado;
     }
 }
+
