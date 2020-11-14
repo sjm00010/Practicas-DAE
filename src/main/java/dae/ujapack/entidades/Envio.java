@@ -14,6 +14,8 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -61,9 +63,8 @@ public class Envio implements Serializable {
     @Valid
     private Cliente destino;
     
-    @Transient
-//    @OneToMany
-//    @OrderColumn(name="ruta")
+    @OneToMany
+    @OrderColumn(name="Paso")
     @NotNull
     private List<@Valid Paso> ruta;
     

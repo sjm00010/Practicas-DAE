@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
@@ -38,6 +37,7 @@ public class Paso implements Serializable  {
     //https://howtodoinjava.com/hibernate/hibernate-jpa-cascade-types/
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name="puntoControl")
     @NotNull
     private PuntoControl pasoPuntos;
 
