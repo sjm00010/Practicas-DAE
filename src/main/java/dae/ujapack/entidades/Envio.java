@@ -10,13 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
-import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -63,7 +64,8 @@ public class Envio implements Serializable {
     @Valid
     private Cliente destino;
     
-    @OneToMany
+    // Ruta del envio, la cargo junto con el envio debido a la alta depencia con este. Es practicamente un objeto embebido
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @OrderColumn(name="Paso")
     @NotNull
     private List<@Valid Paso> ruta;

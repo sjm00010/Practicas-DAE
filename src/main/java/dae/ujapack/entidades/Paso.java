@@ -36,7 +36,7 @@ public class Paso implements Serializable  {
     //CascadeType.MERGE: No lo utilizo porque al actualizar el paso no actualizaré el PC.
     //https://howtodoinjava.com/hibernate/hibernate-jpa-cascade-types/
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = CascadeType.ALL )
     @JoinColumn(name="puntoControl")
     @NotNull
     private PuntoControl pasoPuntos;
