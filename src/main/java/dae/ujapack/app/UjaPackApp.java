@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Primary;
  * Main
  * @author sjm00010
  */
-@SpringBootApplication(scanBasePackages = "dae.ujapack.servicios")
+@SpringBootApplication(scanBasePackages ={ "dae.ujapack.servicios", "dae.ujapack.repositorios"})
 @EntityScan(basePackages="dae.ujapack.entidades")
 public class UjaPackApp {
     private OficinasCentrosServicioCarga datos;

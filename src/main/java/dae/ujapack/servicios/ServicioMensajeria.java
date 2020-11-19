@@ -8,6 +8,7 @@ import dae.ujapack.entidades.Paso;
 import dae.ujapack.errores.EnvioNoExiste;
 import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.entidades.puntosControl.PuntoControl;
+import dae.ujapack.repositorios.RepositorioEnvios;
 import dae.ujapack.utils.tuplas.LocalizadorPrecioEnvio;
 import dae.ujapack.utils.tuplas.PuntoControlEstadoEnvio;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -41,21 +43,27 @@ public class ServicioMensajeria {
     //          Repositorio
     private Map<String, Oficina> oficinas;
     private Map<String, CentroLogistico> centrosLogisticos;
-    private Map<String, Envio> envios;
+//    private Map<String, Envio> envios;
+    
+    @Autowired
+    RepositorioEnvios repositorioEnvios;
     
     
     public ServicioMensajeria( Map<String, Oficina> oficinas, 
             Map<String, CentroLogistico> centros ) {
         this.oficinas = oficinas;
         this.centrosLogisticos = centros;
-        this.envios = new HashMap<>();
+//        this.envios = new HashMap<>();
     }
     
     /**
-     * @return un envios
+     * Getter de envio
+     * @param id ID del envio a localizar
+     * @return El envío localizado, si no existe lanza un error
      */
     public Envio getEnvio(String id) {
-        return envios.get(id);
+        return repositorioEnvios.buscar(id).orElseThrow(() -> new EnvioNoExiste("No existe ningun envío con id: "+id));
+//        return envios.get(id);
     }
     
     /************************
@@ -77,12 +85,12 @@ public class ServicioMensajeria {
             numero = "";
             
             // El bucle se repite 10 veces, tamaño Id envio
-            for(int i = 0; i < 10;i++){
+            for(int i = 0; i < 10;i++)
                 numero += Integer.toString(rn.nextInt(10));
-            }
             
             // Se comprueba que es único
-            if(!envios.containsKey(numero))
+//            if(!envios.containsKey(numero))
+            if(!repositorioEnvios.buscar(numero).isPresent())
                 generado = true;
         }
         return numero;
@@ -113,8 +121,14 @@ public class ServicioMensajeria {
             @Positive int peso, @Valid @NotNull Cliente origen, @Valid @NotNull Cliente destino){
         String id = generaId();
         ArrayList<Paso> ruta = generaRuta(origen.getLocalizacion(), destino.getLocalizacion());
-        envios.put( id, new Envio(id, alto, ancho, peso, origen, destino, ruta));
-        return new LocalizadorPrecioEnvio(id, envios.get(id).getPrecio());
+        
+        ruta.forEach(nodo -> repositorioEnvios.creaPaso(nodo));
+        
+        Envio envio = new Envio(id, alto, ancho, peso, origen, destino, ruta);
+        repositorioEnvios.crear(envio);
+        
+//        envios.put( id, new Envio(id, alto, ancho, peso, origen, destino, ruta));
+        return new LocalizadorPrecioEnvio(id, envio.getPrecio());
     }
     
     /**
@@ -123,12 +137,14 @@ public class ServicioMensajeria {
      * @return PuntoControlEstadoEnvio tupla con el punto de control actual y la situación
      */
     public PuntoControlEstadoEnvio obtenerSituacion(@Size(min=10, max=10) String idEnvio){
-        Paso punto = envios.get(idEnvio).getUltimoPunto();
-        Estado estado = Estado.EN_TRANSITO;;
+        //        Paso punto = envios.get(idEnvio).getUltimoPunto();
+        Envio envio = getEnvio(idEnvio);
+        Paso punto = envio.getUltimoPunto();
+        Estado estado = Estado.EN_TRANSITO;
         
-        if (envios.get(idEnvio).getEntrega() != null)
+        if (envio.getEntrega() != null)
             estado = Estado.ENTREGADO;
-        else if(envios.get(idEnvio).getRuta().size()-1 == envios.get(idEnvio).getRuta().indexOf(punto))
+        else if(envio.getRuta().size()-1 == envio.getRuta().indexOf(punto))
             estado = Estado.EN_REPARTO;
             
         
@@ -142,17 +158,22 @@ public class ServicioMensajeria {
      * @param inOut Entrada o salida del punto de control
      * @param idPc Identificador del punto de control. Si es repartidor poner "Repartidor"
      */
+    @Transactional
     public void actualizar(@Size(min=10, max=10) String idEnvio, 
             @PastOrPresent LocalDateTime fecha, boolean inOut, @NotBlank String idPc){
         
-        if(!envios.containsKey(idEnvio))
-            throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);
+        // Compruebo que el envio existe, en caso de no existir lanza un error
+        Envio envio = getEnvio(idEnvio);
+        
+//        if(!envios.containsKey(idEnvio))
+//            throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);
         
         PuntoControl punto = oficinas.get(idPc);
         if(punto == null)
             punto = centrosLogisticos.get(idPc);
         
-        envios.get(idEnvio).actualizar(fecha, inOut, punto);
+        envio.actualizar(fecha, inOut, punto);
+//        envios.get(idEnvio).actualizar(fecha, inOut, punto);
     }
     
     /**
@@ -160,13 +181,19 @@ public class ServicioMensajeria {
      * @param idEnvio Id del envio ha actualizar
      * @param fecha Fecha de entrega
      */
+    @Transactional
     public void notificarEntrega(@Size(min=10, max=10) String idEnvio, @PastOrPresent LocalDateTime fecha){
-        if(!envios.containsKey(idEnvio))
-            throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);
+
+//        if(!envios.containsKey(idEnvio))
+//            throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);
         
-        Paso punto = envios.get(idEnvio).getUltimoPunto();
-        if(envios.get(idEnvio).getRuta().size()-1 == envios.get(idEnvio).getRuta().indexOf(punto))
-            envios.get(idEnvio).setEntrega(fecha);
+        // Me aseguro que el envio existe y obtengo el ultimo punto
+        Envio envio = getEnvio(idEnvio);
+        Paso punto = envio.getUltimoPunto();
+//        Paso punto = envios.get(idEnvio).getUltimoPunto();
+
+        if(envio.getRuta().size()-1 == envio.getRuta().indexOf(punto))
+            envio.setEntrega(fecha);
         else
             throw new PuntosAnterioresNulos("Algun punto anterior no ha sido actualizado");
     }
