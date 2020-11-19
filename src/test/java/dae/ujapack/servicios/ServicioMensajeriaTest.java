@@ -53,7 +53,6 @@ public class ServicioMensajeriaTest {
     }
     
     @Test
-    @Disabled
     public void testEnvioRutaCaso1() {
         Cliente cliente = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
         

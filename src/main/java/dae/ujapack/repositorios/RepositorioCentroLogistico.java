@@ -6,6 +6,8 @@
 package dae.ujapack.repositorios;
 
 import dae.ujapack.entidades.puntosControl.CentroLogistico;
+import dae.ujapack.entidades.puntosControl.Oficina;
+import java.util.Collection;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -34,11 +36,11 @@ public class RepositorioCentroLogistico {
     }
     
     /**
-     * Función que se encarga de crear un nuevo CentroLogistico
-     * @param centro Centro logístico a crear
+     * Función que se encarga de crear los CentroLogisticos
+     * @param centros Centro logístico a crear
      */
-    public void guardar(CentroLogistico centro) {
-        em.persist(centro);
-    }   
+   public void guardar(Collection<CentroLogistico> centros){
+        centros.forEach(centro -> em.persist(centro));
+    }
    
 }

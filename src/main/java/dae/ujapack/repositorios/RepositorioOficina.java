@@ -6,6 +6,7 @@
 package dae.ujapack.repositorios;
 
 import dae.ujapack.entidades.puntosControl.Oficina;
+import java.util.Collection;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,11 +34,12 @@ public class RepositorioOficina {
         return Optional.ofNullable(em.find(Oficina.class, id));
     }
     
+ 
     /**
-     * Función que se encarga de crear una nueva Oficina
-     * @param oficina Oficina a crear
+     * Función que crea las oficinas por colección.
+     * @param oficinas Colección de oficinas
      */
-    public void guardar(Oficina oficina){
-        em.persist(oficina);
+    public void guardar(Collection<Oficina> oficinas){
+        oficinas.forEach(oficina -> em.persist(oficina));
     }
 }
