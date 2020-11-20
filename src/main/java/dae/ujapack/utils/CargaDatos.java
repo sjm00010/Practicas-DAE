@@ -15,6 +15,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Servicio que carga los datos de un archivo json
@@ -23,7 +24,8 @@ import org.json.simple.parser.ParseException;
 public class CargaDatos {
     private String ruta; // Ruta del archivo .json
     private int numCentros; // Número de centros que contiene el archivo
-
+    
+  
     public CargaDatos() {
         this.ruta = System.getProperty("user.dir")+"/redujapack.json";
         this.numCentros = 10;

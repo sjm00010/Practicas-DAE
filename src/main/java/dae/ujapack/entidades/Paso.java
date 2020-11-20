@@ -21,7 +21,7 @@ import javax.validation.constraints.PastOrPresent;
 @Entity
 public class Paso implements Serializable  {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO) 
+    @GeneratedValue(strategy=GenerationType.SEQUENCE) 
     private Long id;
     
     @PastOrPresent
@@ -36,7 +36,7 @@ public class Paso implements Serializable  {
     //CascadeType.MERGE: No lo utilizo porque al actualizar el paso no actualizaré el PC.
     //https://howtodoinjava.com/hibernate/hibernate-jpa-cascade-types/
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne
     @JoinColumn(name="puntoControl")
     @NotNull
     private PuntoControl pasoPuntos;

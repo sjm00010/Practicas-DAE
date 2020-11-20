@@ -7,11 +7,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import dae.ujapack.utils.Utils;
 import java.time.LocalDateTime;
 import javax.validation.ConstraintViolationException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 
 /**
  * Test para ServicioMensajeria
@@ -22,6 +22,9 @@ public class ServicioMensajeriaTest {
         
     @Autowired
     ServicioMensajeria servicioUjapack;
+    
+    @Autowired
+    ServicioLimpiadoBaseDatos limpiadorBaseDatos;
 
     @Test
     public void testAccesoServicioUjapack() {
@@ -29,7 +32,6 @@ public class ServicioMensajeriaTest {
     }
     
     @Test
-    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testCreaEnvioInvalido() {
         Cliente cliente = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");        
         
@@ -37,20 +39,19 @@ public class ServicioMensajeriaTest {
             servicioUjapack.creaEnvio(5, 5, 5, cliente, null); }) // No tiene destino, es nulo.
                 .isInstanceOf(ConstraintViolationException.class);
     }
-
+    
     @Test
-    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testGetSituacionEnvio() {
+        
         Cliente cliente = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
         LocalizadorPrecioEnvio envio = servicioUjapack.creaEnvio(5, 5, 5, cliente, cliente);
         servicioUjapack.actualizar(envio.getIdentificador(), LocalDateTime.now(), true, "Almería");
                 
-        // Compruebo que esta en transito, dado que sigue la oficina de origen
+        // Compruebo que esta en reparto, dado que sigue la oficina de origen
         Assertions.assertThat(servicioUjapack.obtenerSituacion(envio.getIdentificador()).getEstado()).isEqualTo(Utils.Estado.EN_REPARTO);  
     }
     
     @Test
-    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testEnvioRutaCaso1() {
         Cliente cliente = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
         
@@ -63,7 +64,6 @@ public class ServicioMensajeriaTest {
     }
     
     @Test
-    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testEnvioRutaCaso2() {
         Cliente origen = new Cliente("11111111A", "Prueba", "Pruebas", "Jaén");
         Cliente destino = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
@@ -78,7 +78,6 @@ public class ServicioMensajeriaTest {
     }
     
     @Test
-    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testEnvioRutaCaso3() {
         Cliente origen = new Cliente("11111111A", "Prueba", "Pruebas", "Jaén");
         Cliente destino = new Cliente("11111111A", "Prueba", "Pruebas", "Albacete");
@@ -94,11 +93,16 @@ public class ServicioMensajeriaTest {
     }
     
     @Test
-    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     public void testActualizaEnvioInvalido() {        
         // Intento actualizar un envio que no existe
         Assertions.assertThatThrownBy(() -> {
             servicioUjapack.actualizar("1234567890", LocalDateTime.now(), true, "1"); }) // En id no existe
                 .isInstanceOf(EnvioNoExiste.class);
     }
+    
+    @BeforeEach
+    void limpiarBaseDatos() {
+        limpiadorBaseDatos.limpiar();
+    }
+
 }
