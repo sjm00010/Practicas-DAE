@@ -26,7 +26,6 @@ public class ServicioMensajeriaTest {
     @Autowired
     ServicioLimpiadoBaseDatos limpiadorBaseDatos;
 
-
     @Test
     public void testAccesoServicioUjapack() {
         Assertions.assertThat(servicioUjapack).isNotNull();
@@ -40,9 +39,10 @@ public class ServicioMensajeriaTest {
             servicioUjapack.creaEnvio(5, 5, 5, cliente, null); }) // No tiene destino, es nulo.
                 .isInstanceOf(ConstraintViolationException.class);
     }
-
+    
     @Test
     public void testGetSituacionEnvio() {
+        
         Cliente cliente = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
         LocalizadorPrecioEnvio envio = servicioUjapack.creaEnvio(5, 5, 5, cliente, cliente);
         servicioUjapack.actualizar(envio.getIdentificador(), LocalDateTime.now(), true, "Almería");

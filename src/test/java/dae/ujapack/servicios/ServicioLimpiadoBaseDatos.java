@@ -24,8 +24,8 @@ public class ServicioLimpiadoBaseDatos {
      * para evitar errores de violación de integridad 
      */
     final String[] entidades = {
-        "Paso", 
-        "Envio"         
+        "Envio", 
+        "Paso"         
     };
     
     final String deleteFrom = "delete from ";

@@ -138,7 +138,7 @@ public class ServicioMensajeria {
 //        for(Paso nodo : ruta){
 //            repositorioEnvios.creaPaso(nodo);
 //        }
-        ruta.forEach(nodo -> repositorioEnvios.creaPaso(nodo));
+//        ruta.forEach(nodo -> repositorioEnvios.creaPaso(nodo));
 
         Envio envio = new Envio(id, alto, ancho, peso, origen, destino, ruta);
         repositorioEnvios.crear(envio);
@@ -187,9 +187,9 @@ public class ServicioMensajeria {
 
 //        if(!envios.containsKey(idEnvio))
 //            throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);
-        PuntoControl punto = repositorioOficina.buscar(idPc).orElseThrow(() -> new IdPuntoControlInvalido("El id " + idPc + " de la oficina es inválido"));
+        PuntoControl punto = repositorioOficina.buscar(idPc).orElse(null);
                 if(punto == null){
-                    punto = repositorioCentroLogistico.buscar(idPc).orElseThrow(() -> new IdPuntoControlInvalido("El id " + idPc + " del centro logístico es inválido"));
+                    punto = repositorioCentroLogistico.buscar(idPc).orElseThrow(() -> new IdPuntoControlInvalido("El id " + idPc + " del punto de control es inválido"));
                 }
         //-------------------------------------------------------------------
 //        Optional<? extends PuntoControl> punto = repositorioOficina.buscar(idPc);

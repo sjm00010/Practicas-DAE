@@ -1,6 +1,7 @@
 package dae.ujapack.entidades.puntosControl;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -23,5 +24,24 @@ public abstract class PuntoControl implements Serializable {
     public PuntoControl() {}
     public PuntoControl(String id) {this.id = id;}
     public String getId(){ return id; }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PuntoControl other = (PuntoControl) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
+    }
     
 }

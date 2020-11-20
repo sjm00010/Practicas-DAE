@@ -58,4 +58,5 @@ public class CentroLogistico extends PuntoControl implements Serializable{
     public List<String> getConexiones() {
         return conexiones;
     }
+    
 }
