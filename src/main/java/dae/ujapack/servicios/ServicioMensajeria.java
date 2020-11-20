@@ -165,9 +165,10 @@ public class ServicioMensajeria {
         Envio envio = getEnvio(idEnvio);
 
         PuntoControl punto = repositorioOficina.buscar(idPc).orElse(null);
-                if(punto == null){
-                    punto = repositorioCentroLogistico.buscar(idPc).orElseThrow(() -> new IdPuntoControlInvalido("El id " + idPc + " del punto de control es inválido"));
-                }
+        if(punto == null){
+            punto = repositorioCentroLogistico.buscar(idPc).orElseThrow(() -> new IdPuntoControlInvalido("El id " + idPc + " del punto de control es inválido"));
+        }
+    
         envio.actualizar(fecha, inOut, punto);
     }
 

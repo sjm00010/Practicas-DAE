@@ -42,21 +42,4 @@ public class RepositorioEnvios {
     public void actualizaEnvio(Envio envio){
         em.merge(envio);
     }
-    
-    // Este repositorio tambien se encargar de gestionar el Paso
-    /**
-     * Función que crea un nuevo Paso
-     * @param envio Paso a crear
-     */
-    public void creaPaso(Paso paso){
-        em.persist(paso);
-    }
-    
-    /**
-     * Función para actualizar los datos de un envío
-     * @param envio Nuevo envio que actualizar
-     */
-    public void actualizaPaso(Paso paso){
-        em.merge(paso);
-    }
 }
