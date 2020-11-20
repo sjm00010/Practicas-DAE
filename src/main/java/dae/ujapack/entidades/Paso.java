@@ -3,7 +3,6 @@ package dae.ujapack.entidades;
 import dae.ujapack.entidades.puntosControl.PuntoControl;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +19,7 @@ import javax.validation.constraints.PastOrPresent;
 
 @Entity
 public class Paso implements Serializable  {
+    
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE) 
     private Long id;
@@ -30,12 +30,6 @@ public class Paso implements Serializable  {
     // No se comprueba porque es un valor primitivo
     private boolean inOut; // False entrada, True salida
     
-    //Es una Relación 1 a 1 porque es composición
-    //CascadeType.PERSIST: Lo utilizo porque al guardar el paso tengo que guardar el PC. 
-    //CascadeType.REMOVE: Lo utilizo porque al eliminar el paso tengo que elimnar el PC. 
-    //CascadeType.MERGE: No lo utilizo porque al actualizar el paso no actualizaré el PC.
-    //https://howtodoinjava.com/hibernate/hibernate-jpa-cascade-types/
-
     @OneToOne
     @JoinColumn(name="puntoControl")
     @NotNull

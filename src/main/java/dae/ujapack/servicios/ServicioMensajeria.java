@@ -1,9 +1,7 @@
 package dae.ujapack.servicios;
 
-import dae.ujapack.entidades.puntosControl.CentroLogistico;
 import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.entidades.Envio;
-import dae.ujapack.entidades.puntosControl.Oficina;
 import dae.ujapack.entidades.Paso;
 import dae.ujapack.errores.EnvioNoExiste;
 import dae.ujapack.errores.PuntosAnterioresNulos;
@@ -15,23 +13,17 @@ import dae.ujapack.repositorios.RepositorioOficina;
 import dae.ujapack.utils.tuplas.LocalizadorPrecioEnvio;
 import dae.ujapack.utils.tuplas.PuntoControlEstadoEnvio;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import dae.ujapack.utils.Utils.Estado;
 import java.time.LocalDateTime;
-import java.util.Optional;
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
@@ -48,10 +40,6 @@ public class ServicioMensajeria {
     private ServicioEnrutado servicioEnrutado;
 
     //          Repositorio
-//    private Map<String, Oficina> oficinas;
-//    private Map<String, CentroLogistico> centrosLogisticos;
-//    private Map<String, Envio> envios;
-
     @Autowired
     RepositorioEnvios repositorioEnvios;
 
@@ -70,16 +58,16 @@ public class ServicioMensajeria {
      */
     public Envio getEnvio(String id) {
         return repositorioEnvios.buscar(id).orElseThrow(() -> new EnvioNoExiste("No existe ningun envío con id: " + id));
-//        return envios.get(id);
     }
 
+    /*************************
+     *        Servicio       *
+     *************************/
+     
+    // ------ Funciones auxiliares ------
+    
+    
     /**
-     * **********************
-     * Servicio * ***********************
-     *
-     * // ------ Funciones auxiliares ------
-     *
-     * /**
      * Función que genera los IDs de los envíos
      *
      * @return Identificador creado
@@ -93,16 +81,13 @@ public class ServicioMensajeria {
             numero = "";
 
             // El bucle se repite 10 veces, tamaño Id envio
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 10; i++)
                 numero += Integer.toString(rn.nextInt(10));
-            }
 
             // Se comprueba que es único
-//            if(!envios.containsKey(numero))
-            if (!repositorioEnvios.buscar(numero).isPresent()) {
-                generado = true;
-            }
+            generado = !repositorioEnvios.buscar(numero).isPresent();
         }
+        
         return numero;
     }
 
@@ -113,14 +98,14 @@ public class ServicioMensajeria {
      * @param destino Oficina destino
      * @return ArrayList<Paso> Ruta calculada
      */
-    private ArrayList<Paso> generaRuta(@NotBlank String origen, @NotBlank String destino) {
-        //return servicioEnrutado.generaRuta(oficinas.get(origen), oficinas.get(destino), centrosLogisticos);
-        
+    private ArrayList<Paso> generaRuta(@NotBlank String origen, @NotBlank String destino) {        
         return servicioEnrutado.generaRuta(repositorioOficina.buscar(origen).orElseThrow(() -> new IdPuntoControlInvalido("El id " + origen + " de la oficina de origen es inválido")),
                                            repositorioOficina.buscar(destino).orElseThrow(() -> new IdPuntoControlInvalido("El id " + destino + " de la oficina de destino es inválido")));
     }
 
     // ------ Fin funciones auxiliares ------
+    
+    
     /**
      * Función para crear el envío de un paquete
      *
@@ -135,15 +120,10 @@ public class ServicioMensajeria {
             @Positive int peso, @Valid @NotNull Cliente origen, @Valid @NotNull Cliente destino) {
         String id = generaId();
         ArrayList<Paso> ruta = generaRuta(origen.getLocalizacion(), destino.getLocalizacion());
-//        for(Paso nodo : ruta){
-//            repositorioEnvios.creaPaso(nodo);
-//        }
-//        ruta.forEach(nodo -> repositorioEnvios.creaPaso(nodo));
 
         Envio envio = new Envio(id, alto, ancho, peso, origen, destino, ruta);
         repositorioEnvios.crear(envio);
 
-//        envios.put( id, new Envio(id, alto, ancho, peso, origen, destino, ruta));
         return new LocalizadorPrecioEnvio(id, envio.getPrecio());
     }
 
@@ -155,7 +135,6 @@ public class ServicioMensajeria {
      * situación
      */
     public PuntoControlEstadoEnvio obtenerSituacion(@Size(min = 10, max = 10) String idEnvio) {
-        //        Paso punto = envios.get(idEnvio).getUltimoPunto();
         Envio envio = getEnvio(idEnvio);
         Paso punto = envio.getUltimoPunto();
         Estado estado = Estado.EN_TRANSITO;
@@ -185,23 +164,11 @@ public class ServicioMensajeria {
         // Compruebo que el envio existe, en caso de no existir lanza un error
         Envio envio = getEnvio(idEnvio);
 
-//        if(!envios.containsKey(idEnvio))
-//            throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);
         PuntoControl punto = repositorioOficina.buscar(idPc).orElse(null);
                 if(punto == null){
                     punto = repositorioCentroLogistico.buscar(idPc).orElseThrow(() -> new IdPuntoControlInvalido("El id " + idPc + " del punto de control es inválido"));
                 }
-        //-------------------------------------------------------------------
-//        Optional<? extends PuntoControl> punto = repositorioOficina.buscar(idPc);
-//        if (punto.isPresent()) {
-//            punto = repositorioCentroLogistico.buscar(idPc);
-//        }
-//        envio.actualizar(fecha, inOut, punto.get());
-
-        //----------------------------------------------------------------------
         envio.actualizar(fecha, inOut, punto);
-
-//        envios.get(idEnvio).actualizar(fecha, inOut, punto);
     }
 
     /**
@@ -212,13 +179,9 @@ public class ServicioMensajeria {
      */
     @Transactional
     public void notificarEntrega(@Size(min = 10, max = 10) String idEnvio, @PastOrPresent LocalDateTime fecha) {
-
-//        if(!envios.containsKey(idEnvio))
-//            throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);
         // Me aseguro que el envio existe y obtengo el ultimo punto
         Envio envio = getEnvio(idEnvio);
         Paso punto = envio.getUltimoPunto();
-//        Paso punto = envios.get(idEnvio).getUltimoPunto();
 
         if (envio.getRuta().size() - 1 == envio.getRuta().indexOf(punto)) {
             envio.setEntrega(fecha);

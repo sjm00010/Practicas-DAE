@@ -15,7 +15,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Servicio que carga los datos de un archivo json
@@ -82,9 +81,6 @@ public class CargaDatos {
                 JSONObject centro = (JSONObject) jsonParser.parse(listaCentros.get(Integer.toString(i)).toString());
                 transformarEnObjetos(centro, Integer.toString(i), centrosLogisticos, oficinas);
             }
-            
-            // Aprovecho que ya tengo los centros para generar el grafo para la ruta
-            // grafo.generaGrafo((ArrayList<CentroLogistico>) centrosLogisticos.values().stream().collect(Collectors.toList()));
             
         } catch (FileNotFoundException e) {
             e.printStackTrace();

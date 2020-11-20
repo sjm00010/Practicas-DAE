@@ -11,7 +11,6 @@ import dae.ujapack.utils.Utils;
 import java.time.LocalDateTime;
 import javax.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 
 /**
  * Test para ServicioMensajeria

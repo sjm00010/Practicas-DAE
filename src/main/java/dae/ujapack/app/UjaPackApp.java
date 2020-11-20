@@ -1,25 +1,15 @@
 package dae.ujapack.app;
 
-import dae.ujapack.entidades.puntosControl.CentroLogistico;
-import dae.ujapack.entidades.puntosControl.Oficina;
 import dae.ujapack.repositorios.RepositorioCentroLogistico;
 import dae.ujapack.repositorios.RepositorioOficina;
 import dae.ujapack.utils.CargaDatos;
-import dae.ujapack.servicios.ServicioEnrutado;
-import dae.ujapack.servicios.ServicioMensajeria;
 import dae.ujapack.utils.tuplas.OficinasCentrosServicioCarga;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 
 /**
  * Main
