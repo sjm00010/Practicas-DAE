@@ -42,7 +42,6 @@ public class ServicioMensajeriaTest {
     }
 
     @Test
-    @Disabled
     public void testGetSituacionEnvio() {
         Cliente cliente = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
         LocalizadorPrecioEnvio envio = servicioUjapack.creaEnvio(5, 5, 5, cliente, cliente);
@@ -65,7 +64,6 @@ public class ServicioMensajeriaTest {
     }
     
     @Test
-    @Disabled
     public void testEnvioRutaCaso2() {
         Cliente origen = new Cliente("11111111A", "Prueba", "Pruebas", "Jaén");
         Cliente destino = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
@@ -80,7 +78,6 @@ public class ServicioMensajeriaTest {
     }
     
     @Test
-    @Disabled
     public void testEnvioRutaCaso3() {
         Cliente origen = new Cliente("11111111A", "Prueba", "Pruebas", "Jaén");
         Cliente destino = new Cliente("11111111A", "Prueba", "Pruebas", "Albacete");

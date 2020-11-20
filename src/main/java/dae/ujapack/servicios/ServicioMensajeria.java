@@ -48,8 +48,8 @@ public class ServicioMensajeria {
     private ServicioEnrutado servicioEnrutado;
 
     //          Repositorio
-    private Map<String, Oficina> oficinas;
-    private Map<String, CentroLogistico> centrosLogisticos;
+//    private Map<String, Oficina> oficinas;
+//    private Map<String, CentroLogistico> centrosLogisticos;
 //    private Map<String, Envio> envios;
 
     @Autowired
@@ -61,15 +61,6 @@ public class ServicioMensajeria {
     @Autowired
     RepositorioOficina repositorioOficina;
 
-    public ServicioMensajeria(Map<String, Oficina> oficinas,
-        Map<String, CentroLogistico> centros) {
-        repositorioOficina.guardar(oficinas.values());
-        //this.oficinas = oficinas;
-        //this.centrosLogisticos = centros;
-        repositorioCentroLogistico.guardar(centros.values());
-        
-//        this.envios = new HashMap<>();
-    }
   
     /**
      * Getter de envio
@@ -126,8 +117,7 @@ public class ServicioMensajeria {
         //return servicioEnrutado.generaRuta(oficinas.get(origen), oficinas.get(destino), centrosLogisticos);
         
         return servicioEnrutado.generaRuta(repositorioOficina.buscar(origen).orElseThrow(() -> new IdPuntoControlInvalido("El id " + origen + " de la oficina de origen es inválido")),
-                                           repositorioOficina.buscar(destino).orElseThrow(() -> new IdPuntoControlInvalido("El id " + destino + " de la oficina de destino es inválido")),
-                                           centrosLogisticos);
+                                           repositorioOficina.buscar(destino).orElseThrow(() -> new IdPuntoControlInvalido("El id " + destino + " de la oficina de destino es inválido")));
     }
 
     // ------ Fin funciones auxiliares ------
@@ -145,7 +135,9 @@ public class ServicioMensajeria {
             @Positive int peso, @Valid @NotNull Cliente origen, @Valid @NotNull Cliente destino) {
         String id = generaId();
         ArrayList<Paso> ruta = generaRuta(origen.getLocalizacion(), destino.getLocalizacion());
-
+//        for(Paso nodo : ruta){
+//            repositorioEnvios.creaPaso(nodo);
+//        }
         ruta.forEach(nodo -> repositorioEnvios.creaPaso(nodo));
 
         Envio envio = new Envio(id, alto, ancho, peso, origen, destino, ruta);
@@ -195,9 +187,10 @@ public class ServicioMensajeria {
 
 //        if(!envios.containsKey(idEnvio))
 //            throw new EnvioNoExiste("No se encuentra un envio con id: "+idEnvio);
-        PuntoControl punto = oficinas.get(idPc);
-                if(punto == null)
-                    punto = centrosLogisticos.get(idPc);
+        PuntoControl punto = repositorioOficina.buscar(idPc).orElseThrow(() -> new IdPuntoControlInvalido("El id " + idPc + " de la oficina es inválido"));
+                if(punto == null){
+                    punto = repositorioCentroLogistico.buscar(idPc).orElseThrow(() -> new IdPuntoControlInvalido("El id " + idPc + " del centro logístico es inválido"));
+                }
         //-------------------------------------------------------------------
 //        Optional<? extends PuntoControl> punto = repositorioOficina.buscar(idPc);
 //        if (punto.isPresent()) {
