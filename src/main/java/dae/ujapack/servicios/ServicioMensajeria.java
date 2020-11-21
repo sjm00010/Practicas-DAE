@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -199,6 +200,7 @@ public class ServicioMensajeria {
     /**
      * Función para marcar los envios extraviados, se ejecuta automaticamente a las 12
      */
+    @Scheduled( cron = "0 0 0 * * *") // Se supone que con @midnight funcionaría igual, pero no he conseguido que lo coja
     public void actualizaExtraviados() {
         extraviados = repositorioEnvios.buscarNoEntregados()
                 .stream()

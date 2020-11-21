@@ -10,6 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Main
@@ -18,6 +19,7 @@ import org.springframework.context.ApplicationContext;
  */
 @SpringBootApplication(scanBasePackages = {"dae.ujapack.servicios", "dae.ujapack.repositorios"})
 @EntityScan(basePackages = "dae.ujapack.entidades")
+@EnableScheduling
 public class UjaPackApp {
 
     private OficinasCentrosServicioCarga datos;
