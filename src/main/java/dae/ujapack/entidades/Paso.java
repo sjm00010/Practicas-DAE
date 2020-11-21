@@ -37,6 +37,7 @@ public class Paso implements Serializable  {
     private PuntoControl pasoPuntos;
 
     public Paso() {
+        this.fecha = null; // Me aseguro de que la fecha se inicializa a null
     }
     
     /**

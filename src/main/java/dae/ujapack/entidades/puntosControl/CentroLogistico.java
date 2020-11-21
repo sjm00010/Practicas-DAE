@@ -24,7 +24,7 @@ public class CentroLogistico extends PuntoControl implements Serializable{
     private String localizacion;
     
     /** Conexiones asociadas a un centro logístico*/
-    @ElementCollection
+    @ElementCollection()
     @NotNull @Size(min=1)
     private List<String> conexiones;
 

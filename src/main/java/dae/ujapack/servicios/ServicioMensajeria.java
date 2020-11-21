@@ -200,7 +200,7 @@ public class ServicioMensajeria {
     /**
      * Función para marcar los envios extraviados, se ejecuta automaticamente a las 12
      */
-    @Scheduled( cron = "0 0 0 * * *") // Se supone que con @midnight funcionaría igual, pero no he conseguido que lo coja
+    @Scheduled( cron = "0 0 0 * * *") // Con la última versión de SpringBoot 2.4 se puede usar la macro @midnight que funcionaría igual
     public void actualizaExtraviados() {
         extraviados = repositorioEnvios.buscarNoEntregados()
                 .stream()
