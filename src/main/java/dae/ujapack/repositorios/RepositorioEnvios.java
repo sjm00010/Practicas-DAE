@@ -1,11 +1,12 @@
 package dae.ujapack.repositorios;
 
 import dae.ujapack.entidades.Envio;
-import dae.ujapack.entidades.Paso;
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author sjm00010
  */
 @Repository
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 public class RepositorioEnvios {
     @PersistenceContext
     EntityManager em;
@@ -23,8 +24,18 @@ public class RepositorioEnvios {
      * @param id ID del envío
      * @return Envío
      */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Optional<Envio> buscar(String id){
         return Optional.ofNullable(em.find(Envio.class, id));
+    }
+    
+    /**
+     * Función para listar todos los envios.
+     * @return Lista de envíos
+     */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public List<Envio> buscarTodos(){
+        return em.createQuery("SELECT e FROM Envio e JOIN FETCH e.ruta", Envio.class).getResultList();
     }
     
     /**

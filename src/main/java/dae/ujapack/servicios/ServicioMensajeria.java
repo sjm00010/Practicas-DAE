@@ -18,13 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import dae.ujapack.utils.Utils.Estado;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -34,12 +34,10 @@ import org.springframework.validation.annotation.Validated;
 @Service
 @Validated
 public class ServicioMensajeria {
-
-    // Variables auxiliares
     @Autowired
     private ServicioEnrutado servicioEnrutado;
 
-    //          Repositorio
+    //          Repositorios            //
     @Autowired
     RepositorioEnvios repositorioEnvios;
 
@@ -49,8 +47,11 @@ public class ServicioMensajeria {
     @Autowired
     RepositorioOficina repositorioOficina;
 
-  
-    /**
+    /*************************
+     *        Servicio       *
+     *************************/
+     
+        /**
      * Getter de envio
      *
      * @param id ID del envio a localizar
@@ -59,13 +60,8 @@ public class ServicioMensajeria {
     public Envio getEnvio(String id) {
         return repositorioEnvios.buscar(id).orElseThrow(() -> new EnvioNoExiste("No existe ningun envío con id: " + id));
     }
-
-    /*************************
-     *        Servicio       *
-     *************************/
-     
-    // ------ Funciones auxiliares ------
     
+    // ------ Funciones auxiliares ------  
     
     /**
      * Función que genera los IDs de los envíos
@@ -137,14 +133,8 @@ public class ServicioMensajeria {
     public PuntoControlEstadoEnvio obtenerSituacion(@Size(min = 10, max = 10) String idEnvio) {
         Envio envio = getEnvio(idEnvio);
         Paso punto = envio.getUltimoPunto();
-        Estado estado = Estado.EN_TRANSITO;
-
-        if (envio.getEntrega() != null) {
-            estado = Estado.ENTREGADO;
-        } else if (envio.getRuta().size() - 1 == envio.getRuta().indexOf(punto)) {
-            estado = Estado.EN_REPARTO;
-        }
-
+        Estado estado = envio.getEstado();
+        
         return new PuntoControlEstadoEnvio(punto.getPasoPuntos(), estado);
     }
 
@@ -157,7 +147,6 @@ public class ServicioMensajeria {
      * @param idPc Identificador del punto de control. Si es repartidor poner
      * "Repartidor"
      */
-    @Transactional
     public void actualizar(@Size(min = 10, max = 10) String idEnvio,
             @PastOrPresent LocalDateTime fecha, boolean inOut, @NotBlank String idPc) {
 
@@ -170,6 +159,7 @@ public class ServicioMensajeria {
         }
     
         envio.actualizar(fecha, inOut, punto);
+        repositorioEnvios.actualizaEnvio(envio);
     }
 
     /**
@@ -178,7 +168,6 @@ public class ServicioMensajeria {
      * @param idEnvio Id del envio ha actualizar
      * @param fecha Fecha de entrega
      */
-    @Transactional
     public void notificarEntrega(@Size(min = 10, max = 10) String idEnvio, @PastOrPresent LocalDateTime fecha) {
         // Me aseguro que el envio existe y obtengo el ultimo punto
         Envio envio = getEnvio(idEnvio);
@@ -186,8 +175,18 @@ public class ServicioMensajeria {
 
         if (envio.getRuta().size() - 1 == envio.getRuta().indexOf(punto)) {
             envio.setEntrega(fecha);
+            repositorioEnvios.actualizaEnvio(envio);
         } else {
             throw new PuntosAnterioresNulos("Algun punto anterior no ha sido actualizado");
         }
+    }
+    
+    /**
+     * Funcion para marcar los envios extraviados
+     */
+    public void actualizaExtraviados() {
+        List<Envio> envios = repositorioEnvios.buscarTodos();
+        
+//        envios.forEach(envio -> );
     }
 }

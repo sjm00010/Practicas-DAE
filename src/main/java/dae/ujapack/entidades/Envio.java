@@ -4,6 +4,7 @@ import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.entidades.puntosControl.PuntoControl;
+import dae.ujapack.utils.Utils.Estado;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -72,11 +73,14 @@ public class Envio implements Serializable {
     
     @PastOrPresent
     private LocalDateTime entrega; // Representación de la entrega del envio, sacado de la ruta(sustutiye al repartidor)
+    
+    @NotNull
+    private Estado estado;
 
     public Envio() {
     }
     
-    // Para no hacer mas engorrosa la creación del envio el cliente ya viene creado, solo se vincula
+    // Para no hacer mas engorrosa la creación del envío el cliente ya viene creado, solo se vincula
     public Envio(String id, int alto, int ancho, int peso, Cliente origen, 
             Cliente destino, ArrayList<@Valid Paso> ruta) {
         this.id = id;
@@ -87,6 +91,7 @@ public class Envio implements Serializable {
         this.destino = destino;
         this.ruta = ruta;
         this.entrega = null;
+        this.estado = estado.EN_TRANSITO; // Por defecto cuando se crea un envío está EN_TRANSITO dado que esta en la oficina de origen
     }
 
     /**
@@ -162,6 +167,8 @@ public class Envio implements Serializable {
         for (Paso paso : ruta) {
             if(paso.getPasoPuntos().getId().equals(pc.getId()) && paso.isInOut() == inOut){
                 paso.setFecha(fecha);
+                if(pc.getId().equals(destino.getLocalizacion()) && inOut)
+                    this.estado = Estado.EN_REPARTO;
                 esta = true;
                 break;
             }else if(paso.getFecha() == null ){
@@ -195,6 +202,14 @@ public class Envio implements Serializable {
      * @param entrega the entrega to set
      */
     public void setEntrega(LocalDateTime entrega) {
+        this.estado = Estado.ENTREGADO;
         this.entrega = entrega;
+    }
+
+    /**
+     * @return the estado
+     */
+    public Estado getEstado() {
+        return estado;
     }
 }

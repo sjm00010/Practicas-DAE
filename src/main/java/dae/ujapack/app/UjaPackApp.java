@@ -30,7 +30,7 @@ public class UjaPackApp {
 
     @PostConstruct
     void cargarDatos() {
-        if (repositorioCentroLogistico.buscarTodos().isEmpty()) {
+        if (repositorioCentroLogistico.isEmpty()) {
             datos = new CargaDatos().cargaDatos();
             repositorioCentroLogistico.guardar(datos.getCentros().values());
             repositorioOficina.guardar(datos.getOficinas().values());
