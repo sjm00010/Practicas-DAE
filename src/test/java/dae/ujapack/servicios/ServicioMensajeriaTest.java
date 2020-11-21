@@ -11,6 +11,7 @@ import dae.ujapack.utils.Utils;
 import java.time.LocalDateTime;
 import javax.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 
 /**
  * Test para ServicioMensajeria
@@ -97,6 +98,25 @@ public class ServicioMensajeriaTest {
         Assertions.assertThatThrownBy(() -> {
             servicioUjapack.actualizar("1234567890", LocalDateTime.now(), true, "1"); }) // En id no existe
                 .isInstanceOf(EnvioNoExiste.class);
+    }
+    
+    /*
+        Este test comprueba que se detectan correctamente los paquetes extraviados,
+        para ejecutar el test ir a ServicioEnrutado->generaRuta-> caso 1 y utilizar
+        el comentario existente en dicho caso.
+    */
+    @Test
+    @Disabled 
+    public void testValidaExtraviado(){
+        Cliente origen = new Cliente("11111111A", "Prueba", "Pruebas", "Jaén");
+        Cliente destino = new Cliente("11111111A", "Prueba", "Pruebas", "Albacete");
+        
+        // Creación de envio con origen y destino en distintos centros
+        LocalizadorPrecioEnvio envio = servicioUjapack.creaEnvio(5, 5, 5, origen, destino);
+        servicioUjapack.actualizar(envio.getIdentificador(), LocalDateTime.now(), true, "Jaén");
+        servicioUjapack.actualizaExtraviados();
+        
+        Assertions.assertThat(servicioUjapack.getExtraviados()).hasSize(1);
     }
     
     @BeforeEach

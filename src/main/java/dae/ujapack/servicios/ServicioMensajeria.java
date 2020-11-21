@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import dae.ujapack.utils.Utils.Estado;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -39,19 +40,33 @@ public class ServicioMensajeria {
 
     //          Repositorios            //
     @Autowired
-    RepositorioEnvios repositorioEnvios;
+    private RepositorioEnvios repositorioEnvios;
 
     @Autowired
-    RepositorioCentroLogistico repositorioCentroLogistico;
+    private RepositorioCentroLogistico repositorioCentroLogistico;
 
     @Autowired
-    RepositorioOficina repositorioOficina;
+    private RepositorioOficina repositorioOficina;
+    
+    private List<Envio> extraviados;
+
+    public ServicioMensajeria() {
+        extraviados = new ArrayList<>();
+    }
 
     /*************************
      *        Servicio       *
      *************************/
-     
-        /**
+    
+    /**
+     * Get de extraviados
+     * @return Lista de extraviados
+     */
+    public List<Envio> getExtraviados() {
+        return extraviados;
+    }
+
+    /**
      * Getter de envio
      *
      * @param id ID del envio a localizar
@@ -182,11 +197,11 @@ public class ServicioMensajeria {
     }
     
     /**
-     * Funcion para marcar los envios extraviados
+     * Función para marcar los envios extraviados, se ejecuta automaticamente a las 12
      */
     public void actualizaExtraviados() {
-        List<Envio> envios = repositorioEnvios.buscarTodos();
-        
-//        envios.forEach(envio -> );
+        extraviados = repositorioEnvios.buscarNoEntregados()
+                .stream()
+                .filter(envio -> envio.estaExtravido()).collect(Collectors.toList());
     }
 }

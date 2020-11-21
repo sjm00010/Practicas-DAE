@@ -1,6 +1,7 @@
 package dae.ujapack.repositorios;
 
 import dae.ujapack.entidades.Envio;
+import dae.ujapack.utils.Utils;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -30,12 +31,12 @@ public class RepositorioEnvios {
     }
     
     /**
-     * Función para listar todos los envios.
+     * Función para listar todos los envios no entregados.
      * @return Lista de envíos
      */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Envio> buscarTodos(){
-        return em.createQuery("SELECT e FROM Envio e JOIN FETCH e.ruta", Envio.class).getResultList();
+    public List<Envio> buscarNoEntregados(){
+        return em.createQuery("SELECT e FROM Envio e WHERE e.estado != :estado", Envio.class).setParameter("estado", Utils.Estado.ENTREGADO).getResultList();
     }
     
     /**

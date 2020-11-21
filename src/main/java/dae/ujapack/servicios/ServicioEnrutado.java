@@ -83,7 +83,7 @@ public class ServicioEnrutado {
         if (origen != null && destino != null) {
 
             // Caso 1 : Misma provincia (BASE PARA TODOS LOS CASOS)
-            ruta.add(new Paso(origen, false, LocalDateTime.now()));
+            ruta.add(new Paso(origen, false, LocalDateTime.now())); // .minusDays(8) para comprobar los envios extraviados
             ruta.add(new Paso(origen, true));
 
             if (!origen.equals(destino)) {
