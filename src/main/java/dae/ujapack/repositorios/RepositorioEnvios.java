@@ -1,11 +1,13 @@
 package dae.ujapack.repositorios;
 
 import dae.ujapack.entidades.Envio;
-import dae.ujapack.entidades.Paso;
+import dae.ujapack.utils.Utils;
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -13,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author sjm00010
  */
 @Repository
-@Transactional
+@Transactional(propagation = Propagation.REQUIRED)
 public class RepositorioEnvios {
     @PersistenceContext
     EntityManager em;
@@ -23,8 +25,18 @@ public class RepositorioEnvios {
      * @param id ID del envío
      * @return Envío
      */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Optional<Envio> buscar(String id){
         return Optional.ofNullable(em.find(Envio.class, id));
+    }
+    
+    /**
+     * Función para listar todos los envios no entregados.
+     * @return Lista de envíos
+     */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public List<Envio> buscarNoEntregados(){
+        return em.createQuery("SELECT e FROM Envio e WHERE e.estado != :estado", Envio.class).setParameter("estado", Utils.Estado.ENTREGADO).getResultList();
     }
     
     /**
@@ -41,22 +53,5 @@ public class RepositorioEnvios {
      */
     public void actualizaEnvio(Envio envio){
         em.merge(envio);
-    }
-    
-    // Este repositorio tambien se encargar de gestionar el Paso
-    /**
-     * Función que crea un nuevo Paso
-     * @param envio Paso a crear
-     */
-    public void creaPaso(Paso paso){
-        em.persist(paso);
-    }
-    
-    /**
-     * Función para actualizar los datos de un envío
-     * @param envio Nuevo envio que actualizar
-     */
-    public void actualizaPaso(Paso paso){
-        em.merge(paso);
     }
 }

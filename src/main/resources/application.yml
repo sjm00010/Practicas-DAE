@@ -3,6 +3,6 @@ spring.dataSource.url: jdbc:mysql://localhost:3306/ujapack
 spring.dataSource.username: ujapack
 spring.dataSource.password: ujapack
 
-spring.jpa.properties.javax.persistence.schema-generation.database.action: drop-and-create
+# spring.jpa.properties.javax.persistence.schema-generation.database.action: drop-and-create
 
 spring.data.jpa.repositories.bootstrap-mode: default

@@ -4,10 +4,13 @@ import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.entidades.puntosControl.PuntoControl;
+import dae.ujapack.utils.Utils.Estado;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
@@ -72,11 +75,14 @@ public class Envio implements Serializable {
     
     @PastOrPresent
     private LocalDateTime entrega; // Representación de la entrega del envio, sacado de la ruta(sustutiye al repartidor)
+    
+    @NotNull
+    private Estado estado;
 
     public Envio() {
     }
     
-    // Para no hacer mas engorrosa la creación del envio el cliente ya viene creado, solo se vincula
+    // Para no hacer mas engorrosa la creación del envío el cliente ya viene creado, solo se vincula
     public Envio(String id, int alto, int ancho, int peso, Cliente origen, 
             Cliente destino, ArrayList<@Valid Paso> ruta) {
         this.id = id;
@@ -87,6 +93,7 @@ public class Envio implements Serializable {
         this.destino = destino;
         this.ruta = ruta;
         this.entrega = null;
+        this.estado = estado.EN_TRANSITO; // Por defecto cuando se crea un envío está EN_TRANSITO dado que esta en la oficina de origen
     }
 
     /**
@@ -145,6 +152,37 @@ public class Envio implements Serializable {
     public int getPrecio(){
         return peso*(alto*ancho)* (ruta.size()/2+1) / 1000;
     }
+
+    /**
+     * @return the entrega
+     */
+    public LocalDateTime getEntrega() {
+        return entrega;
+    }
+
+    /**
+     * @param entrega the entrega to set
+     */
+    public void setEntrega(LocalDateTime entrega) {
+        this.estado = Estado.ENTREGADO;
+        this.entrega = entrega;
+    }
+
+    /**
+     * @return the estado
+     */
+    public Estado getEstado() {
+        return estado;
+    }
+    
+    /**
+     * Función que devuelve el punto actual del envío
+     * @return PuntoControl punto de control actual
+     */
+    public Paso getUltimoPunto(){
+        return ruta.stream()
+                    .reduce(null, (anterior, actual) -> actual.getFecha() == null ? anterior : actual); 
+    }
     
     /**
      * Funcion que actualiza la fecha de un punto de la ruta
@@ -162,6 +200,8 @@ public class Envio implements Serializable {
         for (Paso paso : ruta) {
             if(paso.getPasoPuntos().getId().equals(pc.getId()) && paso.isInOut() == inOut){
                 paso.setFecha(fecha);
+                if(pc.getId().equals(destino.getLocalizacion()) && inOut)
+                    this.estado = Estado.EN_REPARTO;
                 esta = true;
                 break;
             }else if(paso.getFecha() == null ){
@@ -175,26 +215,27 @@ public class Envio implements Serializable {
             throw new PuntosAnterioresNulos("Algun punto anterior no ha sido actualizado");
     }
     
-    /**
-     * Función que devuelve el punto actual del envío
-     * @return PuntoControl punto de control actual
-     */
-    public Paso getUltimoPunto(){
-        return ruta.stream()
-                    .reduce(null, (anterior, actual) -> actual.getFecha() == null ? anterior : actual); 
-    }
+    public boolean estaExtravido(){
+        if(estado.equals(Estado.EXTRAVIADO))
+            return true;
+        else if (estado.equals(Estado.ENTREGADO)){
+            return false;
+        }
+        
+        
+        AtomicBoolean extraviado = new AtomicBoolean(false);
+        final Period periodo = Period.ofDays(7);
+        
+        ruta.stream().filter(paso -> paso.getFecha() != null)
+                    .reduce((anterior, actual) -> {
+                        if(actual.getFecha().minus(periodo).isAfter(anterior.getFecha()))
+                            extraviado.set(true);
 
-    /**
-     * @return the entrega
-     */
-    public LocalDateTime getEntrega() {
-        return entrega;
-    }
-
-    /**
-     * @param entrega the entrega to set
-     */
-    public void setEntrega(LocalDateTime entrega) {
-        this.entrega = entrega;
+                        return actual;
+                    });
+        
+        if(extraviado.get()) this.estado = Estado.EXTRAVIADO;
+        
+        return extraviado.get();
     }
 }

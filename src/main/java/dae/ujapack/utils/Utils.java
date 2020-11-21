@@ -13,6 +13,7 @@ public class Utils {
     public enum Estado {
         EN_TRANSITO,
         EN_REPARTO,
-        ENTREGADO
+        ENTREGADO,
+        EXTRAVIADO
     }
 }

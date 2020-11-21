@@ -1,25 +1,16 @@
 package dae.ujapack.app;
 
-import dae.ujapack.entidades.puntosControl.CentroLogistico;
-import dae.ujapack.entidades.puntosControl.Oficina;
 import dae.ujapack.repositorios.RepositorioCentroLogistico;
 import dae.ujapack.repositorios.RepositorioOficina;
 import dae.ujapack.utils.CargaDatos;
-import dae.ujapack.servicios.ServicioEnrutado;
-import dae.ujapack.servicios.ServicioMensajeria;
 import dae.ujapack.utils.tuplas.OficinasCentrosServicioCarga;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Main
@@ -28,6 +19,7 @@ import org.springframework.context.annotation.Primary;
  */
 @SpringBootApplication(scanBasePackages = {"dae.ujapack.servicios", "dae.ujapack.repositorios"})
 @EntityScan(basePackages = "dae.ujapack.entidades")
+@EnableScheduling
 public class UjaPackApp {
 
     private OficinasCentrosServicioCarga datos;
@@ -40,7 +32,7 @@ public class UjaPackApp {
 
     @PostConstruct
     void cargarDatos() {
-        if (repositorioCentroLogistico.buscarTodos().isEmpty()) {
+        if (repositorioCentroLogistico.isEmpty()) {
             datos = new CargaDatos().cargaDatos();
             repositorioCentroLogistico.guardar(datos.getCentros().values());
             repositorioOficina.guardar(datos.getOficinas().values());

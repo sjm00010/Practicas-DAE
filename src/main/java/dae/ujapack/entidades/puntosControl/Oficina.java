@@ -2,6 +2,7 @@ package dae.ujapack.entidades.puntosControl;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.Valid;
@@ -12,6 +13,7 @@ import javax.validation.Valid;
  */
 @Entity
 public class Oficina extends PuntoControl implements Serializable{
+    
     /**Centro logístico asociado a la oficina*/
     @ManyToOne
     @JoinColumn(name="CentroAsociado")

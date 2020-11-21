@@ -100,6 +100,25 @@ public class ServicioMensajeriaTest {
                 .isInstanceOf(EnvioNoExiste.class);
     }
     
+    /*
+        Este test comprueba que se detectan correctamente los paquetes extraviados,
+        para ejecutar el test ir a ServicioEnrutado->generaRuta-> caso 1 y utilizar
+        el comentario existente en dicho caso.
+    */
+    @Test
+    @Disabled 
+    public void testValidaExtraviado(){
+        Cliente origen = new Cliente("11111111A", "Prueba", "Pruebas", "Jaén");
+        Cliente destino = new Cliente("11111111A", "Prueba", "Pruebas", "Albacete");
+        
+        // Creación de envio con origen y destino en distintos centros
+        LocalizadorPrecioEnvio envio = servicioUjapack.creaEnvio(5, 5, 5, origen, destino);
+        servicioUjapack.actualizar(envio.getIdentificador(), LocalDateTime.now(), true, "Jaén");
+        servicioUjapack.actualizaExtraviados();
+        
+        Assertions.assertThat(servicioUjapack.getExtraviados()).hasSize(1);
+    }
+    
     @BeforeEach
     void limpiarBaseDatos() {
         limpiadorBaseDatos.limpiar();

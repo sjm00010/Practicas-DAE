@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dae.ujapack.repositorios;
 
 import dae.ujapack.entidades.puntosControl.CentroLogistico;
@@ -39,7 +34,7 @@ public class RepositorioCentroLogistico {
      * Función que se encarga de crear los CentroLogisticos
      * @param centros Centro logístico a crear
      */
-   public void guardar(Collection<CentroLogistico> centros){
+    public void guardar(Collection<CentroLogistico> centros){
         centros.forEach(centro -> em.persist(centro));
     }
    
@@ -47,8 +42,12 @@ public class RepositorioCentroLogistico {
     * Función para buscar todos los centros logísticos
     * @return Devuelve una lista con los centros logísticos o una lista vacía si no ha encontrado ningún centro logístico.
     */
-   public List<CentroLogistico> buscarTodos(){
-       List<CentroLogistico> centros = em.createQuery("SELECT c FROM CentroLogistico c JOIN FETCH c.conexiones", CentroLogistico.class).getResultList();
-       return centros;
-   }
+    public List<CentroLogistico> buscarTodos(){
+        List<CentroLogistico> centros = em.createQuery("SELECT c FROM CentroLogistico c JOIN FETCH c.conexiones", CentroLogistico.class).getResultList();
+        return centros;
+    }
+    
+    public boolean isEmpty() {
+        return em.createQuery("SELECT c FROM CentroLogistico c", CentroLogistico.class).setMaxResults(1).getResultList().isEmpty();
+    }
 }
