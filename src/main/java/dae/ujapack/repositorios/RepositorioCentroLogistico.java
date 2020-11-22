@@ -42,11 +42,17 @@ public class RepositorioCentroLogistico {
     * Función para buscar todos los centros logísticos
     * @return Devuelve una lista con los centros logísticos o una lista vacía si no ha encontrado ningún centro logístico.
     */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<CentroLogistico> buscarTodos(){
         List<CentroLogistico> centros = em.createQuery("SELECT c FROM CentroLogistico c JOIN FETCH c.conexiones", CentroLogistico.class).getResultList();
         return centros;
     }
     
+    /**
+     * Función para comprobar si hay centros logisticos en la base de datos
+     * @return True si hay datos, false si no
+     */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public boolean isEmpty() {
         return em.createQuery("SELECT c FROM CentroLogistico c", CentroLogistico.class).setMaxResults(1).getResultList().isEmpty();
     }

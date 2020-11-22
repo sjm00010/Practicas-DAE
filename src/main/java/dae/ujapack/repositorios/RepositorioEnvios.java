@@ -40,6 +40,15 @@ public class RepositorioEnvios {
     }
     
     /**
+     * Función para listar todos los envios no entregados.
+     * @return Lista de envíos
+     */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public List<Envio> buscarTodos(){
+        return em.createQuery("SELECT e FROM Envio e", Envio.class).getResultList();
+    }
+    
+    /**
      * Función que crea un nuevo Envio
      * @param envio Envío a crear
      */

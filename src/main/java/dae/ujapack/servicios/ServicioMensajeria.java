@@ -10,6 +10,7 @@ import dae.ujapack.errores.IdPuntoControlInvalido;
 import dae.ujapack.repositorios.RepositorioCentroLogistico;
 import dae.ujapack.repositorios.RepositorioEnvios;
 import dae.ujapack.repositorios.RepositorioOficina;
+import dae.ujapack.utils.Utils;
 import dae.ujapack.utils.tuplas.LocalizadorPrecioEnvio;
 import dae.ujapack.utils.tuplas.PuntoControlEstadoEnvio;
 import java.util.ArrayList;
@@ -206,4 +207,48 @@ public class ServicioMensajeria {
                 .stream()
                 .filter(envio -> envio.estaExtravido()).collect(Collectors.toList());
     }
+    
+    /**
+     * Función que obtiene los envíos extraviados, opcionalmente entre un intervalo de fechas.
+     * @throws IllegalArgumentException La fecha de inicio debe ser menor que la de fin
+     * @param inicio Fecha de inicio, null para obtener todos los envios extraviados
+     * @param fin Fecha de fin, null para obtener todos los envios extraviados
+     * @return Lista con los envios extraviados
+     */
+    public List<Envio> obtenerExtraviados(@PastOrPresent LocalDateTime inicio, @PastOrPresent LocalDateTime fin){
+        if(inicio != null && fin != null && inicio.isAfter(fin)){
+            throw new IllegalArgumentException("La fecha de inicio debe ser anterior a la de fin");
+        }
+        
+        return extraviados.stream()
+                            .filter(envio -> (inicio == null || envio.getUltimoPunto().getFecha().isAfter(inicio) || envio.getUltimoPunto().getFecha().isEqual(inicio))  &&
+                                             (fin == null || envio.getUltimoPunto().getFecha().isBefore(fin) || envio.getUltimoPunto().getFecha().isEqual(fin)))
+                            .collect(Collectors.toList());
+    }
+    
+    /**
+     * Función que devuelve el porcentaje de envíos extraviados en un periodo
+     * @param periodo Periodo, puede ser DIA, MES o ANIO(AÑO)
+     * @return Porcentaje de envios extraviados
+     */
+    public float porcentajeExtraviados(Utils.Periodo periodo){
+        int contador = 0;
+        
+        switch(periodo){
+            case DIA:
+                contador = obtenerExtraviados(LocalDateTime.now().minusDays(1), LocalDateTime.now()).size();
+                break;
+            case MES:
+                contador = obtenerExtraviados(LocalDateTime.now().minusMonths(1).withDayOfMonth(1), LocalDateTime.now().withDayOfMonth(1)).size();
+                break;
+            case ANIO:
+                contador = obtenerExtraviados(LocalDateTime.now().minusYears(1).withDayOfYear(1), LocalDateTime.now().withDayOfYear(1)).size();
+                break;
+            default:
+                throw new IllegalArgumentException("El periodo no puede ser nulo");
+        }
+        
+        return (contador/repositorioEnvios.buscarTodos().size())*100;
+    }
+    
 }

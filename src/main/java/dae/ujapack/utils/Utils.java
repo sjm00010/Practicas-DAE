@@ -16,4 +16,10 @@ public class Utils {
         ENTREGADO,
         EXTRAVIADO
     }
+    
+    public enum Periodo {
+        DIA,
+        MES,
+        ANIO
+    }
 }
