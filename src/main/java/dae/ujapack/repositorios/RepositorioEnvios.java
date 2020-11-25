@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,7 @@ public class RepositorioEnvios {
      * @return Envío
      */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    @Cacheable(value="envios", key="#id")
     public Optional<Envio> buscar(String id){
         return Optional.ofNullable(em.find(Envio.class, id));
     }
@@ -52,6 +55,7 @@ public class RepositorioEnvios {
      * Función que crea un nuevo Envio
      * @param envio Envío a crear
      */
+    @CacheEvict(value="envios" , key="#envio.getId()")
     public void crear(Envio envio){
         em.persist(envio);
     }
@@ -60,6 +64,7 @@ public class RepositorioEnvios {
      * Función para actualizar los datos de un envío
      * @param envio Nuevo envio que actualizar
      */
+    @CacheEvict(value="envios" , key="#envio.getId()")
     public void actualizaEnvio(Envio envio){
         em.merge(envio);
     }

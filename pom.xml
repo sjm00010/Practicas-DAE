@@ -35,6 +35,17 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
         
+        <!-- Cacheado -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+        </dependency>
+        
         <!-- Lectura del archivo .json -->
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
