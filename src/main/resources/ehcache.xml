@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+         updateCheck="true"
+         monitoring="autodetect"
+         dynamicConfig="true">
+    
+    <!-- Cache de envios -->
+    <cache name="envios" 
+           maxElementsInMemory="100" 
+           eternal="false"
+           overflowToDisk="false" />
+    
+    <!-- Cache de puntos de control -->
+    <cache name="puntoscontrol"
+           maxElementsInMemory="100"
+           eternal="false"
+           overflowToDisk="false" />
+    
+   
+</ehcache>

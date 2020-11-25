@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ public class RepositorioCentroLogistico {
      * @return CentroLogistico
      */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    @Cacheable(value = "puntoscontrol", key = "#id")
     public Optional<CentroLogistico> buscar(String id){
         return Optional.ofNullable(em.find(CentroLogistico.class, id));
     }
@@ -43,6 +45,7 @@ public class RepositorioCentroLogistico {
     * @return Devuelve una lista con los centros logísticos o una lista vacía si no ha encontrado ningún centro logístico.
     */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    @Cacheable(value = "puntoscontrol")
     public List<CentroLogistico> buscarTodos(){
         List<CentroLogistico> centros = em.createQuery("SELECT c FROM CentroLogistico c JOIN FETCH c.conexiones", CentroLogistico.class).getResultList();
         return centros;
