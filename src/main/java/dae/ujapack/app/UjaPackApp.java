@@ -4,19 +4,13 @@ import dae.ujapack.repositorios.RepositorioCentroLogistico;
 import dae.ujapack.repositorios.RepositorioOficina;
 import dae.ujapack.utils.CargaDatos;
 import dae.ujapack.utils.tuplas.OficinasCentrosServicioCarga;
-import java.util.Arrays;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.ehcache.EhCacheCacheManager;
-import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -46,19 +40,8 @@ public class UjaPackApp {
             repositorioOficina.guardar(datos.getOficinas().values());
         }
     }
-
-    @Bean
-    public CacheManager cacheManager() {
-        return new EhCacheCacheManager(ehCacheCacheManager().getObject());
-    }
-
-    @Bean
-    public EhCacheManagerFactoryBean ehCacheCacheManager() {
-        EhCacheManagerFactoryBean cmfb = new EhCacheManagerFactoryBean();
-        cmfb.setConfigLocation(new ClassPathResource("ehcache.xml"));
-        cmfb.setShared(true);
-        return cmfb;
-    }
+    
+    // No creo los beans de la cache, uso la notación equivalente en el aplication.yml
 
     // El json esta en la carpeta del proyecto, se carga automaticamente
     public static void main(String[] args) throws Exception {

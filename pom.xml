@@ -76,18 +76,7 @@
             <groupId>org.jgrapht</groupId>
             <artifactId>jgrapht-core</artifactId>
             <version>1.4.0</version>
-        </dependency> 
-        
-        <!--Cache para base de datos-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-cache</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-        </dependency> 
-        
+        </dependency>  
     </dependencies>
 
     <build>

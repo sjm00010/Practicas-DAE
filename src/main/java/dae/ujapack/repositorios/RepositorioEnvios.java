@@ -33,6 +33,8 @@ public class RepositorioEnvios {
         return Optional.ofNullable(em.find(Envio.class, id));
     }
     
+    // No cacheo los metodos de buscar todos ya que cargar todos los envios en la cache sería ineficiente
+    
     /**
      * Función para listar todos los envios no entregados.
      * @return Lista de envíos
@@ -55,7 +57,7 @@ public class RepositorioEnvios {
      * Función que crea un nuevo Envio
      * @param envio Envío a crear
      */
-    @CacheEvict(value="envios" , key="#envio.getId()")
+    @CacheEvict(value="envios" , key="#envio.getId()") // Es necesario invalidar el envio, ya que para generar el id del mismo uso el metodo de buscar
     public void crear(Envio envio){
         em.persist(envio);
     }
