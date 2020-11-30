@@ -116,7 +116,7 @@ public class ServicioMensajeriaTest {
         servicioUjapack.actualizar(envio.getIdentificador(), LocalDateTime.now(), true, "Jaén");
         servicioUjapack.actualizaExtraviados();
         
-        Assertions.assertThat(servicioUjapack.getExtraviados()).hasSize(1);
+        Assertions.assertThat(servicioUjapack.obtenerExtraviados(null, null)).hasSize(1);
     }
     
     @BeforeEach

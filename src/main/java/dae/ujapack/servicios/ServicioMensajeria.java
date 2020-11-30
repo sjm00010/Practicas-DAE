@@ -3,13 +3,13 @@ package dae.ujapack.servicios;
 import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.entidades.Envio;
 import dae.ujapack.entidades.Paso;
+import dae.ujapack.entidades.puntosControl.Oficina;
 import dae.ujapack.errores.EnvioNoExiste;
 import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.entidades.puntosControl.PuntoControl;
 import dae.ujapack.errores.IdPuntoControlInvalido;
-import dae.ujapack.repositorios.RepositorioCentroLogistico;
+import dae.ujapack.repositorios.RepositorioPuntoControl;
 import dae.ujapack.repositorios.RepositorioEnvios;
-import dae.ujapack.repositorios.RepositorioOficina;
 import dae.ujapack.utils.Utils;
 import dae.ujapack.utils.tuplas.LocalizadorPrecioEnvio;
 import dae.ujapack.utils.tuplas.PuntoControlEstadoEnvio;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import dae.ujapack.utils.Utils.Estado;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -45,28 +44,14 @@ public class ServicioMensajeria {
     private RepositorioEnvios repositorioEnvios;
 
     @Autowired
-    private RepositorioCentroLogistico repositorioCentroLogistico;
-
-    @Autowired
-    private RepositorioOficina repositorioOficina;
-    
-    private List<Envio> extraviados;
+    private RepositorioPuntoControl repositorioPuntoControl;
 
     public ServicioMensajeria() {
-        extraviados = new ArrayList<>();
     }
 
     /*************************
      *        Servicio       *
      *************************/
-    
-    /**
-     * Get de extraviados
-     * @return Lista de extraviados
-     */
-    public List<Envio> getExtraviados() {
-        return extraviados;
-    }
 
     /**
      * Getter de envio
@@ -112,8 +97,8 @@ public class ServicioMensajeria {
      * @return ArrayList<Paso> Ruta calculada
      */
     private ArrayList<Paso> generaRuta(@NotBlank String origen, @NotBlank String destino) {        
-        return servicioEnrutado.generaRuta(repositorioOficina.buscar(origen).orElseThrow(() -> new IdPuntoControlInvalido("El id " + origen + " de la oficina de origen es inválido")),
-                                           repositorioOficina.buscar(destino).orElseThrow(() -> new IdPuntoControlInvalido("El id " + destino + " de la oficina de destino es inválido")));
+        return servicioEnrutado.generaRuta( (Oficina) repositorioPuntoControl.buscar(origen).orElseThrow(() -> new IdPuntoControlInvalido("El id " + origen + " de la oficina de origen es inválido")),
+                                            (Oficina) repositorioPuntoControl.buscar(destino).orElseThrow(() -> new IdPuntoControlInvalido("El id " + destino + " de la oficina de destino es inválido")));
     }
 
     // ------ Fin funciones auxiliares ------
@@ -149,7 +134,7 @@ public class ServicioMensajeria {
      */
     public PuntoControlEstadoEnvio obtenerSituacion(@Size(min = 10, max = 10) String idEnvio) {
         Envio envio = getEnvio(idEnvio);
-        Paso punto = envio.getUltimoPunto();
+        Paso punto = envio.getUltimoPunto().get();
         Estado estado = envio.getEstado();
         
         return new PuntoControlEstadoEnvio(punto.getPasoPuntos(), estado);
@@ -170,10 +155,8 @@ public class ServicioMensajeria {
         // Compruebo que el envio existe, en caso de no existir lanza un error
         Envio envio = getEnvio(idEnvio);
 
-        PuntoControl punto = repositorioOficina.buscar(idPc).orElse(null);
-        if(punto == null){
-            punto = repositorioCentroLogistico.buscar(idPc).orElseThrow(() -> new IdPuntoControlInvalido("El id " + idPc + " del punto de control es inválido"));
-        }
+        PuntoControl punto = repositorioPuntoControl.buscar(idPc)
+                                                .orElseThrow(() -> new IdPuntoControlInvalido("El id " + idPc + " del punto de control es inválido"));
     
         envio.actualizar(fecha, inOut, punto);
         repositorioEnvios.actualizaEnvio(envio);
@@ -188,7 +171,7 @@ public class ServicioMensajeria {
     public void notificarEntrega(@Size(min = 10, max = 10) String idEnvio, @PastOrPresent LocalDateTime fecha) {
         // Me aseguro que el envio existe y obtengo el ultimo punto
         Envio envio = getEnvio(idEnvio);
-        Paso punto = envio.getUltimoPunto();
+        Paso punto = envio.getUltimoPunto().get();
 
         if (envio.getRuta().size() - 1 == envio.getRuta().indexOf(punto)) {
             envio.setEntrega(fecha);
@@ -203,9 +186,10 @@ public class ServicioMensajeria {
      */
     @Scheduled( cron = "0 0 0 * * *") // Con la última versión de SpringBoot 2.4 se puede usar la macro @midnight que funcionaría igual
     public void actualizaExtraviados() {
-        extraviados = repositorioEnvios.buscarNoEntregados()
+        repositorioEnvios.obtenerPosiblesExtraviados()
                 .stream()
-                .filter(envio -> envio.estaExtravido()).collect(Collectors.toList());
+                .filter(envio -> envio.estaExtravido())
+                .forEach(envio -> repositorioEnvios.actualizaEnvio(envio)); // Guardo los envios que se han extraviado
     }
     
     /**
@@ -220,10 +204,7 @@ public class ServicioMensajeria {
             throw new IllegalArgumentException("La fecha de inicio debe ser anterior a la de fin");
         }
         
-        return extraviados.stream()
-                            .filter(envio -> (inicio == null || envio.getUltimoPunto().getFecha().isAfter(inicio) || envio.getUltimoPunto().getFecha().isEqual(inicio))  &&
-                                             (fin == null || envio.getUltimoPunto().getFecha().isBefore(fin) || envio.getUltimoPunto().getFecha().isEqual(fin)))
-                            .collect(Collectors.toList());
+        return repositorioEnvios.buscaExtraviados(inicio, fin);
     }
     
     /**
@@ -232,23 +213,27 @@ public class ServicioMensajeria {
      * @return Porcentaje de envios extraviados
      */
     public float porcentajeExtraviados(Utils.Periodo periodo){
-        int contador = 0;
+        long contador = 0;
+        long total = 0;
         
         switch(periodo){
             case DIA:
-                contador = obtenerExtraviados(LocalDateTime.now().minusDays(1), LocalDateTime.now()).size();
+                contador = repositorioEnvios.numExtraviados(LocalDateTime.now().minusDays(1));
+                total = repositorioEnvios.numEnvios(LocalDateTime.now().minusDays(1));
                 break;
             case MES:
-                contador = obtenerExtraviados(LocalDateTime.now().minusMonths(1).withDayOfMonth(1), LocalDateTime.now().withDayOfMonth(1)).size();
+                contador = repositorioEnvios.numExtraviados(LocalDateTime.now().minusMonths(1));
+                total = repositorioEnvios.numEnvios(LocalDateTime.now().minusMonths(1));
                 break;
             case ANIO:
-                contador = obtenerExtraviados(LocalDateTime.now().minusYears(1).withDayOfYear(1), LocalDateTime.now().withDayOfYear(1)).size();
+                contador = repositorioEnvios.numExtraviados(LocalDateTime.now().minusYears(1));
+                total = repositorioEnvios.numEnvios(LocalDateTime.now().minusYears(1));
                 break;
             default:
                 throw new IllegalArgumentException("El periodo no puede ser nulo");
         }
         
-        return (contador/repositorioEnvios.buscarTodos().size())*100;
+        return (contador/total)*100;
     }
     
 }

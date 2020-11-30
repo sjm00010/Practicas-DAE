@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -78,6 +79,9 @@ public class Envio implements Serializable {
     
     @NotNull
     private Estado estado;
+    
+    @PastOrPresent
+    private LocalDateTime fechaActualizado;
 
     public Envio() {
     }
@@ -94,6 +98,9 @@ public class Envio implements Serializable {
         this.ruta = ruta;
         this.entrega = null;
         this.estado = estado.EN_TRANSITO; // Por defecto cuando se crea un envío está EN_TRANSITO dado que esta en la oficina de origen
+        getUltimoPunto().ifPresentOrElse(
+                paso -> this.fechaActualizado = paso.getFecha(), 
+                () -> this.fechaActualizado = LocalDateTime.now());
     }
 
     /**
@@ -179,9 +186,9 @@ public class Envio implements Serializable {
      * Función que devuelve el punto actual del envío
      * @return PuntoControl punto de control actual
      */
-    public Paso getUltimoPunto(){
-        return ruta.stream()
-                    .reduce(null, (anterior, actual) -> actual.getFecha() == null ? anterior : actual); 
+    public Optional<Paso> getUltimoPunto(){
+        return Optional.ofNullable(ruta.stream()
+                                        .reduce(null, (anterior, actual) -> actual.getFecha() == null ? anterior : actual)); 
     }
     
     /**
@@ -200,6 +207,7 @@ public class Envio implements Serializable {
         for (Paso paso : ruta) {
             if(paso.getPasoPuntos().getId().equals(pc.getId()) && paso.isInOut() == inOut){
                 paso.setFecha(fecha);
+                fechaActualizado = fecha;
                 if(pc.getId().equals(destino.getLocalizacion()) && inOut)
                     this.estado = Estado.EN_REPARTO;
                 esta = true;

@@ -80,7 +80,7 @@ public class EnvioTest {
     
         // Comprobar la obtención del último pc. Para ello primero actualiza y luego trata de obtenerlo.
         envio.actualizar(LocalDateTime.now(), true, centro);
-        Assertions.assertThat(envio.getUltimoPunto()).isEqualTo(ruta.get(0));
+        Assertions.assertThat(envio.getUltimoPunto().get()).isEqualTo(ruta.get(0));
     }
     
     @Test

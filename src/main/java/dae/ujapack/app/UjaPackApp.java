@@ -1,7 +1,6 @@
 package dae.ujapack.app;
 
-import dae.ujapack.repositorios.RepositorioCentroLogistico;
-import dae.ujapack.repositorios.RepositorioOficina;
+import dae.ujapack.repositorios.RepositorioPuntoControl;
 import dae.ujapack.utils.CargaDatos;
 import dae.ujapack.utils.tuplas.OficinasCentrosServicioCarga;
 import javax.annotation.PostConstruct;
@@ -27,17 +26,15 @@ public class UjaPackApp {
     private OficinasCentrosServicioCarga datos;
 
     @Autowired
-    RepositorioOficina repositorioOficina;
+    RepositorioPuntoControl repositorioPuntoControl;
 
-    @Autowired
-    RepositorioCentroLogistico repositorioCentroLogistico;
 
     @PostConstruct
     void cargarDatos() {
-        if (repositorioCentroLogistico.isEmpty()) {
+        if (repositorioPuntoControl.isEmpty()) {
             datos = new CargaDatos().cargaDatos();
-            repositorioCentroLogistico.guardar(datos.getCentros().values());
-            repositorioOficina.guardar(datos.getOficinas().values());
+            repositorioPuntoControl.guardar(datos.getCentros().values());
+            repositorioPuntoControl.guardar(datos.getOficinas().values());
         }
     }
     
