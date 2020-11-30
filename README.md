@@ -18,6 +18,10 @@ El código de para la primera práctica está en la rama _master_.
 ## Práctica 2
 En esta segunda práctica completaremos el prototipo añadiendo la persistencia mediante JPA.
 
+### Actiualización diagrama UML
+El diseño UML de la practica anterior ha sido modificado con lo requerido para esta practica, se puede consultar en el siguente enlace :
+https://drive.google.com/file/d/1sniQK1NADKzh69AjrTijK3GT25YpkjHx/view?usp=sharing
+
 ### Base de datos
 Para la base de datos usaremos MySQL ejecutado en Docker. Para ello se debe :
 
