@@ -78,6 +78,9 @@ public class Envio implements Serializable {
     
     @NotNull
     private Estado estado;
+    
+    @PastOrPresent
+    private LocalDateTime fechaActualizado;
 
     public Envio() {
     }
@@ -94,6 +97,7 @@ public class Envio implements Serializable {
         this.ruta = ruta;
         this.entrega = null;
         this.estado = estado.EN_TRANSITO; // Por defecto cuando se crea un envío está EN_TRANSITO dado que esta en la oficina de origen
+        this.fechaActualizado = getUltimoPunto().getFecha();
     }
 
     /**
@@ -200,6 +204,7 @@ public class Envio implements Serializable {
         for (Paso paso : ruta) {
             if(paso.getPasoPuntos().getId().equals(pc.getId()) && paso.isInOut() == inOut){
                 paso.setFecha(fecha);
+                fechaActualizado = fecha;
                 if(pc.getId().equals(destino.getLocalizacion()) && inOut)
                     this.estado = Estado.EN_REPARTO;
                 esta = true;

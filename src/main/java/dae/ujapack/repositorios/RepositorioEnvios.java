@@ -2,6 +2,7 @@ package dae.ujapack.repositorios;
 
 import dae.ujapack.entidades.Envio;
 import dae.ujapack.utils.Utils;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -36,21 +37,56 @@ public class RepositorioEnvios {
     // No cacheo los metodos de buscar todos ya que cargar todos los envios en la cache sería ineficiente
     
     /**
-     * Función para listar todos los envios no entregados.
+     * Función para listar envios que puedas estar extraviados. No incluye envios ya extraviados ni entregados.
      * @return Lista de envíos
      */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Envio> buscarNoEntregados(){
-        return em.createQuery("SELECT e FROM Envio e WHERE e.estado != :estado", Envio.class).setParameter("estado", Utils.Estado.ENTREGADO).getResultList();
+    public List<Envio> obtenerPosiblesExtraviados(){
+        return em.createQuery("SELECT e FROM Envio e WHERE e.estado != :entregado AND e.estado != :extraviado AND e.fechaActualizado >= :fecha", Envio.class)
+                    .setParameter("entregado", Utils.Estado.ENTREGADO)
+                    .setParameter("extraviado", Utils.Estado.EXTRAVIADO)
+                    .setParameter("fecha", LocalDateTime.now().minusDays(1))
+                    .getResultList();
     }
     
     /**
-     * Función para listar todos los envios no entregados.
-     * @return Lista de envíos
+     * Función que lista los envios extraviados entre dos fechas, si no se indican devuelve todos los envios extraviados.
+     * @param inicio Fecha de inicio, OPCIONAL
+     * @param fin Fecha de fin, OPCIONAL
+     * @return Lista de envios extraviados
      */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Envio> buscarTodos(){
-        return em.createQuery("SELECT e FROM Envio e", Envio.class).getResultList();
+    public List<Envio> buscaExtraviados(LocalDateTime inicio, LocalDateTime fin){
+        inicio = inicio != null ? inicio : LocalDateTime.MIN;
+        fin = fin != null ? fin : LocalDateTime.now();
+        return em.createQuery("SELECT e FROM Envio e WHERE e.estado != :estado AND e.fechaActualizado BETWEEN :inicio AND :fin", Envio.class)
+                    .setParameter("estado", Utils.Estado.EXTRAVIADO)
+                    .setParameter("inicio", inicio)
+                    .setParameter("fin", fin)
+                    .getResultList();
+    }
+    
+    /**
+     * Función contar el numero de envios existentes
+     * @param inicio Fecha a partir de la que se van a contar los envios
+     * @return Numero de envíos
+     */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public long numEnvios(LocalDateTime inicio){
+        return em.createQuery("SELECT COUNT(e) FROM Envio e WHERE e.fechaActualizado > :inicio", Long.class)
+                .setParameter("inicio", inicio).getSingleResult();
+    }
+    
+    /**
+     * Función contar el numero de envios existentes
+     * @param inicio Fecha a partir de la que se van a contar los envios
+     * @return Numero de envíos
+     */
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public long numExtraviados(LocalDateTime inicio){
+        return em.createQuery("SELECT COUNT(e) FROM Envio e WHERE e.estado != :estado AND e.fechaActualizado > :inicio", Long.class)
+                .setParameter("estado", Utils.Estado.EXTRAVIADO)
+                .setParameter("inicio", inicio).getSingleResult();
     }
     
     /**
