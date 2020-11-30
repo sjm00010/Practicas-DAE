@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -97,7 +98,9 @@ public class Envio implements Serializable {
         this.ruta = ruta;
         this.entrega = null;
         this.estado = estado.EN_TRANSITO; // Por defecto cuando se crea un envío está EN_TRANSITO dado que esta en la oficina de origen
-        this.fechaActualizado = getUltimoPunto().getFecha();
+        getUltimoPunto().ifPresentOrElse(
+                paso -> this.fechaActualizado = paso.getFecha(), 
+                () -> this.fechaActualizado = LocalDateTime.now());
     }
 
     /**
@@ -183,9 +186,9 @@ public class Envio implements Serializable {
      * Función que devuelve el punto actual del envío
      * @return PuntoControl punto de control actual
      */
-    public Paso getUltimoPunto(){
-        return ruta.stream()
-                    .reduce(null, (anterior, actual) -> actual.getFecha() == null ? anterior : actual); 
+    public Optional<Paso> getUltimoPunto(){
+        return Optional.ofNullable(ruta.stream()
+                                        .reduce(null, (anterior, actual) -> actual.getFecha() == null ? anterior : actual)); 
     }
     
     /**

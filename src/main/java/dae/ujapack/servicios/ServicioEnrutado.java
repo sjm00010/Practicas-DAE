@@ -4,7 +4,7 @@ import dae.ujapack.entidades.puntosControl.CentroLogistico;
 import dae.ujapack.entidades.puntosControl.Oficina;
 import dae.ujapack.entidades.Paso;
 import dae.ujapack.errores.IdPuntoControlInvalido;
-import dae.ujapack.repositorios.RepositorioCentroLogistico;
+import dae.ujapack.repositorios.RepositorioPuntoControl;
 import java.time.LocalDateTime;
 import org.jgrapht.*;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.*;
@@ -28,7 +28,7 @@ public class ServicioEnrutado {
     private Graph<String, DefaultEdge> directedGraph;
 
     @Autowired
-    private RepositorioCentroLogistico repositorioCentroLogistico;
+    private RepositorioPuntoControl repositorioPuntoControl;
 
     public ServicioEnrutado() {
         this.directedGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
@@ -36,7 +36,7 @@ public class ServicioEnrutado {
 
     @PostConstruct
     private void cargar() {
-        generaGrafo(repositorioCentroLogistico.buscarTodos());
+        generaGrafo(repositorioPuntoControl.obtenCentros());
     }
 
     /**
@@ -100,8 +100,8 @@ public class ServicioEnrutado {
                     // Calculo y añado los centros logisticos por los que pasa
                     List<String> centrosRuta = this.obtenRuta(centroOrig.getId(), centroDest.getId());
                     for (String idCentro : centrosRuta) {
-                        ruta.add(new Paso(repositorioCentroLogistico.buscar(idCentro).orElseThrow(() -> new IdPuntoControlInvalido("El id "+idCentro+" del centroLogistico es inválido")), false));
-                        ruta.add(new Paso(repositorioCentroLogistico.buscar(idCentro).orElseThrow(() -> new IdPuntoControlInvalido("El id "+idCentro+" del centroLogistico es inválido")), true));
+                        ruta.add(new Paso(repositorioPuntoControl.buscar(idCentro).orElseThrow(() -> new IdPuntoControlInvalido("El id "+idCentro+" del centroLogistico es inválido")), false));
+                        ruta.add(new Paso(repositorioPuntoControl.buscar(idCentro).orElseThrow(() -> new IdPuntoControlInvalido("El id "+idCentro+" del centroLogistico es inválido")), true));
                     }
 
                     // Añado el destino

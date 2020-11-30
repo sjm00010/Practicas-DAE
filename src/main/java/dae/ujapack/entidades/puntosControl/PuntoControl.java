@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
  * @author sjm00010
  */
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class PuntoControl implements Serializable {
     
     /* Id del punto de control */

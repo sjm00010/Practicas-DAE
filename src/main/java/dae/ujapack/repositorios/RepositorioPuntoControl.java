@@ -1,6 +1,8 @@
 package dae.ujapack.repositorios;
 
 import dae.ujapack.entidades.puntosControl.CentroLogistico;
+import dae.ujapack.entidades.puntosControl.Oficina;
+import dae.ujapack.entidades.puntosControl.PuntoControl;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -12,41 +14,41 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Repositorio de CentroLogistico
- * @author juanc
+ * Repositorios de los puntos de control
+ * @author sjm00010
  */
 @Repository
 @Transactional(propagation = Propagation.REQUIRED)
-public class RepositorioCentroLogistico {
+public class RepositorioPuntoControl {
     @PersistenceContext
     EntityManager em;
     
     /**
-     * Función para buscar un centro logístico a través de su id.
-     * @param id ID del centro logístico
-     * @return CentroLogistico
+     * Función para buscar una oficina a través de su id.
+     * @param id ID de la oficina
+     * @return Oficina
      */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @Cacheable(value = "puntoscontrol", key = "#id")
-    public Optional<CentroLogistico> buscar(String id){
-        return Optional.ofNullable(em.find(CentroLogistico.class, id));
+    public Optional<PuntoControl> buscar(String id){
+        return Optional.ofNullable(em.find(PuntoControl.class, id));
     }
     
     /**
-     * Función que se encarga de crear los CentroLogisticos
-     * @param centros Centro logístico a crear
+     * Función que crea los puntos de control de la colección.
+     * @param puntos Colección de puntos de control a guardar
      */
-    public void guardar(Collection<CentroLogistico> centros){
-        centros.forEach(centro -> em.persist(centro));
+    public void guardar(Collection<? extends PuntoControl> puntos){
+        puntos.forEach(punto -> em.persist(punto));
     }
-   
-   /**
+    
+    /**
     * Función para buscar todos los centros logísticos
     * @return Devuelve una lista con los centros logísticos o una lista vacía si no ha encontrado ningún centro logístico.
     */
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     @Cacheable(value = "puntoscontrol")
-    public List<CentroLogistico> buscarTodos(){
+    public List<CentroLogistico> obtenCentros(){
         List<CentroLogistico> centros = em.createQuery("SELECT c FROM CentroLogistico c JOIN FETCH c.conexiones", CentroLogistico.class).getResultList();
         return centros;
     }

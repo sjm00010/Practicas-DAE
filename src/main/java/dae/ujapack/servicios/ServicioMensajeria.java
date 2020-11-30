@@ -8,9 +8,8 @@ import dae.ujapack.errores.EnvioNoExiste;
 import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.entidades.puntosControl.PuntoControl;
 import dae.ujapack.errores.IdPuntoControlInvalido;
-import dae.ujapack.repositorios.RepositorioCentroLogistico;
+import dae.ujapack.repositorios.RepositorioPuntoControl;
 import dae.ujapack.repositorios.RepositorioEnvios;
-import dae.ujapack.repositorios.RepositorioOficina;
 import dae.ujapack.utils.Utils;
 import dae.ujapack.utils.tuplas.LocalizadorPrecioEnvio;
 import dae.ujapack.utils.tuplas.PuntoControlEstadoEnvio;
@@ -21,8 +20,6 @@ import org.springframework.stereotype.Service;
 import dae.ujapack.utils.Utils.Estado;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -47,10 +44,7 @@ public class ServicioMensajeria {
     private RepositorioEnvios repositorioEnvios;
 
     @Autowired
-    private RepositorioCentroLogistico repositorioCentroLogistico;
-
-    @Autowired
-    private RepositorioOficina repositorioOficina;
+    private RepositorioPuntoControl repositorioPuntoControl;
 
     public ServicioMensajeria() {
     }
@@ -103,8 +97,8 @@ public class ServicioMensajeria {
      * @return ArrayList<Paso> Ruta calculada
      */
     private ArrayList<Paso> generaRuta(@NotBlank String origen, @NotBlank String destino) {        
-        return servicioEnrutado.generaRuta( repositorioOficina.buscar(origen).orElseThrow(() -> new IdPuntoControlInvalido("El id " + origen + " de la oficina de origen es inválido")),
-                                            repositorioOficina.buscar(destino).orElseThrow(() -> new IdPuntoControlInvalido("El id " + destino + " de la oficina de destino es inválido")));
+        return servicioEnrutado.generaRuta( (Oficina) repositorioPuntoControl.buscar(origen).orElseThrow(() -> new IdPuntoControlInvalido("El id " + origen + " de la oficina de origen es inválido")),
+                                            (Oficina) repositorioPuntoControl.buscar(destino).orElseThrow(() -> new IdPuntoControlInvalido("El id " + destino + " de la oficina de destino es inválido")));
     }
 
     // ------ Fin funciones auxiliares ------
@@ -140,7 +134,7 @@ public class ServicioMensajeria {
      */
     public PuntoControlEstadoEnvio obtenerSituacion(@Size(min = 10, max = 10) String idEnvio) {
         Envio envio = getEnvio(idEnvio);
-        Paso punto = envio.getUltimoPunto();
+        Paso punto = envio.getUltimoPunto().get();
         Estado estado = envio.getEstado();
         
         return new PuntoControlEstadoEnvio(punto.getPasoPuntos(), estado);
@@ -161,8 +155,7 @@ public class ServicioMensajeria {
         // Compruebo que el envio existe, en caso de no existir lanza un error
         Envio envio = getEnvio(idEnvio);
 
-        PuntoControl punto = repositorioOficina.buscar(idPc)
-                                                .or(() -> repositorioCentroLogistico.buscar(idPc))
+        PuntoControl punto = repositorioPuntoControl.buscar(idPc)
                                                 .orElseThrow(() -> new IdPuntoControlInvalido("El id " + idPc + " del punto de control es inválido"));
     
         envio.actualizar(fecha, inOut, punto);
@@ -178,7 +171,7 @@ public class ServicioMensajeria {
     public void notificarEntrega(@Size(min = 10, max = 10) String idEnvio, @PastOrPresent LocalDateTime fecha) {
         // Me aseguro que el envio existe y obtengo el ultimo punto
         Envio envio = getEnvio(idEnvio);
-        Paso punto = envio.getUltimoPunto();
+        Paso punto = envio.getUltimoPunto().get();
 
         if (envio.getRuta().size() - 1 == envio.getRuta().indexOf(punto)) {
             envio.setEntrega(fecha);
