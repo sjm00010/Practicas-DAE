@@ -17,7 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  *
  * @author sjm00010
  */
-@SpringBootApplication(scanBasePackages = {"dae.ujapack.servicios", "dae.ujapack.repositorios"})
+@SpringBootApplication(scanBasePackages = {"dae.ujapack.servicios", "dae.ujapack.repositorios", "dae.ujapack.controladoresREST"})
 @EntityScan(basePackages = "dae.ujapack.entidades")
 @EnableScheduling
 @EnableCaching

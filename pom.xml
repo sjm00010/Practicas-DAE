@@ -17,6 +17,12 @@
     </parent>
 
     <dependencies>
+        <!-- REST -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

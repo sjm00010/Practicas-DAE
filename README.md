@@ -18,7 +18,7 @@ El código de para la primera práctica está en la rama _master_.
 ## Práctica 2
 En esta segunda práctica completaremos el prototipo añadiendo la persistencia mediante JPA.
 
-### Actiualización diagrama UML
+### Actualización diagrama UML
 El diseño UML de la practica anterior ha sido modificado con lo requerido para esta practica, se puede consultar en el siguente enlace :
 https://drive.google.com/file/d/1sniQK1NADKzh69AjrTijK3GT25YpkjHx/view?usp=sharing
 
@@ -39,3 +39,17 @@ Este comando hace:
 4. **-e MYSQL_DATABASE=ujapack -e MYSQL_USER=ujapack -e MYSQL_PASSWORD=ujapack** : crea una base de datos de nombre _ujapack_, a la que le asocia un nuevo usuario _ujapack_ con la contraseña _ujapack_. Es el equivalente ha hacer `GRANT ALL`.
 
 Si todo salio bien le damos al Play y comprobaremos que ejecuta (si no configuramos algo bien se parara) y que en la pestaña _Inspect_ aparece `Port 3306/tcp localhost:3306` que nos indica el puerto al que debemos conectarnos. Para el desarrollo de la práctica usaremos el puerto por defecto, _3306_.
+
+## Práctica 3
+Para la ultima práctica haremos un [cliente web]() para acceder a la API que vamos a realizar.
+
+### Acciones identificadas para la API
+Segun lo visto en clase hemos identificado las siguientes acciones:
+- POST /ujapack/administrador/envio -> Crear envio y devolver identificador y precio
+- GET /ujapack/envio/{id} -> Obtiene el envio con ID. Devuelve envio
+- PUT /ujapack/operario/envio/{id}/{idPuntoControl} -> Actualiza el envio con ID. Indicar punto de control y fecha
+- PUT /ujapack/operario/envio/{id}/entrega -> Actualiza el envio con ID. Indicar fecha de entrega
+
+Además de lo anterior, y completando la entrega opcional de practicas anteriores, tenemos:
+- GET /ujapack/envio/extraviados/{fechas} -> Obtiene los envios extraviados. Indicar opcionalmente fecha de inicio y fin
+- GET /ujapack/envio/extraviados/porcentaje/{periodo} -> Obtiene el porcentaje de envios extraviados. Indicar periodo(DIA, MES, ANIO)
