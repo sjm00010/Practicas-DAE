@@ -41,7 +41,7 @@ Este comando hace:
 Si todo salio bien le damos al Play y comprobaremos que ejecuta (si no configuramos algo bien se parara) y que en la pestaña _Inspect_ aparece `Port 3306/tcp localhost:3306` que nos indica el puerto al que debemos conectarnos. Para el desarrollo de la práctica usaremos el puerto por defecto, _3306_.
 
 ## Práctica 3
-Para la ultima práctica haremos un [cliente web]() para acceder a la API que vamos a realizar.
+Para la ultima práctica haremos un [cliente web](https://gitlab.com/sjm00010/dae-cliente-web) para acceder a la API que vamos a realizar.
 
 ### Acciones identificadas para la API
 Segun lo visto en clase hemos identificado las siguientes acciones:

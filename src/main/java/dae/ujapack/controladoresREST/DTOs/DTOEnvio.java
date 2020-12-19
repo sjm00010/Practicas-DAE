@@ -1,5 +1,6 @@
 package dae.ujapack.controladoresREST.DTOs;
 
+import dae.ujapack.entidades.Envio;
 import dae.ujapack.objetosvalor.Cliente;
 
 /**
@@ -23,6 +24,15 @@ public class DTOEnvio {
         this.peso = peso;
         this.origen = origen;
         this.destino = destino;
+    }
+
+    public DTOEnvio(Envio envio) {
+        this(   envio.getId(),
+                envio.getAlto(), 
+                envio.getAncho(), 
+                envio.getPeso(), 
+                envio.getOrigen().getLocalizacion(), 
+                envio.getDestino().getLocalizacion());
     }
 
     /**
