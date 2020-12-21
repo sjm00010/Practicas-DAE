@@ -45,11 +45,14 @@ Para la ultima práctica haremos un [cliente web](https://gitlab.com/sjm00010/da
 
 ### Acciones identificadas para la API
 Segun lo visto en clase hemos identificado las siguientes acciones:
-- POST /ujapack/administrador/envio -> Crear envio y devolver identificador y precio
+- POST /ujapack/envio -> Crear envio y devolver identificador y precio
+
 - GET /ujapack/envio/{id} -> Obtiene el envio con ID. Devuelve envio
-- PUT /ujapack/operario/envio/{id}/{idPuntoControl} -> Actualiza el envio con ID. Indicar punto de control y fecha
-- PUT /ujapack/operario/envio/{id}/entrega -> Actualiza el envio con ID. Indicar fecha de entrega
+- PUT /ujapack/envio/{id} -> Actualiza el envio con ID. Indicar fecha de entrega
+
+- GET /ujapack/envio/{id}/puntoControl -> Obtiene el envio con ID. Devuelve envio
+- PUT /ujapack/envio/{id}/puntoControl/{idPuntoControl}/ -> Actualiza el envio con ID. Indicar punto de control y fecha
 
 Además de lo anterior, y completando la entrega opcional de practicas anteriores, tenemos:
-- GET /ujapack/envio/extraviados/{fechas} -> Obtiene los envios extraviados. Indicar opcionalmente fecha de inicio y fin
-- GET /ujapack/envio/extraviados/porcentaje/{periodo} -> Obtiene el porcentaje de envios extraviados. Indicar periodo(DIA, MES, ANIO)
+- GET /ujapack/envio/extraviados?inicio={fechas}&fin={fechas} -> Obtiene los envios extraviados. Indicar opcionalmente fecha de inicio y fin
+- GET /ujapack/envio/extraviados/{periodo} -> Obtiene el porcentaje de envios extraviados. Indicar periodo(DIA, MES, ANIO)

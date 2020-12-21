@@ -52,9 +52,9 @@ public class ControladorEnvios {
    
     /** Crea envio y devolver identificador y precio */
     @PostMapping("/envio")
-    ResponseEntity<DTOLocalizadorPrecioEnvio> creaEnvio(@RequestBody Envio envio){
+    ResponseEntity<DTOLocalizadorPrecioEnvio> creaEnvio(@RequestBody DTOEnvio envio){
         LocalizadorPrecioEnvio localizador = servicios.creaEnvio(envio.getAlto(), envio.getAncho(), envio.getPeso(), envio.getOrigen(), envio.getDestino());
-        return ResponseEntity.ok(new DTOLocalizadorPrecioEnvio(localizador));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new DTOLocalizadorPrecioEnvio(localizador));
     }
     
     /** Obtiene el envio con ID */
@@ -65,10 +65,10 @@ public class ControladorEnvios {
     }
     
     /** Actualiza la entrega del envio con ID */
-    @PutMapping("/envio/{id}/{idPuntoControl}/{entradaSalida}")
+    @PutMapping("/envio/{id}/{idPuntoControl}")
     ResponseEntity actualizaEnvio(@PathVariable("id") String idEnvio, 
-            @PathVariable("idPuntoControl") String idPC, @PathVariable("entradaSalida") boolean inOut){
-        servicios.actualizar(idEnvio, LocalDateTime.now(), inOut, idPC);
+            @PathVariable("idPuntoControl") String idPC){
+        servicios.actualizar(idEnvio, LocalDateTime.now(), true, idPC);
         return ResponseEntity.ok("Envio actualizado correctamente.");
     }
     
