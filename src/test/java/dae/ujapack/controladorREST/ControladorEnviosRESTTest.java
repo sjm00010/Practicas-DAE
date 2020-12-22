@@ -2,8 +2,11 @@ package dae.ujapack.controladorREST;
 
 import dae.ujapack.controladoresREST.DTOs.DTOEnvio;
 import dae.ujapack.controladoresREST.DTOs.DTOLocalizadorPrecioEnvio;
+import dae.ujapack.controladoresREST.DTOs.DTOPaso;
+import dae.ujapack.controladoresREST.DTOs.DTOPuntoControlEstadoEnvio;
 import dae.ujapack.objetosvalor.Cliente;
 import dae.ujapack.servicios.ServicioLimpiadoBaseDatos;
+import dae.ujapack.utils.Utils;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import org.assertj.core.api.Assertions;
@@ -71,14 +74,15 @@ public class ControladorEnviosRESTTest {
                 restTemplate.postForEntity("/envio", envioPrueba, DTOLocalizadorPrecioEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         
-        ResponseEntity<DTOEnvio> respuesta2 = 
-                restTemplate.getForEntity("/envio/{id}", DTOEnvio.class, 
-                        respuesta.getBody().getIdentificador());
-        
-        DTOEnvio envio = respuesta2.getBody();
+        DTOPaso[] ruta = restTemplate.getForEntity(
+                "/envio/{id}/puntoControl",
+                DTOPaso[].class, 
+                respuesta.getBody().getIdentificador()
+            ).getBody();
+
         /** Compruebo que la ruta generada contiene los puntos que deberia
          * ( 2 entrada/salida de la Oficina ) */
-        Assertions.assertThat(envio.getRuta().size()).isEqualTo(2);  
+        Assertions.assertThat(ruta).hasSize(2);  
     }
     
     @Test
@@ -92,15 +96,16 @@ public class ControladorEnviosRESTTest {
                 restTemplate.postForEntity("/envio", envioPrueba, DTOLocalizadorPrecioEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         
-        ResponseEntity<DTOEnvio> respuesta2 = 
-                restTemplate.getForEntity("/envio/{id}", DTOEnvio.class, 
-                        respuesta.getBody().getIdentificador());
+        DTOPaso[] ruta = restTemplate.getForEntity(
+                "/envio/{id}/puntoControl",
+                DTOPaso[].class, 
+                respuesta.getBody().getIdentificador()
+            ).getBody();
         
-        DTOEnvio envio = respuesta2.getBody();
         /** Compruebo que la ruta generada contiene los puntos que deberia
          * ( 2 entrada/salida de la Oficina origen + 2 entrada/salida del Centro Logistico +
          *   2 entrada/salida de la Oficina destino ) */
-        Assertions.assertThat(envio.getRuta().size()).isEqualTo(6);  
+        Assertions.assertThat(ruta).hasSize(6); 
     }
     
     @Test
@@ -114,53 +119,62 @@ public class ControladorEnviosRESTTest {
                 restTemplate.postForEntity("/envio", envioPrueba, DTOLocalizadorPrecioEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         
-        ResponseEntity<DTOEnvio> respuesta2 = 
-                restTemplate.getForEntity("/envio/{id}", DTOEnvio.class, 
-                        respuesta.getBody().getIdentificador());
-        
-        DTOEnvio envio = respuesta2.getBody();
+        DTOPaso[] ruta = restTemplate.getForEntity(
+                "/envio/{id}/puntoControl",
+                DTOPaso[].class, 
+                respuesta.getBody().getIdentificador()
+            ).getBody();
         
         /** Compruebo que la ruta generada contiene los puntos que deberia
          * ( 2 entrada/salida de la Oficina + 
          *   N entrada/salida del Centro Logistico(4 -> 2 de Andalucía + 2 de La Mancha) +
          *   2 entrada/salida de la Oficina destino) */
-        Assertions.assertThat(envio.getRuta().size()).isEqualTo(8); 
+        Assertions.assertThat(ruta).hasSize(8);
     }
     
     @Test
     public void testActualizaEnvioInvalido() {
         // Intento actualizar un envio que no existe
-        ResponseEntity respuesta = restTemplate.exchange("/envio/{id}/{idPuntoControl}",
+        ResponseEntity respuesta = restTemplate.exchange("/envio/{id}/puntoControl/{idPuntoControl}?isSalida={salida}", // Lo hago con exchange() y no con put() para comprobar el resultado para el test
                         HttpMethod.PUT,
                         HttpEntity.EMPTY,
                         Void.class,
                         "1234567890", // ID inexistente
-                        "1"
+                        "1",
+                        "true"
                         );
         
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
     
-//    @Test
-//    public void testGetSituacionEnvio() {
-//        Cliente cliente = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
-//        
-//        // Creación de envio con Origen y destino en la misma Oficina(Provincia)
-//        DTOEnvio envioPrueba = new DTOEnvio(5, 5, 5, cliente, cliente);
-//        ResponseEntity<DTOLocalizadorPrecioEnvio> respuesta = 
-//                restTemplate.postForEntity("/envio", envioPrueba, DTOLocalizadorPrecioEnvio.class);
-//        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-//        
-//        ResponseEntity<DTOEnvio> respuesta2 = 
-//                restTemplate.getForEntity("/envio/{id}", DTOEnvio.class, 
-//                        respuesta.getBody().getIdentificador());
-//        DTOEnvio envio = new DTOEnvio(5, 5, 5, cliente, cliente);
-//        
-//        servicioUjapack.actualizar(envio.getIdentificador(), LocalDateTime.now(), true, "Almería");
-//                
-//        // Compruebo que esta en reparto, dado que sigue la oficina de origen
-//        Assertions.assertThat(servicioUjapack.obtenerSituacion(envio.getIdentificador()).getEstado()).isEqualTo(Utils.Estado.EN_REPARTO);  
-//    }
+    @Test
+    public void testGetSituacionEnvio() {
+        Cliente cliente = new Cliente("11111111A", "Prueba", "Pruebas", "Almería");
+        
+        // Creación de envio con Origen y destino en la misma Oficina(Provincia)
+        DTOEnvio envioPrueba = new DTOEnvio(5, 5, 5, cliente, cliente);
+        ResponseEntity<DTOLocalizadorPrecioEnvio> respuesta = 
+                restTemplate.postForEntity("/envio", envioPrueba, DTOLocalizadorPrecioEnvio.class);
+        Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        
+        // Actualizo la salida de la oficina, por lo que el estado pasa e estar en reparto 
+        restTemplate.put(
+                        "/envio/{id}/puntoControl/{idPuntoControl}?isSalida={salida}",
+                        null, // La informacion necesaria va en la URL, por lo que no es necesario enviar el objeto actualizado
+                        respuesta.getBody().getIdentificador(),
+                        "Almería", // Identificador del punto de control
+                        "true" // Para saber si el punto de control es de salida o de entrada
+                    );
+        
+        DTOPuntoControlEstadoEnvio envioActualizado = restTemplate.getForEntity(
+                "/envio/{id}/situacion",
+                DTOPuntoControlEstadoEnvio.class, 
+                respuesta.getBody().getIdentificador()
+            ).getBody();
+                
+        // Compruebo que esta en reparto, dado que sigue la oficina de origen
+        Assertions.assertThat(envioActualizado.getEstado()).isEqualTo(Utils.Estado.EN_REPARTO);  
+    }
 
     @BeforeEach
     void limpiarBaseDatos() {

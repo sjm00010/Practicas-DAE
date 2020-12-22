@@ -1,10 +1,9 @@
 package dae.ujapack.controladoresREST.DTOs;
 
 import dae.ujapack.entidades.Envio;
-import dae.ujapack.entidades.Paso;
 import dae.ujapack.objetosvalor.Cliente;
-import java.util.List;
-import java.util.stream.Collectors;
+import dae.ujapack.utils.Utils;
+import dae.ujapack.utils.Utils.Estado;
 
 /**
  *
@@ -19,9 +18,12 @@ public class DTOEnvio {
     private Cliente origen;
     /** Localizador destino */
     private Cliente destino;
-    /** Ruta del envio */
-    private List<DTOPaso> ruta;
+    private Utils.Estado estado;
+    // No incluyo la ruta ya que se obtiene aparte y no es necesaria en esté DTO
 
+    // Incluyo el precio y  del envio
+    private int precio;
+    
     // Contructor para crear el envío
     public DTOEnvio(int alto, int ancho, int peso, Cliente origen, Cliente destino) {
         this.id = ""; // En el momento de la creación no me interesa el id, se le asignará durante la misma
@@ -30,6 +32,8 @@ public class DTOEnvio {
         this.peso = peso;
         this.origen = origen;
         this.destino = destino;
+        this.estado = estado.EN_TRANSITO;
+        this.precio = 0;
     }
 
     // Contructor para devolver un envio
@@ -40,10 +44,9 @@ public class DTOEnvio {
                 envio.getOrigen(), 
                 envio.getDestino());
         // En el caso de que el envio ya este creado si me interesa tener el id
-        this.id = envio.getId(); 
-        this.ruta = envio.getRuta().stream().map(paso -> {
-            return new DTOPaso(paso);
-        }).collect(Collectors.toList());
+        this.id = envio.getId();
+        this.precio = envio.getPrecio();
+        this.estado = envio.getEstado();
     }
 
     /**
@@ -86,13 +89,19 @@ public class DTOEnvio {
      */
     public Cliente getDestino() {
         return destino;
+    }    
+
+    /**
+     * @return the estado
+     */
+    public Utils.Estado getEstado() {
+        return estado;
     }
 
     /**
-     * @return the ruta
+     * @return the precio
      */
-    public List<DTOPaso> getRuta() {
-        return ruta;
+    public int getPrecio() {
+        return precio;
     }
-    
 }

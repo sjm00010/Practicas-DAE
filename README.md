@@ -45,14 +45,16 @@ Para la ultima práctica haremos un [cliente web](https://gitlab.com/sjm00010/da
 
 ### Acciones identificadas para la API
 Segun lo visto en clase hemos identificado las siguientes acciones:
-- POST /ujapack/envio -> Crear envio y devolver identificador y precio
+- **POST** */ujapack/envio* -> Crea un envio y devuelve su identificador y precio
 
-- GET /ujapack/envio/{id} -> Obtiene el envio con ID. Devuelve envio
-- PUT /ujapack/envio/{id} -> Actualiza el envio con ID. Indicar fecha de entrega
+- **GET** */ujapack/envio/{id}* -> Obtiene el envio con ID proporcionado
+- **PUT** */ujapack/envio/{id}* -> Actualiza la fecha de entrega del envio con ID proporcionado
 
-- GET /ujapack/envio/{id}/puntoControl -> Obtiene el envio con ID. Devuelve envio
-- PUT /ujapack/envio/{id}/puntoControl/{idPuntoControl}/ -> Actualiza el envio con ID. Indicar punto de control y fecha
+- **GET** */ujapack/envio/{id}/situacion* -> Obtiene la situación de un envio con ID proporcionado, Estado e ID del punto de control actual
 
-Además de lo anterior, y completando la entrega opcional de practicas anteriores, tenemos:
-- GET /ujapack/envio/extraviados?inicio={fechas}&fin={fechas} -> Obtiene los envios extraviados. Indicar opcionalmente fecha de inicio y fin
-- GET /ujapack/envio/extraviados/{periodo} -> Obtiene el porcentaje de envios extraviados. Indicar periodo(DIA, MES, ANIO)
+- **GET** */ujapack/envio/{id}/puntoControl* -> Obtiene los puntos de control del envio con ID proporcionado
+- **PUT** */ujapack/envio/{id}/puntoControl/{idPuntoControl}* -> Actualiza la fecha del punto de control de la ruta del envio con los IDs proporcionados respectivamente
+
+Además de lo anterior, y completando la entrega opcional de prácticas anteriores, tenemos:
+- **GET** */ujapack/envio/extraviados?inicio={fechas}&fin={fechas}* -> Obtiene los envios extraviados, indicando opcionalmente fecha de inicio y fin
+- **GET** */ujapack/envio/extraviados/{periodo}* -> Obtiene el porcentaje de envios extraviados, se debe indicar periodo(DIA, MES, ANIO)

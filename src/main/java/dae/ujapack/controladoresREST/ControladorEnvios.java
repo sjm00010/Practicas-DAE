@@ -2,12 +2,17 @@ package dae.ujapack.controladoresREST;
 
 import dae.ujapack.controladoresREST.DTOs.DTOEnvio;
 import dae.ujapack.controladoresREST.DTOs.DTOLocalizadorPrecioEnvio;
+import dae.ujapack.controladoresREST.DTOs.DTOPaso;
+import dae.ujapack.controladoresREST.DTOs.DTOPuntoControlEstadoEnvio;
 import dae.ujapack.entidades.Envio;
 import dae.ujapack.errores.EnvioNoExiste;
 import dae.ujapack.errores.IdPuntoControlInvalido;
+import dae.ujapack.errores.PuntosAnterioresNulos;
 import dae.ujapack.servicios.ServicioMensajeria;
+import dae.ujapack.utils.Utils;
 import dae.ujapack.utils.Utils.Periodo;
 import dae.ujapack.utils.tuplas.LocalizadorPrecioEnvio;
+import dae.ujapack.utils.tuplas.PuntoControlEstadoEnvio;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -38,19 +43,19 @@ public class ControladorEnvios {
     ServicioMensajeria servicios;
 
     /** Handler para excepciones de violación de restricciones */
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler({ConstraintViolationException.class, PuntosAnterioresNulos.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handlerViolacionRestricciones(ConstraintViolationException e) {
     }
 
     
-    /** Handler para excepciones de accesos a puntos de control no existe */
+    /** Handler para excepciones de accesos a entidades que no existen */
     @ExceptionHandler({IdPuntoControlInvalido.class, EnvioNoExiste.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handlerClienteNoRegistrado() {
     }
    
-    /** Crea envio y devolver identificador y precio */
+    /** Crear un envio y devolver identificador y precio */
     @PostMapping("/envio")
     ResponseEntity<DTOLocalizadorPrecioEnvio> creaEnvio(@RequestBody DTOEnvio envio){
         LocalizadorPrecioEnvio localizador = servicios.creaEnvio(envio.getAlto(), envio.getAncho(), envio.getPeso(), envio.getOrigen(), envio.getDestino());
@@ -64,35 +69,53 @@ public class ControladorEnvios {
         return ResponseEntity.ok(new DTOEnvio(envio));
     }
     
-    /** Actualiza la entrega del envio con ID */
-    @PutMapping("/envio/{id}/{idPuntoControl}")
-    ResponseEntity actualizaEnvio(@PathVariable("id") String idEnvio, 
-            @PathVariable("idPuntoControl") String idPC){
-        servicios.actualizar(idEnvio, LocalDateTime.now(), true, idPC);
-        return ResponseEntity.ok("Envio actualizado correctamente.");
+    /** Actualiza el envio con ID */
+    @PutMapping("/envio/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    void entregaEnvio(@PathVariable("id") String idEnvio){
+        servicios.notificarEntrega(idEnvio, LocalDateTime.now());
     }
     
-    /** Actualiza el envio con ID */
-    @PutMapping("/envio/{id}/entrega")
-    ResponseEntity entregaEnvio(@PathVariable("id") String idEnvio){
-        servicios.notificarEntrega(idEnvio, LocalDateTime.now());
-        return ResponseEntity.ok("Envio entregado correctamente.");
+    /** Obtiene la situación de un envio con ID */
+    @GetMapping("/envio/{id}/situacion")    
+    ResponseEntity<DTOPuntoControlEstadoEnvio> getSituacion(@PathVariable("id") String idEnvio){
+        PuntoControlEstadoEnvio estado = servicios.obtenerSituacion(idEnvio);
+        return ResponseEntity.ok(new DTOPuntoControlEstadoEnvio(estado.getPc().getId(), estado.getEstado()));
+    }
+    
+    /** Obtiene los puntos de control de un envio con ID */
+    @GetMapping("/envio/{id}/puntoControl")
+    @ResponseStatus(HttpStatus.OK)
+    List<DTOPaso> getPuntosControl(@PathVariable("id") String idEnvio){
+        return servicios.getEnvio(idEnvio).getRuta()
+                                          .stream()
+                                          .map( paso -> new DTOPaso(paso))
+                                          .collect(Collectors.toList());
+    }
+    
+    /** Actualiza la entrega del envio con ID */
+    @PutMapping("/envio/{id}/puntoControl/{idPuntoControl}")
+    @ResponseStatus(HttpStatus.OK)
+    void actualizaEnvio(@PathVariable("id") String idEnvio, 
+            @PathVariable("idPuntoControl") String idPC,
+            @RequestParam boolean isSalida){
+        servicios.actualizar(idEnvio, LocalDateTime.now(), isSalida, idPC);
     }
     
     // Opcionales
     
     /** Obtiene los envios extraviados. Indicar opcionalmente fecha de inicio y fin */
     @GetMapping("/envio/extraviados")
-    ResponseEntity<DTOEnvio> getExtraviados(@RequestParam Optional<LocalDateTime> inicio, 
+    ResponseEntity<List<DTOEnvio>> getExtraviados(@RequestParam Optional<LocalDateTime> inicio, 
             @RequestParam Optional<LocalDateTime> fin){
-        ResponseEntity response;
+        ResponseEntity<List<DTOEnvio>> response;
         try{
             List<Envio> extraviados = servicios.obtenerExtraviados(inicio.orElse(null), fin.orElse(null));
-            response = ResponseEntity.ok(extraviados.stream().map((envio) -> {
-                return new DTOEnvio(envio);
-            }).collect(Collectors.toList()));
+            response = ResponseEntity.ok(extraviados.stream()
+                                                    .map(envio -> new DTOEnvio(envio))
+                                                    .collect(Collectors.toList()));
         }catch(IllegalArgumentException e){
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            response = ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return response;
     }
