@@ -59,7 +59,8 @@ public class ControladorEnviosRESTTest {
         DTOEnvio envio = new DTOEnvio(5, 5, 5, cliente, null); // No tiene destino, es nulo.
  
         ResponseEntity<DTOLocalizadorPrecioEnvio> respuesta = 
-                restTemplate.postForEntity("/envio", envio, DTOLocalizadorPrecioEnvio.class);
+                restTemplate.withBasicAuth("admin", "admin")
+                            .postForEntity("/envio", envio, DTOLocalizadorPrecioEnvio.class);
         
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
@@ -71,7 +72,8 @@ public class ControladorEnviosRESTTest {
         // Creación de envio con Origen y destino en la misma Oficina(Provincia)
         DTOEnvio envioPrueba = new DTOEnvio(5, 5, 5, cliente, cliente);
         ResponseEntity<DTOLocalizadorPrecioEnvio> respuesta = 
-                restTemplate.postForEntity("/envio", envioPrueba, DTOLocalizadorPrecioEnvio.class);
+                restTemplate.withBasicAuth("admin", "admin")
+                            .postForEntity("/envio", envioPrueba, DTOLocalizadorPrecioEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         
         DTOPaso[] ruta = restTemplate.getForEntity(
@@ -93,7 +95,8 @@ public class ControladorEnviosRESTTest {
         // Creación de envio con origen y destino en distintas oficinas dentro del mismo centro
         DTOEnvio envioPrueba = new DTOEnvio(5, 5, 5, origen, destino);
         ResponseEntity<DTOLocalizadorPrecioEnvio> respuesta = 
-                restTemplate.postForEntity("/envio", envioPrueba, DTOLocalizadorPrecioEnvio.class);
+                restTemplate.withBasicAuth("admin", "admin")
+                            .postForEntity("/envio", envioPrueba, DTOLocalizadorPrecioEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         
         DTOPaso[] ruta = restTemplate.getForEntity(
@@ -116,7 +119,8 @@ public class ControladorEnviosRESTTest {
         // Creación de envio con origen y destino en distintos centros
         DTOEnvio envioPrueba = new DTOEnvio(5, 5, 5, origen, destino);
         ResponseEntity<DTOLocalizadorPrecioEnvio> respuesta = 
-                restTemplate.postForEntity("/envio", envioPrueba, DTOLocalizadorPrecioEnvio.class);
+                restTemplate.withBasicAuth("admin", "admin")
+                            .postForEntity("/envio", envioPrueba, DTOLocalizadorPrecioEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         
         DTOPaso[] ruta = restTemplate.getForEntity(
@@ -135,15 +139,17 @@ public class ControladorEnviosRESTTest {
     @Test
     public void testActualizaEnvioInvalido() {
         // Intento actualizar un envio que no existe
-        ResponseEntity respuesta = restTemplate.exchange("/envio/{id}/puntoControl/{idPuntoControl}?isSalida={salida}", // Lo hago con exchange() y no con put() para comprobar el resultado para el test
-                        HttpMethod.PUT,
-                        HttpEntity.EMPTY,
-                        Void.class,
-                        "1234567890", // ID inexistente
-                        "1",
-                        "true"
-                        );
-        
+        ResponseEntity respuesta = restTemplate.withBasicAuth("operario", "secret")
+                                               .exchange(
+                                                    "/envio/{id}/puntoControl/{idPuntoControl}?isSalida={salida}", // Lo hago con exchange() y no con put() para comprobar el resultado para el test
+                                                    HttpMethod.PUT,
+                                                    HttpEntity.EMPTY,
+                                                    Void.class,
+                                                    "1234567890", // ID inexistente
+                                                    "1",
+                                                    "true"
+                                               );
+
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
     
@@ -154,11 +160,13 @@ public class ControladorEnviosRESTTest {
         // Creación de envio con Origen y destino en la misma Oficina(Provincia)
         DTOEnvio envioPrueba = new DTOEnvio(5, 5, 5, cliente, cliente);
         ResponseEntity<DTOLocalizadorPrecioEnvio> respuesta = 
-                restTemplate.postForEntity("/envio", envioPrueba, DTOLocalizadorPrecioEnvio.class);
+                restTemplate.withBasicAuth("admin", "admin")
+                            .postForEntity("/envio", envioPrueba, DTOLocalizadorPrecioEnvio.class);
         Assertions.assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         
         // Actualizo la salida de la oficina, por lo que el estado pasa e estar en reparto 
-        restTemplate.put(
+        restTemplate.withBasicAuth("operario", "secret")
+                    .put(
                         "/envio/{id}/puntoControl/{idPuntoControl}?isSalida={salida}",
                         null, // La informacion necesaria va en la URL, por lo que no es necesario enviar el objeto actualizado
                         respuesta.getBody().getIdentificador(),
