@@ -45,16 +45,22 @@ Para la ultima práctica haremos un [cliente web](https://gitlab.com/sjm00010/da
 
 ### Acciones identificadas para la API
 Segun lo visto en clase hemos identificado las siguientes acciones:
-- **POST** */ujapack/envio* -> Crea un envio y devuelve su identificador y precio
+- **POST** */ujapack/envio* (Solo ADMIN)-> Crea un envio y devuelve su identificador y precio
 
 - **GET** */ujapack/envio/{id}* -> Obtiene el envio con ID proporcionado
-- **PUT** */ujapack/envio/{id}* -> Actualiza la fecha de entrega del envio con ID proporcionado
+- **PUT** */ujapack/envio/{id}* (Solo OPERARIO)-> Actualiza la fecha de entrega del envio con ID proporcionado
 
 - **GET** */ujapack/envio/{id}/situacion* -> Obtiene la situación de un envio con ID proporcionado, Estado e ID del punto de control actual
 
 - **GET** */ujapack/envio/{id}/puntoControl* -> Obtiene los puntos de control del envio con ID proporcionado
-- **PUT** */ujapack/envio/{id}/puntoControl/{idPuntoControl}* -> Actualiza la fecha del punto de control de la ruta del envio con los IDs proporcionados respectivamente
+- **PUT** */ujapack/envio/{id}/puntoControl/{idPuntoControl}* (Solo OPERARIO)-> Actualiza la fecha del punto de control de la ruta del envio con los IDs proporcionados respectivamente
 
 Además de lo anterior, y completando la entrega opcional de prácticas anteriores, tenemos:
 - **GET** */ujapack/envio/extraviados?inicio={fechas}&fin={fechas}* -> Obtiene los envios extraviados, indicando opcionalmente fecha de inicio y fin
 - **GET** */ujapack/envio/extraviados/{periodo}* -> Obtiene el porcentaje de envios extraviados, se debe indicar periodo(DIA, MES, ANIO)
+
+Los usuario / contraseñas creadas para esta practica son:
+- **admin** / *admin* : este usuario con rol de ADMIN puede crear los envios.
+- **operario** / *secret* : este usuario con rol de OPERARIO puede actualizar las fechas de los envíos.
+
+El resto de operaciones son anonimas y se puede realizar sin necesidad de autenticarse.

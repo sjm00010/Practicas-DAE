@@ -102,7 +102,7 @@ public class ControladorEnvios {
         servicios.actualizar(idEnvio, LocalDateTime.now(), isSalida, idPC);
     }
     
-    // Opcionales
+    // Opcionales, para usarlos se debe insertar un envío como en el test que comprueba los extraviados
     
     /** Obtiene los envios extraviados. Indicar opcionalmente fecha de inicio y fin */
     @GetMapping("/envio/extraviados")
