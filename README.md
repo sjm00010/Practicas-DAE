@@ -41,15 +41,26 @@ Este comando hace:
 Si todo salio bien le damos al Play y comprobaremos que ejecuta (si no configuramos algo bien se parara) y que en la pestaña _Inspect_ aparece `Port 3306/tcp localhost:3306` que nos indica el puerto al que debemos conectarnos. Para el desarrollo de la práctica usaremos el puerto por defecto, _3306_.
 
 ## Práctica 3
-Para la ultima práctica haremos un [cliente web]() para acceder a la API que vamos a realizar.
+Para la ultima práctica haremos un [cliente web](https://gitlab.com/sjm00010/dae-cliente-web) para acceder a la API que vamos a realizar.
 
 ### Acciones identificadas para la API
 Segun lo visto en clase hemos identificado las siguientes acciones:
-- POST /ujapack/administrador/envio -> Crear envio y devolver identificador y precio
-- GET /ujapack/envio/{id} -> Obtiene el envio con ID. Devuelve envio
-- PUT /ujapack/operario/envio/{id}/{idPuntoControl} -> Actualiza el envio con ID. Indicar punto de control y fecha
-- PUT /ujapack/operario/envio/{id}/entrega -> Actualiza el envio con ID. Indicar fecha de entrega
+- **POST** */ujapack/envio* (Solo ADMIN)-> Crea un envio y devuelve su identificador y precio
 
-Además de lo anterior, y completando la entrega opcional de practicas anteriores, tenemos:
-- GET /ujapack/envio/extraviados/{fechas} -> Obtiene los envios extraviados. Indicar opcionalmente fecha de inicio y fin
-- GET /ujapack/envio/extraviados/porcentaje/{periodo} -> Obtiene el porcentaje de envios extraviados. Indicar periodo(DIA, MES, ANIO)
+- **GET** */ujapack/envio/{id}* -> Obtiene el envio con ID proporcionado
+- **PUT** */ujapack/envio/{id}* (Solo OPERARIO)-> Actualiza la fecha de entrega del envio con ID proporcionado
+
+- **GET** */ujapack/envio/{id}/situacion* -> Obtiene la situación de un envio con ID proporcionado, Estado e ID del punto de control actual
+
+- **GET** */ujapack/envio/{id}/puntoControl* -> Obtiene los puntos de control del envio con ID proporcionado
+- **PUT** */ujapack/envio/{id}/puntoControl/{idPuntoControl}* (Solo OPERARIO)-> Actualiza la fecha del punto de control de la ruta del envio con los IDs proporcionados respectivamente
+
+Además de lo anterior, y completando la entrega opcional de prácticas anteriores, tenemos:
+- **GET** */ujapack/envio/extraviados?inicio={fechas}&fin={fechas}* -> Obtiene los envios extraviados, indicando opcionalmente fecha de inicio y fin
+- **GET** */ujapack/envio/extraviados/{periodo}* -> Obtiene el porcentaje de envios extraviados, se debe indicar periodo(DIA, MES, ANIO)
+
+Los usuario / contraseñas creadas para esta practica son:
+- **admin** / *admin* : este usuario con rol de ADMIN puede crear los envios.
+- **operario** / *secret* : este usuario con rol de OPERARIO puede actualizar las fechas de los envíos.
+
+El resto de operaciones son anonimas y se puede realizar sin necesidad de autenticarse.
