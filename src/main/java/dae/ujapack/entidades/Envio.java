@@ -156,7 +156,7 @@ public class Envio implements Serializable {
      * Función que calcula el precio de un envío
      * @return precio
      */
-    public int getPrecio(){
+    public float getPrecio(){
         return peso*(alto*ancho)* (ruta.size()/2+1) / 1000;
     }
 

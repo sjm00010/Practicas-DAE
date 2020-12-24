@@ -8,7 +8,7 @@ import dae.ujapack.utils.tuplas.LocalizadorPrecioEnvio;
  */
 public class DTOLocalizadorPrecioEnvio {
     private final String identificador;
-    private final Integer precio;
+    private final float precio;
 
     public DTOLocalizadorPrecioEnvio(String identificador, Integer precio) {
         this.identificador = identificador;
@@ -32,7 +32,7 @@ public class DTOLocalizadorPrecioEnvio {
     /**
      * @return the precio
      */
-    public Integer getPrecio() {
+    public float getPrecio() {
         return precio;
     }
     

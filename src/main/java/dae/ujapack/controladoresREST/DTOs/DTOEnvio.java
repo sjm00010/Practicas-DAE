@@ -22,7 +22,7 @@ public class DTOEnvio {
     // No incluyo la ruta ya que se obtiene aparte y no es necesaria en esté DTO
 
     // Incluyo el precio y  del envio
-    private int precio;
+    private float precio;
     
     // Contructor para crear el envío
     public DTOEnvio(int alto, int ancho, int peso, Cliente origen, Cliente destino) {
@@ -101,7 +101,7 @@ public class DTOEnvio {
     /**
      * @return the precio
      */
-    public int getPrecio() {
+    public float getPrecio() {
         return precio;
     }
 }

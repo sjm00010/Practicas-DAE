@@ -6,9 +6,9 @@ package dae.ujapack.utils.tuplas;
  */
 public class LocalizadorPrecioEnvio {
     private final String identificador;
-    private final Integer precio;
+    private final float precio;
 
-    public LocalizadorPrecioEnvio(String identificador, Integer precio) {
+    public LocalizadorPrecioEnvio(String identificador, float precio) {
         this.identificador = identificador;
         this.precio = precio;
     }
@@ -23,7 +23,7 @@ public class LocalizadorPrecioEnvio {
     /**
      * @return the precio
      */
-    public Integer getPrecio() {
+    public float getPrecio() {
         return precio;
     }
     
