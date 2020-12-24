@@ -122,7 +122,7 @@ public class ControladorEnvios {
     
     /** Obtiene el porcentaje de envios extraviados. Indicar periodo(DIA, MES, ANIO) */
     @GetMapping("/envio/extraviados/{periodo}")
-    ResponseEntity<DTOEnvio> getProcentaje(@PathVariable Periodo periodo){
+    ResponseEntity<DTOEnvio> getPorcentaje(@PathVariable Periodo periodo){
         ResponseEntity response;
         try{
             float porcentaje = servicios.porcentajeExtraviados(periodo);

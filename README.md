@@ -63,4 +63,4 @@ Los usuario / contraseñas creadas para esta practica son:
 - **admin** / *admin* : este usuario con rol de ADMIN puede crear los envios.
 - **operario** / *secret* : este usuario con rol de OPERARIO puede actualizar las fechas de los envíos.
 
-El resto de operaciones son anonimas y se puede realizar sin necesidad de autenticarse.
+El resto de operaciones son anónimas y se puede realizar sin necesidad de autenticarse.
