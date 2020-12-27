@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/ujapack")
-public class ControladorEnvios {
+public class ControladorREST {
     @Autowired
     ServicioMensajeria servicios;
 

@@ -46,7 +46,7 @@ public class ControladorEnviosRESTTest {
     @PostConstruct
     void crearRestTemplate() {
         RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder()
-                .rootUri("http://localhost:" + localPort + "/ujapack")
+                .rootUri("https://localhost:" + localPort + "/ujapack")
                 .additionalMessageConverters(List.of(springBootJacksonConverter));
         
         restTemplate = new TestRestTemplate(restTemplateBuilder);
