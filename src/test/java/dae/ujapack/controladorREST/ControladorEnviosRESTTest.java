@@ -23,11 +23,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestPropertySource;
 
 /**
  *
  * @author sjm00010
  */
+@TestPropertySource(properties = { "spring.config.location=classpath:application-test.yml" })
 @SpringBootTest(classes = dae.ujapack.app.UjaPackApp.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext // Necesario para que no haya conflictos con la cache
 public class ControladorEnviosRESTTest {
@@ -49,7 +51,7 @@ public class ControladorEnviosRESTTest {
     @PostConstruct
     void crearRestTemplate() {
         RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder()
-                .rootUri("https://localhost:" + localPort + "/ujapack")
+                .rootUri("http://localhost:" + localPort + "/ujapack")
                 .additionalMessageConverters(List.of(springBootJacksonConverter));
 
         restTemplate = new TestRestTemplate(restTemplateBuilder);

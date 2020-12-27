@@ -1,0 +1,11 @@
+# Configuración para la base de datos MySQL
+spring.dataSource.url: jdbc:mysql://localhost:3306/ujapack
+spring.dataSource.username: ujapack
+spring.dataSource.password: ujapack
+
+spring.jpa.properties.javax.persistence.schema-generation.database.action: none
+
+spring.data.jpa.repositories.bootstrap-mode: default
+
+# Equivalente a la creación de beans en UjaPackApp para la cache
+spring.cache.jcache.config: classpath:ehcache.xml
