@@ -4,11 +4,13 @@ import dae.ujapack.entidades.puntosControl.PuntoControl;
 import dae.ujapack.utils.Utils.Estado;
 
 /**
- * Clase que para almacenar una tupla del último punto de control y el estado
- * de un envío
+ * Clase que para almacenar una tupla del último punto de control y el estado de
+ * un envío
+ *
  * @author sjm00010
  */
 public class PuntoControlEstadoEnvio {
+
     private PuntoControl pc;
     private Estado estado;
 

@@ -10,20 +10,25 @@ import dae.ujapack.utils.Utils.Estado;
  * @author sjm00010
  */
 public class DTOEnvio {
+
     private String id;
     private int alto;
     private int ancho;
     private int peso;
-    /** Localizador origen */
+    /**
+     * Localizador origen
+     */
     private Cliente origen;
-    /** Localizador destino */
+    /**
+     * Localizador destino
+     */
     private Cliente destino;
     private Utils.Estado estado;
     // No incluyo la ruta ya que se obtiene aparte y no es necesaria en esté DTO
 
     // Incluyo el precio y  del envio
     private float precio;
-    
+
     // Contructor para crear el envío
     public DTOEnvio(int alto, int ancho, int peso, Cliente origen, Cliente destino) {
         this.id = ""; // En el momento de la creación no me interesa el id, se le asignará durante la misma
@@ -38,10 +43,10 @@ public class DTOEnvio {
 
     // Contructor para devolver un envio
     public DTOEnvio(Envio envio) {
-        this(   envio.getAlto(), 
-                envio.getAncho(), 
+        this(envio.getAlto(),
+                envio.getAncho(),
                 envio.getPeso(),
-                envio.getOrigen(), 
+                envio.getOrigen(),
                 envio.getDestino());
         // En el caso de que el envio ya este creado si me interesa tener el id
         this.id = envio.getId();
@@ -89,7 +94,7 @@ public class DTOEnvio {
      */
     public Cliente getDestino() {
         return destino;
-    }    
+    }
 
     /**
      * @return the estado

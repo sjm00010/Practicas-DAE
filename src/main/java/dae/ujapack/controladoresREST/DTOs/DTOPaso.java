@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
  * @author sjm00010
  */
 public class DTOPaso {
+
     private LocalDateTime fecha;
     private boolean inOut; // False entrada, True salida
     private String idPuntoControl;
@@ -23,7 +24,6 @@ public class DTOPaso {
         this.inOut = paso.isInOut();
         this.idPuntoControl = paso.getPasoPuntos().getId();
     }
-    
 
     /**
      * @return the fecha
@@ -45,5 +45,5 @@ public class DTOPaso {
     public String getIdPuntoControl() {
         return idPuntoControl;
     }
-    
+
 }

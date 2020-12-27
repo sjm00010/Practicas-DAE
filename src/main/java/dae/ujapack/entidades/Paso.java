@@ -15,53 +15,57 @@ import javax.validation.constraints.PastOrPresent;
 
 /**
  * Entidad que representa un punto de la ruta
+ *
  * @author juanc
  */
-
 @Entity
-public class Paso implements Serializable  {
-    
+public class Paso implements Serializable {
+
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE) 
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    
+
     @PastOrPresent
     private LocalDateTime fecha;
-    
+
     // No se comprueba porque es un valor primitivo
     private boolean inOut; // False entrada, True salida
-    
+
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="puntoControl")
+    @JoinColumn(name = "puntoControl")
     @NotNull
     private PuntoControl pasoPuntos;
 
     public Paso() {
         this.fecha = null; // Me aseguro de que la fecha se inicializa a null
     }
-    
+
     /**
      * Constructor parametrizado
-     * @param pasoPuntos Parámetro con los puntos de control por los que ha pasado el envío.
+     *
+     * @param pasoPuntos Parámetro con los puntos de control por los que ha
+     * pasado el envío.
      * @param inOut Indica la entrada(False) o salida(True) del punto
      * @param fecha Fecha del paso por el punto de control
      */
-    public Paso(PuntoControl pasoPuntos, boolean inOut, LocalDateTime fecha){
+    public Paso(PuntoControl pasoPuntos, boolean inOut, LocalDateTime fecha) {
         this.pasoPuntos = pasoPuntos;
         this.inOut = inOut;
         this.fecha = fecha;
     }
-    
+
     /**
      * Función constructora parametrizada para cuando se crea la ruta.
-     * @param pasoPuntos Parámetro con los puntos de control por los que ha pasado el envío.
+     *
+     * @param pasoPuntos Parámetro con los puntos de control por los que ha
+     * pasado el envío.
      * @param inOut Indica la entrada(False) o salida(True) del punto
      */
-    public Paso(PuntoControl pasoPuntos, boolean inOut){
+    public Paso(PuntoControl pasoPuntos, boolean inOut) {
         this.pasoPuntos = pasoPuntos;
         this.inOut = inOut;
     }
-       
+
     /**
      * @return the fecha
      */
@@ -75,7 +79,7 @@ public class Paso implements Serializable  {
     public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
     }
-    
+
     /**
      * @return the inOut
      */
@@ -89,6 +93,5 @@ public class Paso implements Serializable  {
     public PuntoControl getPasoPuntos() {
         return pasoPuntos;
     }
-    
-}
 
+}

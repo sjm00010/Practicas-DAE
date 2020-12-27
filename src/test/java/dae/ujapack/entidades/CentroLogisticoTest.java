@@ -15,12 +15,12 @@ import org.junit.jupiter.api.Test;
  * @author juanc
  */
 public class CentroLogisticoTest {
-    
-     public CentroLogisticoTest() {
+
+    public CentroLogisticoTest() {
     }
-     
+
     @Test
-    void testCreaCentroLogistico(){
+    void testCreaCentroLogistico() {
         //Comprueba que un centro logístico está conectado, es decir, tiene alguna conexión con otro centro logístico.
         List<String> conexiones = new ArrayList<>();
         conexiones.add("2");
@@ -28,7 +28,5 @@ public class CentroLogisticoTest {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<CentroLogistico>> violations = validator.validate(centroLogistico);
         Assertions.assertThat(violations).isEmpty(); // Compruebo que se ha creado correctamente      
-        }
     }
-     
-
+}

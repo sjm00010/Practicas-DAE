@@ -100,8 +100,8 @@ public class ServicioEnrutado {
                     // Calculo y añado los centros logisticos por los que pasa
                     List<String> centrosRuta = this.obtenRuta(centroOrig.getId(), centroDest.getId());
                     for (String idCentro : centrosRuta) {
-                        ruta.add(new Paso(repositorioPuntoControl.buscar(idCentro).orElseThrow(() -> new IdPuntoControlInvalido("El id "+idCentro+" del centroLogistico es inválido")), false));
-                        ruta.add(new Paso(repositorioPuntoControl.buscar(idCentro).orElseThrow(() -> new IdPuntoControlInvalido("El id "+idCentro+" del centroLogistico es inválido")), true));
+                        ruta.add(new Paso(repositorioPuntoControl.buscar(idCentro).orElseThrow(() -> new IdPuntoControlInvalido("El id " + idCentro + " del centroLogistico es inválido")), false));
+                        ruta.add(new Paso(repositorioPuntoControl.buscar(idCentro).orElseThrow(() -> new IdPuntoControlInvalido("El id " + idCentro + " del centroLogistico es inválido")), true));
                     }
 
                     // Añado el destino

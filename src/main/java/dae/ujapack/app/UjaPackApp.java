@@ -18,8 +18,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @author sjm00010
  */
 @SpringBootApplication(scanBasePackages = {
-    "dae.ujapack.servicios", 
-    "dae.ujapack.repositorios", 
+    "dae.ujapack.servicios",
+    "dae.ujapack.repositorios",
     "dae.ujapack.controladoresREST",
     "dae.ujapack.seguridad"})
 @EntityScan(basePackages = "dae.ujapack.entidades")
@@ -32,7 +32,6 @@ public class UjaPackApp {
     @Autowired
     RepositorioPuntoControl repositorioPuntoControl;
 
-
     @PostConstruct
     void cargarDatos() {
         if (repositorioPuntoControl.isEmpty()) {
@@ -41,9 +40,8 @@ public class UjaPackApp {
             repositorioPuntoControl.guardar(datos.getOficinas().values());
         }
     }
-    
-    // No creo los beans de la cache, uso la notación equivalente en el aplication.yml
 
+    // No creo los beans de la cache, uso la notación equivalente en el aplication.yml
     // El json esta en la carpeta del proyecto, se carga automaticamente
     public static void main(String[] args) throws Exception {
         // Creación de servidor

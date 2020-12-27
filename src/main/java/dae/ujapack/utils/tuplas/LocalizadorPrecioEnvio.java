@@ -2,9 +2,11 @@ package dae.ujapack.utils.tuplas;
 
 /**
  * Clase que para almacenar una tupla del localizado y el precio de un envío
+ *
  * @author sjm00010
  */
 public class LocalizadorPrecioEnvio {
+
     private final String identificador;
     private final float precio;
 
@@ -26,6 +28,5 @@ public class LocalizadorPrecioEnvio {
     public float getPrecio() {
         return precio;
     }
-    
-    
+
 }

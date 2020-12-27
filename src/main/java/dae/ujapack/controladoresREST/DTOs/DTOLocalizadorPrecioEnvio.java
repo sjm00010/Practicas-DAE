@@ -7,6 +7,7 @@ import dae.ujapack.utils.tuplas.LocalizadorPrecioEnvio;
  * @author sjm00010
  */
 public class DTOLocalizadorPrecioEnvio {
+
     private final String identificador;
     private final float precio;
 
@@ -19,8 +20,6 @@ public class DTOLocalizadorPrecioEnvio {
         this.identificador = origin.getIdentificador();
         this.precio = origin.getPrecio();
     }
-    
-    
 
     /**
      * @return the identificador
@@ -35,6 +34,5 @@ public class DTOLocalizadorPrecioEnvio {
     public float getPrecio() {
         return precio;
     }
-    
-    
+
 }
