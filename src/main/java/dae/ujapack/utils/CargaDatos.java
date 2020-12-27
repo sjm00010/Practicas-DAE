@@ -18,26 +18,29 @@ import org.json.simple.parser.ParseException;
 
 /**
  * Servicio que carga los datos de un archivo json
+ *
  * @author sjm00010
  */
 public class CargaDatos {
+
     private String ruta; // Ruta del archivo .json
     private int numCentros; // Número de centros que contiene el archivo
-    
-  
+
     public CargaDatos() {
-        this.ruta = System.getProperty("user.dir")+"/redujapack.json";
+        this.ruta = System.getProperty("user.dir") + "/redujapack.json";
         this.numCentros = 10;
     }
-    
+
     /**
-     * Función que crea los centros y oficinas a partir de la información leída del json
+     * Función que crea los centros y oficinas a partir de la información leída
+     * del json
+     *
      * @param centro JSONObject con la información del centro a crear
      * @param id Id del centro
      * @param centrosLogisticos Mapa a rellenar con los centros
      * @param oficinas Mapa a rellenar con las oficinas
      */
-    private void transformarEnObjetos(JSONObject centro, String id, 
+    private void transformarEnObjetos(JSONObject centro, String id,
             Map<String, CentroLogistico> centrosLogisticos, Map<String, Oficina> oficinas) {
 
         // Obtengo el nombre del centro
@@ -48,31 +51,32 @@ public class CargaDatos {
 
         // Obtengo el conjunto de conexiones
         JSONArray conexionesTemp = (JSONArray) centro.get("conexiones");
-        ArrayList<String> conexiones = new ArrayList<>();        
+        ArrayList<String> conexiones = new ArrayList<>();
         conexionesTemp.forEach(conexion -> conexiones.add(conexion.toString()));
-        
+
         // Creo el centro y lo añado
-        centrosLogisticos.put( id ,new CentroLogistico(id, nombre, localizacion, conexiones));
-        
+        centrosLogisticos.put(id, new CentroLogistico(id, nombre, localizacion, conexiones));
+
         // Obtengo el conjunto de provincias
         JSONArray provincias = (JSONArray) centro.get("provincias");
         provincias.forEach(provincia -> oficinas.put(provincia.toString(), new Oficina(provincia.toString(), centrosLogisticos.get(id))));
     }
-    
+
     /**
      * Función que carga los datos del fichero json
+     *
      * @param ServicioMensajeria Servicio al que ha de cargar los datos
      */
     public OficinasCentrosServicioCarga cargaDatos() {
         // Variables
         Map<String, Oficina> oficinas = new HashMap<>();
         Map<String, CentroLogistico> centrosLogisticos = new HashMap<>();
-        
+
         //JSON parser object to parse read file
         JSONParser jsonParser = new JSONParser();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(ruta), "UTF-8"));) {
-            
+
             // Leo el archivo JSON
             JSONObject listaCentros = (JSONObject) jsonParser.parse(reader);
 
@@ -81,7 +85,7 @@ public class CargaDatos {
                 JSONObject centro = (JSONObject) jsonParser.parse(listaCentros.get(Integer.toString(i)).toString());
                 transformarEnObjetos(centro, Integer.toString(i), centrosLogisticos, oficinas);
             }
-            
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -89,7 +93,7 @@ public class CargaDatos {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        
+
         return new OficinasCentrosServicioCarga(oficinas, centrosLogisticos);
     }
 }

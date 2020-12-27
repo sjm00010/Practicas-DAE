@@ -9,9 +9,3 @@ spring.data.jpa.repositories.bootstrap-mode: default
 
 # Equivalente a la creación de beans en UjaPackApp para la cache
 spring.cache.jcache.config: classpath:ehcache.xml
-
-# HTTPS config
-server.port: 8080
-server.ssl.key-store: classpath:ujapackcert.p12
-server.ssl.key-store-password: changeit
-server.ssl.keyStoreType: PKCS12

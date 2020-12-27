@@ -10,22 +10,30 @@ import javax.validation.constraints.Size;
 
 /**
  * Entidad Centro logístico
+ *
  * @author juanc
  */
 @Entity
-public class CentroLogistico extends PuntoControl implements Serializable{
-        
-    /** Nombre del centro logístico*/
+public class CentroLogistico extends PuntoControl implements Serializable {
+
+    /**
+     * Nombre del centro logístico
+     */
     @NotBlank
     private String nombre;
-    
-    /** Ubicación del centro logístico*/
+
+    /**
+     * Ubicación del centro logístico
+     */
     @NotBlank
     private String localizacion;
-    
-    /** Conexiones asociadas a un centro logístico*/
+
+    /**
+     * Conexiones asociadas a un centro logístico
+     */
     @ElementCollection
-    @NotNull @Size(min=1)
+    @NotNull
+    @Size(min = 1)
     private List<String> conexiones;
 
     public CentroLogistico() {
@@ -58,5 +66,5 @@ public class CentroLogistico extends PuntoControl implements Serializable{
     public List<String> getConexiones() {
         return conexiones;
     }
-    
+
 }

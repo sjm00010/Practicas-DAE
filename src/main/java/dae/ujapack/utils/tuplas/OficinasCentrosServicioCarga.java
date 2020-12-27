@@ -5,10 +5,13 @@ import dae.ujapack.entidades.puntosControl.Oficina;
 import java.util.Map;
 
 /**
- * Clase para almacenar la tupla de Oficinas y Centros Logisticos cargados del fichero
+ * Clase para almacenar la tupla de Oficinas y Centros Logisticos cargados del
+ * fichero
+ *
  * @author sjm00010
  */
 public class OficinasCentrosServicioCarga {
+
     private Map<String, Oficina> oficinas;
     private Map<String, CentroLogistico> centros;
 
@@ -31,5 +34,4 @@ public class OficinasCentrosServicioCarga {
         return centros;
     }
 
-    
 }

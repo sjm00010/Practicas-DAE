@@ -10,21 +10,28 @@ import javax.validation.constraints.NotBlank;
 
 /**
  * Clase que representa un punto de control
+ *
  * @author sjm00010
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class PuntoControl implements Serializable {
-    
+
     /* Id del punto de control */
     @Id
     @NotBlank
     String id;
-    
-    public PuntoControl() {}
-    public PuntoControl(String id) {this.id = id;}
-    public String getId(){ return id; }
 
+    public PuntoControl() {
+    }
+
+    public PuntoControl(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -43,5 +50,5 @@ public abstract class PuntoControl implements Serializable {
         }
         return true;
     }
-    
+
 }

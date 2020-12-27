@@ -7,6 +7,7 @@ import dae.ujapack.utils.Utils.Estado;
  * @author sjm00010
  */
 public class DTOPuntoControlEstadoEnvio {
+
     // Guardo el ID del punto de control que es el dato que interesa devolver
     private String idPC;
     private Estado estado;
@@ -29,5 +30,5 @@ public class DTOPuntoControlEstadoEnvio {
     public Estado getEstado() {
         return estado;
     }
-        
+
 }

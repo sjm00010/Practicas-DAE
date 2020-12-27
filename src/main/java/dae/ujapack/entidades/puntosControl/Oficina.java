@@ -9,21 +9,24 @@ import javax.validation.Valid;
 
 /**
  * Entidad oficina
+ *
  * @author juanc
  */
 @Entity
-public class Oficina extends PuntoControl implements Serializable{
-    
-    /**Centro logístico asociado a la oficina*/
+public class Oficina extends PuntoControl implements Serializable {
+
+    /**
+     * Centro logístico asociado a la oficina
+     */
     @ManyToOne
-    @JoinColumn(name="CentroAsociado")
+    @JoinColumn(name = "CentroAsociado")
     @Valid
     private CentroLogistico centroAsociado;
 
     public Oficina() {
     }
-    
-    public Oficina(String id, CentroLogistico centroAsociado){
+
+    public Oficina(String id, CentroLogistico centroAsociado) {
         super(id);
         this.centroAsociado = centroAsociado;
     }
@@ -35,4 +38,3 @@ public class Oficina extends PuntoControl implements Serializable{
         return centroAsociado;
     }
 }
-

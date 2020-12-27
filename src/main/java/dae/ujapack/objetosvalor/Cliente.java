@@ -8,27 +8,28 @@ import javax.validation.constraints.Size;
 
 /**
  * Objeto valor Cliente
+ *
  * @author sjm00010
  */
 @Embeddable
 public class Cliente implements Serializable {
-    
-    @Size(min=9, max=9)
-    @Pattern(regexp="\\d{8}[A-HJ-NP-TV-Z]")
+
+    @Size(min = 9, max = 9)
+    @Pattern(regexp = "\\d{8}[A-HJ-NP-TV-Z]")
     private String dni;
-    
+
     @NotBlank
     private String nombre;
-    
+
     @NotBlank
     private String apellidos;
-    
+
     @NotBlank
     private String localizacion;
 
     public Cliente() {
     }
-    
+
     public Cliente(String dni, String nombre, String apellidos, String localizacion) {
         this.dni = dni;
         this.nombre = nombre;
