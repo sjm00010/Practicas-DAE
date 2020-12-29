@@ -45,11 +45,11 @@ public class ControladorREST {
     ServicioMensajeria servicios;
 
     /**
-     * Handler para excepciones de violación de restricciones
+     * Handler para excepciones de violación de restricciones y puntos anteriores nulos
      */
     @ExceptionHandler({ConstraintViolationException.class, PuntosAnterioresNulos.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void handlerViolacionRestricciones(ConstraintViolationException e) {
+    public void handlerViolacionRestricciones() {
     }
 
     /**
